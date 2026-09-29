@@ -158,8 +158,8 @@
                     line-height: 1.05;
                   "
                 >
-                  Lists, Hooks<br />and
-                  <span style="color: var(--accent)">Custom Hooks</span>
+                  State, Events, Lists<br />and
+                  <span style="color: var(--accent)">Effects</span>
                 </h1>
                 <p
                   style="
@@ -276,7 +276,7 @@
                     font-weight: 600;
                   "
                 >
-                  Rules of Hooks
+                  useState & Multiple State
                 </p>
               </div>
               <div class="card" style="font-size: 0.78em; text-align: center">
@@ -296,7 +296,7 @@
                     font-weight: 600;
                   "
                 >
-                  useEffect
+                  Immutability (Objects & Arrays)
                 </p>
               </div>
               <div class="card" style="font-size: 0.78em; text-align: center">
@@ -316,7 +316,7 @@
                     font-weight: 600;
                   "
                 >
-                  Custom Hooks
+                  Batching & Functional Updates
                 </p>
               </div>
               <div class="card" style="font-size: 0.78em; text-align: center">
@@ -336,7 +336,7 @@
                     font-weight: 600;
                   "
                 >
-                  useRef
+                  Rules of Hooks
                 </p>
               </div>
               <div class="card" style="font-size: 0.78em; text-align: center">
@@ -356,7 +356,7 @@
                     font-weight: 600;
                   "
                 >
-                  🧪 Exercises & Practice
+                  useEffect & Lifecycle
                 </p>
               </div>
               <div class="card" style="font-size: 0.78em; text-align: center">
@@ -376,7 +376,30 @@
                     font-weight: 600;
                   "
                 >
-                  Q&A / Buffer
+                  Data Fetching
+                </p>
+              </div>
+              <div
+                class="card"
+                style="font-size: 0.78em; text-align: center; opacity: 0.6"
+              >
+                <div
+                  style="
+                    font-size: 1.8em;
+                    margin-bottom: 0.3rem;
+                    color: var(--accent);
+                  "
+                >
+                  ✦
+                </div>
+                <p
+                  style="
+                    margin: 0 0 0.2rem;
+                    color: var(--accent);
+                    font-weight: 600;
+                  "
+                >
+                  Appendix: Custom Hooks & useRef
                 </p>
               </div>
             </div>
@@ -1705,6 +1728,419 @@ function UserProfile() {
             </div>
           </section>
 
+          <!-- Slide 12b: State & useState Hook (imported from Day 1) -->
+          <section>
+            <div style="display: flex; flex-direction: column; gap: 0.9rem">
+              <h3>State &amp; useState Hook</h3>
+
+              <div class="card">
+                <strong class="highlight">🗃️ What is state?</strong>
+                <p
+                  style="
+                    margin: 0.3rem 0 0;
+                    font-size: 0.78em;
+                    color: var(--text-soft);
+                  "
+                >
+                  Data <em>owned</em> by a component that can change over time.
+                </p>
+              </div>
+
+              <div
+                class="fragment"
+                style="
+                  background: var(--accent-soft);
+                  border: 1px solid rgba(97, 218, 251, 0.3);
+                  border-radius: 10px;
+                  padding: 0.5rem 1rem;
+                  text-align: center;
+                "
+              >
+                <code style="font-size: 0.82em; color: var(--accent)"
+                  >const [<span style="color: #ffcc66">value</span>,
+                  <span style="color: #b5f0a5">setValue</span>] = useState(<span
+                    style="color: #c8d2de"
+                    >initialValue</span
+                  >)</code
+                >
+              </div>
+
+              <div
+                class="fragment"
+                style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr 1fr;
+                  gap: 0.7rem;
+                  font-size: 0.72em;
+                "
+              >
+                <div class="card" style="text-align: center">
+                  <span style="color: #ffcc66; font-weight: 700">value</span>
+                  <p style="margin: 0.3rem 0 0; color: var(--text-soft)">
+                    Current state value
+                  </p>
+                </div>
+                <div class="card" style="text-align: center">
+                  <span style="color: #b5f0a5; font-weight: 700">setValue</span>
+                  <p style="margin: 0.3rem 0 0; color: var(--text-soft)">
+                    Setter — triggers re-render
+                  </p>
+                </div>
+                <div class="card" style="text-align: center">
+                  <span style="color: #c8d2de; font-weight: 700"
+                    >initialValue</span
+                  >
+                  <p style="margin: 0.3rem 0 0; color: var(--text-soft)">
+                    Used on first render only
+                  </p>
+                </div>
+              </div>
+
+              <div class="fragment card">
+                <strong class="highlight">🔄 Re-renders on change</strong>
+                <p
+                  style="
+                    margin: 0.3rem 0 0;
+                    font-size: 0.78em;
+                    color: var(--text-soft);
+                  "
+                >
+                  Calling the setter tells React to re-render with the new
+                  value.
+                </p>
+              </div>
+            </div>
+            <aside class="notes">
+              State is the BIG concept of the day. Props = data from outside,
+              State = data owned internally. When state changes, React
+              re-renders the component automatically. useState returns a tuple:
+              [currentValue, setterFunction]. The initial value is only used on
+              the very first render.
+            </aside>
+          </section>
+
+          <!-- Slide 12c: useState in Action - Step 1 (imported from Day 1) -->
+          <section data-auto-animate>
+            <div style="display: flex; flex-direction: column; gap: 0.7rem">
+              <h2 data-id="s16-title" style="margin: 0; font-weight: 800">
+                useState in Action
+              </h2>
+              <div style="display: flex; gap: 1.4rem; align-items: flex-start">
+                <pre
+                  data-id="s16-code"
+                  style="margin: 0; flex: 1.4"
+                ><code class="tsx">
+// ProductCard.tsx
+import { useState } from 'react';
+
+function ProductCard() {
+  const [count, setCount] = useState(0);
+
+  function handleAddToCart() {
+    setCount(count + 1);
+  }
+
+  return (
+    &lt;button onClick={handleAddToCart}&gt;
+      Add to Cart ({count})
+    &lt;/button&gt;
+  );
+}
+
+export default ProductCard;
+                </code></pre>
+                <div
+                  style="
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.6rem;
+                    justify-content: center;
+                    font-size: 0.86em;
+                  "
+                >
+                  <p style="margin: 0">
+                    🏁 <strong class="highlight">Initial Render</strong>
+                  </p>
+                  <p style="margin: 0; color: var(--text-soft)">
+                    <code>useState(0)</code> returns <code>[0, setCount]</code>.
+                  </p>
+                  <p style="margin: 0; color: var(--text-soft)">
+                    UI: <em style="color: #fff">"Add to Cart (0)"</em>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Walk through the ProductCard step by step. useState(0) sets the
+              initial count to 0. The button's onClick calls handleAddToCart
+              which fires setCount with count + 1.
+            </aside>
+          </section>
+
+          <!-- Slide 12d: useState in Action - Step 2 -->
+          <section data-auto-animate>
+            <div style="display: flex; flex-direction: column; gap: 0.7rem">
+              <h2 data-id="s16-title" style="margin: 0; font-weight: 800">
+                useState in Action
+              </h2>
+              <div style="display: flex; gap: 1.4rem; align-items: flex-start">
+                <pre
+                  data-id="s16-code"
+                  style="margin: 0; flex: 1.4"
+                ><code class="tsx">
+// ProductCard.tsx
+import { useState } from 'react';
+
+function ProductCard() {
+  const [count, setCount] = useState(0);
+
+  function handleAddToCart() {
+    setCount(count + 1);
+  }
+
+  return (
+    &lt;button onClick={handleAddToCart}&gt;
+      Add to Cart ({count})
+    &lt;/button&gt;
+  );
+}
+
+export default ProductCard;
+                </code></pre>
+                <div
+                  style="
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.6rem;
+                    justify-content: center;
+                    font-size: 0.86em;
+                  "
+                >
+                  <p style="margin: 0">
+                    🖱️ <strong style="color: #f59e0b">Button Clicked</strong>
+                  </p>
+                  <p style="margin: 0; color: var(--text-soft)">
+                    <code>handleAddToCart()</code> →
+                    <code>setCount(count + 1)</code> fires.
+                  </p>
+                  <p style="margin: 0; color: var(--text-soft)">
+                    React queues
+                    <strong style="color: #fff">0 → 1</strong> &amp; re-renders.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              When the button is clicked, setCount is called with count + 1.
+              React doesn't update immediately — it queues the update and
+              schedules a re-render.
+            </aside>
+          </section>
+
+          <!-- Slide 12e: useState in Action - Step 3 -->
+          <section data-auto-animate>
+            <div style="display: flex; flex-direction: column; gap: 0.7rem">
+              <h2 data-id="s16-title" style="margin: 0; font-weight: 800">
+                useState in Action
+              </h2>
+              <div style="display: flex; gap: 1.4rem; align-items: flex-start">
+                <pre
+                  data-id="s16-code"
+                  style="margin: 0; flex: 1.4"
+                ><code class="tsx">
+// ProductCard.tsx
+import { useState } from 'react';
+
+function ProductCard() {
+  const [count, setCount] = useState(0);
+
+  function handleAddToCart() {
+    setCount(count + 1);
+  }
+
+  return (
+    &lt;button onClick={handleAddToCart}&gt;
+      Add to Cart ({count})
+    &lt;/button&gt;
+  );
+}
+
+export default ProductCard;
+                </code></pre>
+                <div
+                  style="
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.6rem;
+                    justify-content: center;
+                    font-size: 0.86em;
+                  "
+                >
+                  <p style="margin: 0">
+                    🔄 <strong style="color: #4ade80">Re-render</strong>
+                  </p>
+                  <p style="margin: 0; color: var(--text-soft)">
+                    <code>count</code> is now
+                    <strong style="color: #fff">1</strong>.
+                  </p>
+                  <p style="margin: 0; color: var(--text-soft)">
+                    UI: <em style="color: #4ade80">"Add to Cart (1)"</em> ✓
+                  </p>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              On re-render, React calls ProductCard() again. This time useState
+              returns [1, setCount]. The button text updates. The component
+              function runs again from top to bottom on every re-render.
+            </aside>
+          </section>
+
+          <!-- Slide 12f: State with Objects — Immutability (imported from Day 1) -->
+          <section>
+            <div style="display: flex; flex-direction: column; gap: 0.8rem">
+              <h3>State with Objects — Immutability</h3>
+              <div class="two-col" style="align-items: flex-start; gap: 1.4rem">
+                <div style="display: flex; flex-direction: column; gap: 0.6rem">
+                  <pre style="margin: 0"><code class="ts" data-line-numbers>
+const [user, setUser] = useState({ name: 'Dan', age: 30 });
+
+// ✅ spread — creates a new object
+setUser(prev =&gt; ({ ...prev, age: 31 }));
+
+// ❌ mutate — React won't re-render
+user.age = 31;
+                  </code></pre>
+                </div>
+                <div class="card" style="font-size: 0.82em">
+                  <strong class="highlight">Why spread?</strong>
+                  <ul style="margin: 0.5rem 0 0; color: var(--text-soft)">
+                    <li>React uses <code>===</code> to detect changes</li>
+                    <li>Mutating the same object keeps the same reference</li>
+                    <li>
+                      Spread creates a
+                      <strong style="color: #fff">new object</strong> — React
+                      sees the change
+                    </li>
+                    <li>
+                      Only the updated property changes; the rest is copied
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <p class="small-text">
+                Never mutate state directly — always return a
+                <span class="highlight">new reference</span> so React detects
+                the change.
+              </p>
+            </div>
+            <aside class="notes">
+              This is the #1 state bug beginners hit. React uses reference
+              equality (===) to detect changes. Spread creates a shallow copy —
+              that's a new reference.
+            </aside>
+          </section>
+
+          <!-- Slide 12g: State with Arrays — Immutability (imported from Day 1) -->
+          <section>
+            <div style="display: flex; flex-direction: column; gap: 0.8rem">
+              <h3>State with Arrays — Immutability</h3>
+              <div class="two-col" style="align-items: flex-start; gap: 1.4rem">
+                <div style="display: flex; flex-direction: column; gap: 0.6rem">
+                  <pre style="margin: 0"><code class="ts" data-line-numbers>
+const [items, setItems] = useState(['a', 'b', 'c']);
+
+// ✅ add
+setItems(prev =&gt; [...prev, 'd']);
+
+// ✅ remove
+setItems(prev =&gt; prev.filter(i =&gt; i !== 'b'));
+
+// ❌ wrong — mutates in place!
+items.push('d');
+setItems(items);
+                  </code></pre>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.7rem">
+                  <div
+                    class="card"
+                    style="
+                      font-size: 0.78em;
+                      border: 1.5px solid rgba(34, 197, 94, 0.5);
+                    "
+                  >
+                    <strong style="color: #4ade80">✅ Immutable methods</strong>
+                    <p style="margin: 0.3rem 0 0; color: var(--text-soft)">
+                      <code>map</code>, <code>filter</code>,
+                      <code>spread</code>, <code>slice</code>,
+                      <code>concat</code>
+                    </p>
+                  </div>
+                  <div
+                    class="card"
+                    style="
+                      font-size: 0.78em;
+                      border: 1.5px solid rgba(239, 68, 68, 0.5);
+                    "
+                  >
+                    <strong style="color: #f87171">❌ Mutating methods</strong>
+                    <p style="margin: 0.3rem 0 0; color: var(--text-soft)">
+                      <code>push</code>, <code>pop</code>, <code>splice</code>,
+                      <code>sort</code> (in-place), <code>reverse</code>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p class="small-text">
+                Same rule as objects — always return a
+                <span class="highlight">new array</span> so React sees the
+                update.
+              </p>
+            </div>
+            <aside class="notes">
+              For arrays: use map/filter/spread, never push/splice directly.
+              Immutable methods return a new array; mutating methods modify in
+              place.
+            </aside>
+          </section>
+
+          <!-- Slide 12h: Functional Updates & Batching (imported from Day 1) -->
+          <section>
+            <div style="display: flex; flex-direction: column; gap: 0.8rem">
+              <h3>Functional Updates &amp; Batching</h3>
+              <div class="two-col" style="align-items: center; gap: 1.4rem">
+                <div style="display: flex; flex-direction: column; gap: 0.6rem">
+                  <pre style="margin: 0"><code class="ts" data-line-numbers>
+// ❌ Direct — can read stale value
+setCount(count + 1);
+setCount(count + 1); // still uses stale count
+
+// ✅ Functional — always reads latest
+setCount(prev =&gt; prev + 1);
+setCount(prev =&gt; prev + 1); // reads the queued value
+                  </code></pre>
+                  <p class="small-text">
+                    React <strong class="highlight">batches</strong> multiple
+                    updates in the same event handler. State does not change
+                    immediately — it changes on the next render. Use the
+                    functional form whenever the next value depends on the
+                    previous one.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              If you call setCount(count + 1) twice in the same handler, you get
+              count+1 both times (not count+2) because count is a stale closure.
+              The functional form receives the actual queued value. This is also
+              why "state doesn't change immediately" — React batches and applies
+              updates before the next render.
+            </aside>
+          </section>
+
           <!-- Slide 13a: Rules of Hooks -->
           <section>
             <h3>Rules of Hooks</h3>
@@ -1854,18 +2290,42 @@ if (loggedIn) { ... }</code></pre>
                   background: var(--accent-soft);
                 "
               >
-                <p style="margin: 0 0 1rem; color: var(--accent); font-weight: bold;">
+                <p
+                  style="
+                    margin: 0 0 1rem;
+                    color: var(--accent);
+                    font-weight: bold;
+                  "
+                >
                   Official Documentation:
                 </p>
-                <p style="margin: 0 0 1.5rem;">
-                  🔗 <a href="https://react.dev/reference/react/useEffect" target="_blank" style="color: #61dafb; text-decoration: underline;">React Reference - useEffect</a>
+                <p style="margin: 0 0 1.5rem">
+                  🔗
+                  <a
+                    href="https://react.dev/reference/react/useEffect"
+                    target="_blank"
+                    style="color: #61dafb; text-decoration: underline"
+                    >React Reference - useEffect</a
+                  >
                 </p>
 
-                <p style="margin: 0 0 1rem; color: var(--accent); font-weight: bold;">
+                <p
+                  style="
+                    margin: 0 0 1rem;
+                    color: var(--accent);
+                    font-weight: bold;
+                  "
+                >
                   Recommended Video:
                 </p>
-                <p style="margin: 0;">
-                  🎥 <a href="https://www.youtube.com/watch?v=JjUKtu0Bj90" target="_blank" style="color: #61dafb; text-decoration: underline;">Goodbye useEffect - clean up your code</a>
+                <p style="margin: 0">
+                  🎥
+                  <a
+                    href="https://www.youtube.com/watch?v=JjUKtu0Bj90"
+                    target="_blank"
+                    style="color: #61dafb; text-decoration: underline"
+                    >Goodbye useEffect - clean up your code</a
+                  >
                 </p>
               </div>
             </div>
@@ -2185,6 +2645,20 @@ export default function Clock() {
             </div>
           </section>
 
+          <!-- Slide 20: Exercise - Fetch and Render -->
+          <section>
+            <h3>🧪 Exercise 2 — Fetch and Render a List</h3>
+            <p class="small-text">→ live coding / hands-on</p>
+
+            <div class="card" style="margin-top: 1rem">
+              <p style="font-size: 0.7em">⏱️ Time: 1 hour</p>
+            </div>
+          </section>
+
+          <!-- ============================================================ -->
+          <!-- APPENDIX: Topics not in the Day 2 syllabus (Custom Hooks, useRef) -->
+          <!-- ============================================================ -->
+
           <!-- Slide 16a: What is a Custom Hook? -->
           <section>
             <h3>What is a Custom Hook?</h3>
@@ -2407,18 +2881,42 @@ export function useFetch(url) {
                   background: var(--accent-soft);
                 "
               >
-                <p style="margin: 0 0 1rem; color: var(--accent); font-weight: bold;">
+                <p
+                  style="
+                    margin: 0 0 1rem;
+                    color: var(--accent);
+                    font-weight: bold;
+                  "
+                >
                   Official Documentation:
                 </p>
-                <p style="margin: 0 0 1.5rem;">
-                  🔗 <a href="https://react.dev/reference/react/useRef" target="_blank" style="color: #61dafb; text-decoration: underline;">React Reference - useRef</a>
+                <p style="margin: 0 0 1.5rem">
+                  🔗
+                  <a
+                    href="https://react.dev/reference/react/useRef"
+                    target="_blank"
+                    style="color: #61dafb; text-decoration: underline"
+                    >React Reference - useRef</a
+                  >
                 </p>
 
-                <p style="margin: 0 0 1rem; color: var(--accent); font-weight: bold;">
+                <p
+                  style="
+                    margin: 0 0 1rem;
+                    color: var(--accent);
+                    font-weight: bold;
+                  "
+                >
                   Recommended Video:
                 </p>
-                <p style="margin: 0;">
-                  🎥 <a href="https://www.youtube.com/watch?v=ZC3KBxzobd4" target="_blank" style="color: #61dafb; text-decoration: underline;">useRef Hook - React Course</a>
+                <p style="margin: 0">
+                  🎥
+                  <a
+                    href="https://www.youtube.com/watch?v=ZC3KBxzobd4"
+                    target="_blank"
+                    style="color: #61dafb; text-decoration: underline"
+                    >useRef Hook - React Course</a
+                  >
                 </p>
               </div>
             </div>
@@ -2645,16 +3143,6 @@ function ClickCounter() {
                   💡 Route: /useref-counter
                 </p>
               </div>
-            </div>
-          </section>
-
-          <!-- Slide 20: Exercise - Fetch and Render -->
-          <section>
-            <h3>🧪 Exercise 2 — Fetch and Render a List</h3>
-            <p class="small-text">→ live coding / hands-on</p>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.7em">⏱️ Time: 1 hour</p>
             </div>
           </section>
         </section>
