@@ -267,6 +267,16 @@
         margin-top: 1rem;
       }
     }
+
+    /* Preserve original Day 2 sizing on slides carried over from Day 2. */
+    .reveal .carry-over-slide code {
+      font-size: 0.7em;
+    }
+
+    .reveal .carry-over-slide pre {
+      width: 100%;
+      max-width: none;
+    }
   </style>
 </head>
 
@@ -305,6 +315,501 @@
             nested layouts.
           </aside>
         </section>
+
+        <!-- ============================================================ -->
+        <!-- CARRY-OVER FROM DAY 2: Custom Hooks & useRef -->
+        <!-- ============================================================ -->
+
+        <!-- Slide 16a: What is a Custom Hook? -->
+        <section class="carry-over-slide">
+          <h3>What is a Custom Hook?</h3>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
+            <div
+              class="card"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 2rem;
+                background: var(--accent-soft);
+              "
+            >
+              <ul style="margin: 0; padding-left: 1.5rem; line-height: 2.2">
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  A JavaScript function that starts with <code>use</code> and
+                  reuses component logic.
+                </li>
+                <li style="font-size: 1.8em">
+                  Can use other hooks inside it (<code>useState</code>,
+                  <code>useEffect</code>, etc.).
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 16b: Why Use Custom Hooks? -->
+        <section class="carry-over-slide">
+          <h3>Why Use Custom Hooks?</h3>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
+            <div
+              class="card"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 2rem;
+                background: var(--accent-soft);
+              "
+            >
+              <ul style="margin: 0; padding-left: 1.5rem; line-height: 2.2">
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  Avoid repeating code.
+                </li>
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  Separate logic from UI.
+                </li>
+                <li style="font-size: 1.8em">
+                  Makes code cleaner and easier to test.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 16c: What Can Custom Hooks Return? -->
+        <section class="carry-over-slide">
+          <h3>What Can Custom Hooks Return?</h3>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
+            <div
+              class="card"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 2rem;
+                background: var(--accent-soft);
+              "
+            >
+              <ul style="margin: 0; padding-left: 1.5rem; line-height: 2.2">
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  Can return <strong>any kind of data</strong>: objects,
+                  arrays, primitives, functions
+                </li>
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  Can return <strong>nothing</strong> (just perform side
+                  effects)
+                </li>
+                <li style="color: #ef4444; font-size: 1.8em">
+                  ❌ <strong>Cannot return JSX</strong> - hooks are logic, not
+                  UI
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 16d: Custom Hooks as Services -->
+        <section class="carry-over-slide">
+          <h3>Custom Hooks as Services</h3>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
+            <div
+              class="card"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 2rem;
+                background: var(--accent-soft);
+              "
+            >
+              <ul style="margin: 0; padding-left: 1.5rem; line-height: 2.2">
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  Think of custom hooks as <strong>services</strong>
+                </li>
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  They provide reusable functionality to components
+                </li>
+                <li style="font-size: 1.8em">
+                  Similar to services in other frameworks (Angular, etc.)
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 16e: Custom Hooks and Component Lifecycle -->
+        <section class="carry-over-slide">
+          <h3>Custom Hooks & Component Lifecycle</h3>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
+            <div
+              class="card"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 2rem;
+                background: var(--accent-soft);
+              "
+            >
+              <ul style="margin: 0; padding-left: 1.5rem; line-height: 2.2">
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  Custom hooks are
+                  <strong>part of the component's lifecycle</strong>
+                </li>
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  They execute when the component renders
+                </li>
+                <li style="font-size: 1.8em">
+                  This is just a
+                  <strong>technical/visual separation</strong> of concerns
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 16f: Custom Hooks and Separation of Concerns -->
+        <section class="carry-over-slide">
+          <h3>Custom Hooks & Design Patterns</h3>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
+            <div
+              class="card"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 2rem;
+                background: var(--accent-soft);
+              "
+            >
+              <ul style="margin: 0; padding-left: 1.5rem; line-height: 2.2">
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  Similar to <strong>MVC pattern</strong>: separate business
+                  logic from presentation
+                </li>
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  <strong>Custom Hook</strong> = Model/Controller (logic)
+                </li>
+                <li style="font-size: 1.8em">
+                  <strong>Component</strong> = View (UI/JSX)
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 16g: Custom Hooks Example -->
+        <section class="carry-over-slide">
+          <h3>Custom Hooks - Example</h3>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
+            <div
+              class="card"
+              style="padding: 2rem; background: var(--accent-soft)"
+            >
+              <p style="margin: 0; line-height: 1.8; font-size: 1.8em">
+                <code>useFetch</code> encapsulates data fetching logic, so any
+                component can just call
+                <code>const { data, loading } = useFetch(url)</code>.
+              </p>
+            </div>
+          </div>
+          <p class="small-text" style="margin-top: 1.5rem">
+            💡 Show example: component without custom hook (repeated fetch
+            code) vs component with custom hook
+          </p>
+        </section>
+
+        <!-- Slide 17: Example - useFetch -->
+        <section class="carry-over-slide">
+          <h3>Example: useFetch Custom Hook</h3>
+          <div style="margin-top: 1rem">
+            <pre><code class="language-jsx">import { useState, useEffect } from "react";
+
+export function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(url)
+      .then((res) => res.json())
+      .then((json) => setData(json))
+      .finally(() => setLoading(false));
+  }, [url]);
+
+  return { data, loading };
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- Slide 17b: useRef Resources -->
+        <section class="carry-over-slide">
+          <h3>useRef Resources</h3>
+          <div style="text-align: left; font-size: 0.85em; margin-top: 2rem">
+            <div
+              class="card"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 1.5rem;
+                background: var(--accent-soft);
+              "
+            >
+              <p
+                style="
+                  margin: 0 0 1rem;
+                  color: var(--accent);
+                  font-weight: bold;
+                "
+              >
+                Official Documentation:
+              </p>
+              <p style="margin: 0 0 1.5rem">
+                🔗
+                <a
+                  href="https://react.dev/reference/react/useRef"
+                  target="_blank"
+                  style="color: #61dafb; text-decoration: underline"
+                  >React Reference - useRef</a
+                >
+              </p>
+
+              <p
+                style="
+                  margin: 0 0 1rem;
+                  color: var(--accent);
+                  font-weight: bold;
+                "
+              >
+                Recommended Video:
+              </p>
+              <p style="margin: 0">
+                🎥
+                <a
+                  href="https://www.youtube.com/watch?v=ZC3KBxzobd4"
+                  target="_blank"
+                  style="color: #61dafb; text-decoration: underline"
+                  >useRef Hook - React Course</a
+                >
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 18a: What is useRef? -->
+        <section class="carry-over-slide">
+          <h3>What is useRef?</h3>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
+            <div
+              class="card"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 2rem;
+                background: var(--accent-soft);
+              "
+            >
+              <ul style="margin: 0; padding-left: 1.5rem; line-height: 2.2">
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  A hook that holds a mutable object whose
+                  <code>.current</code> property persists across renders.
+                </li>
+                <li style="font-size: 1.8em">
+                  Can store DOM elements or mutable values.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 18b: useRef Use Cases -->
+        <section class="carry-over-slide">
+          <h3>useRef - Use Cases</h3>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
+            <div
+              class="card"
+              style="
+                margin-bottom: 1.5rem;
+                padding: 2rem;
+                background: var(--accent-soft);
+              "
+            >
+              <ul style="margin: 0; padding-left: 1.5rem; line-height: 2.2">
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  <strong>DOM access:</strong> Focus input, scroll to element,
+                  measure element size.
+                </li>
+                <li style="font-size: 1.8em">
+                  <strong>Mutable storage:</strong> Store previous state or
+                  timer ID without triggering re-renders.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 18c: useRef Important Rules -->
+        <section class="carry-over-slide">
+          <h3>useRef - Important Rules</h3>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
+            <div
+              class="card"
+              style="padding: 2rem; background: var(--accent-soft)"
+            >
+              <ul style="margin: 0; padding-left: 1.5rem; line-height: 2.2">
+                <li style="margin-bottom: 1.2rem; font-size: 1.8em">
+                  Updating <code>.current</code> does not trigger a render.
+                </li>
+                <li style="font-size: 1.8em">
+                  Useful for performance-sensitive operations.
+                </li>
+              </ul>
+            </div>
+          </div>
+          <p class="small-text" style="margin-top: 1.5rem">
+            💡 Show visual: component renders, useRef stores a DOM element →
+            manipulate it without re-rendering
+          </p>
+        </section>
+
+        <!-- Slide 19: Example - FocusInput -->
+        <section class="carry-over-slide">
+          <h3>Example: Focus Input with useRef</h3>
+          <div class="two-col" style="margin-top: 1rem">
+            <div>
+              <div
+                class="small-text"
+                style="margin-bottom: 0.5rem; color: var(--accent)"
+              >
+                JavaScript/JSX
+              </div>
+              <pre><code class="language-jsx">import { useRef } from "react";
+
+function FocusInput() {
+  const inputRef = useRef();
+
+  const handleFocus = () => {
+    inputRef.current.focus();
+  };
+
+  return (
+    &lt;div className="focus-container"&gt;
+      &lt;input
+        ref={inputRef}
+        type="text"
+        placeholder="Type here..."
+      /&gt;
+      &lt;button onClick={handleFocus}&gt;
+        Focus Input
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+            </div>
+            <div>
+              <div
+                class="small-text"
+                style="margin-bottom: 0.5rem; color: var(--accent)"
+              >
+                CSS
+              </div>
+              <pre><code class="language-css">.focus-container {
+  display: flex;
+  gap: 0.5rem;
+
+  input {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    background: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+  }
+}</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slide 19b: Example - useRef for Constant Reference -->
+        <section class="carry-over-slide">
+          <h3>Example: useRef - Constant Reference</h3>
+          <div class="two-col" style="margin-top: 1rem">
+            <div>
+              <div
+                class="small-text"
+                style="margin-bottom: 0.5rem; color: var(--accent)"
+              >
+                JavaScript/JSX
+              </div>
+              <pre><code class="language-jsx">import { useState, useRef } from "react";
+
+function ClickCounter() {
+  const [stateCount, setStateCount] = useState(0);
+  const [displayRef, setDisplayRef] = useState(0);
+  const refCount = useRef(0);
+
+  const handleStateClick = () => {
+    setStateCount(stateCount + 1); // ✅ Triggers re-render
+  };
+
+  const handleRefClick = () => {
+    refCount.current++; // ❌ No re-render
+    console.log("Ref count:", refCount.current);
+  };
+
+  const showRefValue = () => {
+    setDisplayRef(refCount.current); // Force update
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;State Count: {stateCount}&lt;/p&gt;
+      &lt;p&gt;Ref Count (Display): {displayRef}&lt;/p&gt;
+      &lt;button onClick={handleStateClick}&gt;
+        State +1 (Re-renders)
+      &lt;/button&gt;
+      &lt;button onClick={handleRefClick}&gt;
+        Ref +1 (No Re-render)
+      &lt;/button&gt;
+      &lt;button onClick={showRefValue}&gt;
+        Show Ref Value
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+            </div>
+            <div>
+              <div
+                class="small-text"
+                style="margin-bottom: 0.5rem; color: var(--accent)"
+              >
+                Key Points
+              </div>
+              <div
+                class="card"
+                style="
+                  padding: 0.8rem;
+                  text-align: left;
+                  font-size: 0.7em;
+                  background: var(--accent-soft);
+                "
+              >
+                <ul style="margin: 0; padding-left: 1.2rem; line-height: 1.6">
+                  <li style="margin-bottom: 0.6rem">
+                    <code>useState</code> triggers re-render when updated
+                  </li>
+                  <li style="margin-bottom: 0.6rem">
+                    <code>useRef</code> persists value but doesn't trigger
+                    re-render
+                  </li>
+                  <li style="margin-bottom: 0.6rem">
+                    Perfect for tracking values like click counts, timers,
+                    previous values
+                  </li>
+                  <li>Check console to see ref value updates</li>
+                </ul>
+              </div>
+              <p class="small-text" style="margin-top: 0.8rem">
+                💡 Route: /useref-counter
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- END CARRY-OVER — Day 3 core content follows -->
+        <!-- ============================================================ -->
 
         <section>
           <h2 class="slide-title">React Router: Introduction</h2>
