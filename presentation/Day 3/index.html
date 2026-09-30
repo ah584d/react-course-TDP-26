@@ -267,6 +267,16 @@
         margin-top: 1rem;
       }
     }
+
+    /* Preserve original Day 2 sizing on slides carried over from Day 2. */
+    .reveal .carry-over-slide code {
+      font-size: 0.7em;
+    }
+
+    .reveal .carry-over-slide pre {
+      width: 100%;
+      max-width: none;
+    }
   </style>
 </head>
 
@@ -311,7 +321,7 @@
         <!-- ============================================================ -->
 
         <!-- Slide 16a: What is a Custom Hook? -->
-        <section>
+        <section class="carry-over-slide">
           <h3>What is a Custom Hook?</h3>
           <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
             <div
@@ -337,7 +347,7 @@
         </section>
 
         <!-- Slide 16b: Why Use Custom Hooks? -->
-        <section>
+        <section class="carry-over-slide">
           <h3>Why Use Custom Hooks?</h3>
           <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
             <div
@@ -364,7 +374,7 @@
         </section>
 
         <!-- Slide 16c: What Can Custom Hooks Return? -->
-        <section>
+        <section class="carry-over-slide">
           <h3>What Can Custom Hooks Return?</h3>
           <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
             <div
@@ -394,7 +404,7 @@
         </section>
 
         <!-- Slide 16d: Custom Hooks as Services -->
-        <section>
+        <section class="carry-over-slide">
           <h3>Custom Hooks as Services</h3>
           <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
             <div
@@ -421,7 +431,7 @@
         </section>
 
         <!-- Slide 16e: Custom Hooks and Component Lifecycle -->
-        <section>
+        <section class="carry-over-slide">
           <h3>Custom Hooks & Component Lifecycle</h3>
           <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
             <div
@@ -450,7 +460,7 @@
         </section>
 
         <!-- Slide 16f: Custom Hooks and Separation of Concerns -->
-        <section>
+        <section class="carry-over-slide">
           <h3>Custom Hooks & Design Patterns</h3>
           <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
             <div
@@ -478,7 +488,7 @@
         </section>
 
         <!-- Slide 16g: Custom Hooks Example -->
-        <section>
+        <section class="carry-over-slide">
           <h3>Custom Hooks - Example</h3>
           <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
             <div
@@ -499,7 +509,7 @@
         </section>
 
         <!-- Slide 17: Example - useFetch -->
-        <section>
+        <section class="carry-over-slide">
           <h3>Example: useFetch Custom Hook</h3>
           <div style="margin-top: 1rem">
             <pre><code class="language-jsx">import { useState, useEffect } from "react";
@@ -521,7 +531,7 @@ export function useFetch(url) {
         </section>
 
         <!-- Slide 17b: useRef Resources -->
-        <section>
+        <section class="carry-over-slide">
           <h3>useRef Resources</h3>
           <div style="text-align: left; font-size: 0.85em; margin-top: 2rem">
             <div
@@ -574,7 +584,7 @@ export function useFetch(url) {
         </section>
 
         <!-- Slide 18a: What is useRef? -->
-        <section>
+        <section class="carry-over-slide">
           <h3>What is useRef?</h3>
           <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
             <div
@@ -599,7 +609,7 @@ export function useFetch(url) {
         </section>
 
         <!-- Slide 18b: useRef Use Cases -->
-        <section>
+        <section class="carry-over-slide">
           <h3>useRef - Use Cases</h3>
           <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
             <div
@@ -625,7 +635,7 @@ export function useFetch(url) {
         </section>
 
         <!-- Slide 18c: useRef Important Rules -->
-        <section>
+        <section class="carry-over-slide">
           <h3>useRef - Important Rules</h3>
           <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
             <div
@@ -649,7 +659,7 @@ export function useFetch(url) {
         </section>
 
         <!-- Slide 19: Example - FocusInput -->
-        <section>
+        <section class="carry-over-slide">
           <h3>Example: Focus Input with useRef</h3>
           <div class="two-col" style="margin-top: 1rem">
             <div>
@@ -712,7 +722,7 @@ function FocusInput() {
         </section>
 
         <!-- Slide 19b: Example - useRef for Constant Reference -->
-        <section>
+        <section class="carry-over-slide">
           <h3>Example: useRef - Constant Reference</h3>
           <div class="two-col" style="margin-top: 1rem">
             <div>
