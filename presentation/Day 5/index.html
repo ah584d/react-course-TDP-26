@@ -1,0 +1,1081 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Day 5 - Performance Optimization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
+    
+    <style>
+        :root {
+            --accent: #61dafb;
+            --accent-soft: rgba(97, 218, 251, 0.14);
+            --text-soft: #c8d2de;
+            --surface: rgba(255, 255, 255, 0.05);
+            --surface-border: rgba(255, 255, 255, 0.14);
+        }
+        .reveal {
+            background: radial-gradient(circle at 10% 15%, #1f2f47 0%, #10131a 45%, #080a0f 100%);
+        }
+        .reveal h1, .reveal h2, .reveal h3 { text-transform: none; letter-spacing: 0.01em; }
+        .reveal h1 { text-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+        .reveal ul { font-size: 0.86em; }
+        .reveal code { font-size: 0.9em; }
+        .reveal pre {
+            border-radius: 12px;
+            border: 1px solid var(--surface-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+        }
+        .reveal table {
+            font-size: 0.75em;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--surface-border);
+        }
+        .reveal table th,
+        .reveal table td {
+            padding: 0.5rem 0.7rem;
+            border-color: rgba(255,255,255,0.12);
+        }
+        .small-text { font-size: 0.7em; color: var(--text-soft); }
+        .highlight { color: var(--accent); }
+        .two-col { display: flex; gap: 1.5rem; align-items: flex-start; }
+        .two-col > div { flex: 1; }
+        .card {
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            background: var(--surface);
+            backdrop-filter: blur(4px);
+        }
+        .step-card { font-size: 0.82em; line-height: 1.4; }
+        .step-card ol { margin: 0; padding-left: 1.2rem; }
+        .code-card pre { margin: 0; font-size: 0.7em; }
+        .hero {
+            display: grid;
+            grid-template-columns: 1.25fr 1fr;
+            gap: 1.6rem;
+            align-items: center;
+            text-align: left;
+        }
+        .hero p { color: var(--text-soft); }
+        .hero-visual {
+            padding: 1rem;
+            border: 1px solid var(--surface-border);
+            border-radius: 16px;
+            background: linear-gradient(160deg, rgba(97,218,251,0.14), rgba(30,41,59,0.35));
+            text-align: center;
+        }
+        .hero-visual img {
+            width: min(200px, 100%);
+            height: auto;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.35));
+        }
+        .logo-row {
+            margin-top: 0.8rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .logo-row img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            opacity: 0.92;
+        }
+        .image-frame {
+            border: 1px solid var(--surface-border);
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.55);
+            padding: 0.8rem;
+            text-align: center;
+        }
+        .concept-img {
+            width: min(240px, 100%);
+            height: auto;
+        }
+        .diagram-svg {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            background: rgba(10, 16, 26, 0.55);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 0.5em;
+            border: 1px solid rgba(97,218,251,0.45);
+            margin-top: 0.5rem;
+        }
+        .roadmap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+        .roadmap span {
+            font-size: 0.45em;
+            border: 1px solid rgba(97,218,251,0.4);
+            background: rgba(97,218,251,0.1);
+            color: #d5f6ff;
+            border-radius: 999px;
+            padding: 0.23rem 0.55rem;
+        }
+        .check-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            font-size: 0.78em;
+            line-height: 1.65;
+        }
+        .check-list li::before {
+            content: "✓ ";
+            color: var(--accent);
+        }
+        .adv-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+            margin-top: 0.7rem;
+            text-align: left;
+            font-size: 0.58em;
+        }
+        .adv-item {
+            border: 1px solid var(--surface-border);
+            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.45);
+            padding: 0.55rem;
+        }
+        .flow-caption {
+            margin-top: 0.45rem;
+            font-size: 0.5em;
+            color: var(--text-soft);
+        }
+        .split-code {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.1rem;
+            text-align: left;
+            margin-top: 0.75rem;
+        }
+        .label {
+            font-size: 0.5em;
+            color: #8fb5d8;
+            margin-bottom: 0.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .mini {
+            font-size: 0.62em;
+            line-height: 1.5;
+            color: var(--text-soft);
+            margin-top: 0.5rem;
+        }
+        @media (max-width: 900px) {
+            .hero,
+            .two-col {
+                grid-template-columns: 1fr;
+                display: block;
+            }
+            .split-code,
+            .adv-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-visual,
+            .two-col > div + div {
+                margin-top: 1rem;
+            }
+        }
+        .demo-slide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+        .demo-slide .demo-icon { font-size: 3.5em; line-height: 1; }
+        .demo-slide h2 {
+            font-size: 2.2em;
+            margin: 0;
+            color: var(--accent);
+            text-shadow: 0 0 32px rgba(97,218,251,0.5);
+        }
+        .demo-slide p { color: var(--text-soft); font-size: 0.95em; margin: 0; }
+        .demo-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+            padding: 0.5rem 1.1rem;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 0.55em;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid rgba(97, 218, 251, 0.4);
+        }
+        .demo-link:hover { background: rgba(97, 218, 251, 0.24); }
+        .reveal .controls { color: var(--accent) !important; }
+
+        /* Auto-play word reveal (no clicks needed) */
+        .auto-reveal .auto-word { opacity: 0; }
+        .reveal section.present.auto-reveal .auto-word {
+            animation: autoWordIn 0.8s ease forwards;
+        }
+        .reveal section.present.auto-reveal .auto-word:nth-of-type(1) { animation-delay: 0.5s; }
+        .reveal section.present.auto-reveal .auto-word:nth-of-type(2) { animation-delay: 1.8s; }
+        .reveal section.present.auto-reveal .auto-word:nth-of-type(3) { animation-delay: 3.1s; }
+        .reveal section.present.auto-reveal .auto-word:nth-of-type(4) { animation-delay: 4.4s; }
+        @keyframes autoWordIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <section>
+                    <div class="hero">
+                        <div>
+                            <h1>Day 5</h1>
+                            <h3>Performance Optimization</h3>
+                            <p>Memoization, Rendering, the React Compiler &amp; What's New in React 19</p>
+                            <span class="badge">Measure, then optimize</span>
+                            <span class="badge">React 19</span>
+                        </div>
+                        <div class="hero-visual">
+                            <svg class="diagram-svg" viewBox="0 0 520 220" role="img" aria-label="Performance chart illustration">
+                                <rect x="55" y="55" width="60" height="130" rx="8" fill="#334155"/>
+                                <rect x="145" y="90" width="60" height="95" rx="8" fill="#334155"/>
+                                <rect x="235" y="120" width="60" height="65" rx="8" fill="#334155"/>
+                                <rect x="325" y="75" width="60" height="110" rx="8" fill="#334155"/>
+                                <rect x="415" y="105" width="60" height="80" rx="8" fill="#61dafb"/>
+                                <text x="260" y="32" fill="#dbeafe" text-anchor="middle" font-size="16">Fewer unnecessary renders = smoother UI</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        Welcome to Day 5. Today we focus on performance optimization — understanding when and how to prevent unnecessary work in React.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">What Is Memoization?</h2>
+                    <p class="small-text">Same input → return cached result, skip the work.</p>
+                    <pre><code class="js">const cache = {};
+
+function double(n) {
+  if (cache[n]) return cache[n];
+  cache[n] = n * 2;
+  return cache[n];
+}
+
+double(8); // computes → 16
+double(8); // cached  → 16</code></pre>
+                    <aside class="notes">
+                        Start with memoization in general before React. We save a previous result in a cache, and when the same input comes back, we skip the work and reuse the answer.
+                        This is the core idea behind React.memo, useMemo, and useCallback: avoid doing the same work again when nothing important changed.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Why Performance Optimization Matters</h2>
+                    <ul>
+                        <li>Large component trees and frequent re-renders</li>
+                        <li>Expensive calculations or passing functions as props</li>
+                        <li>Slow UI interactions</li>
+                        <li>React is fast, but unnecessary re-renders hurt</li>
+                        <li><strong>Don't optimize until you have a real performance problem</strong></li>
+                    </ul>
+                    <aside class="notes">
+                        Set the stage: React is already fast, but as apps grow, unnecessary renders accumulate. We optimize the bottlenecks, not everything.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">How React Renders</h2>
+                    <h6 class="slide-title">(Quick Refresher)</h6>
+
+                    <ul>
+                        <li>A component re-renders when its state changes</li>
+                        <li>When its props change</li>
+                        <li>When its parent re-renders</li>
+                        <li>By default: parent render triggers child renders</li>
+                    </ul>
+                    <aside class="notes">
+                        Quick refresher on the render cycle. Emphasize that parent re-renders cascade down to all children by default — this is the root cause of most perf issues.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">What Is an Unnecessary Re-render?</h2>
+                    <pre><code class="tsx">
+function App() {
+  const [count, setCount] = useState(0);
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;+&lt;/button&gt;
+      &lt;HeavyComponent title="Products" /&gt;
+    &lt;/&gt;
+  );
+}
+                    </code></pre>
+                    <p class="small-text">HeavyComponent re-renders even though it does not use count. Optimization helps.</p>
+                    <aside class="notes">
+                        Walk through the example: clicking the button changes count, Parent re-renders, and HeavyComponent re-renders for no reason. This is the problem we solve.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Optimization Tools Overview</h2>
+                    <table>
+                        <thead><tr><th>Tool</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td>React.memo</td><td>Prevent unnecessary re-renders</td></tr>
+                            <tr><td>useCallback</td><td>Cache function references</td></tr>
+                            <tr><td>useMemo</td><td>Cache expensive calculations</td></tr>
+                        </tbody>
+                    </table>
+                    <aside class="notes">
+                        Overview of our three main tools. We'll cover each one in depth. They solve different problems but work together.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">What Is React.memo?</h2>
+                    <ul>
+                        <li>Higher-order component</li>
+                        <li>Memoizes a component</li>
+                    </ul>
+                    <pre><code class="tsx">
+const MyComponent = React.memo(Component);
+                    </code></pre>
+                    <p class="highlight" style="font-weight:700; margin-top:0.6rem;">&#10003; Skips re-render if props did not change</p>
+                    <aside class="notes">
+                        React.memo is a higher-order component that wraps your component. It compares previous and next props — if they're the same, it skips re-rendering.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">React.memo Example</h2>
+                    <pre><code class="tsx">
+const HeavyComponent = memo(({ title }: { title: string }) =&gt; {
+  return &lt;h2&gt;{title}&lt;/h2&gt;;
+});
+
+function App() {
+  const [count, setCount] = useState(0);
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;+&lt;/button&gt;
+      &lt;HeavyComponent title="Products" /&gt;
+    &lt;/&gt;
+  );
+}
+                    </code></pre>
+                    <p class="small-text"><code>HeavyComponent</code> no longer re-renders when <code>count</code> changes — <code>title</code> is the same.</p>
+                    <aside class="notes">
+                        memo receives a function component and an optional custom comparison function.
+                        It returns a new component that behaves the same but skips re-rendering when props have not changed.
+                        Think of it as a wrapper — same component inside, with a "skip if same props" guard added on top.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Without vs With React.memo</h2>
+                    <table>
+                        <thead><tr><th>Without</th><th>With</th></tr></thead>
+                        <tbody>
+                            <tr><td>Parent renders → child <strong>always</strong> renders</td><td>Parent renders → child renders <strong>only if props changed</strong></td></tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <p class="small-text" style="margin-top:0.8rem;">Uses <strong>shallow comparison</strong> (===) — primitives by value, objects/arrays by reference.</p>
+                    <aside class="notes">
+                        Key concept: shallow comparison means === on each prop. Primitives are safe. Objects and arrays need stable references — this is where useMemo comes in later.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Shallow Comparison Examples</h2>
+                    <div class="split-code">
+                        <div class="fragment fade-in-then-semi-out">
+                            <div class="label">❌ Child ALWAYS re-renders</div>
+                            <pre><code class="tsx">
+function Parent() {
+ const [count, setCount] = useState(0);
+
+ // new array created every render
+ const items = ["a", "b", "c"];
+ return &lt;Box items={items} /&gt;;
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="fragment fade-in">
+                            <div class="label">✅ Child does NOT re-render</div>
+                            <pre><code class="tsx">
+const items = ["a", "b", "c"];
+
+function Parent() {
+ const [count, setCount] = useState(0);
+
+ // same reference every render
+ return &lt;Box items={items} /&gt;;
+}                    </code></pre>
+                        </div>
+                    </div>
+                    <p class="small-text">Arrays are compared by <strong>reference</strong>, not by content.<br>Every render creates a new reference → memo thinks props changed.</p>
+                    <aside class="notes">
+                        Side-by-side comparison. Left: inline array creates a new reference every render, defeating memo. Right: array defined outside the component keeps the same reference. This is the most common mistake with React.memo.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">When React.memo Helps</h2>
+                    <ul>
+                        <li>Heavy components or long lists</li>
+                        <li>UI components with stable props</li>
+                        <li>Not useful when props change often or component is cheap</li>
+                        <li>Rule: measure first, optimize second</li>
+                    </ul>
+                    <aside class="notes">
+                        Don't wrap everything in memo. It has a cost (storing previous props, running comparison). Only use when the component is expensive or renders frequently with the same props.
+                    </aside>
+                </section>
+
+                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🛠️</span>
+                        <h2>Demo Time</h2>
+                        <p>React.memo in action</p>
+                        <a class="demo-link" href="/?target=day-4/demo/react-memo" target="_blank" rel="noopener">▶ Open demo</a>
+                    </div>
+                    <aside class="notes">
+                        Live demo: wrap a heavy component in React.memo, show the console.log only fires when props actually change.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Why useCallback Exists</h2>
+                    <div class="split-code" style="margin-left: -8%; margin-right: -8%; font-size: 0.78em;">
+                        <div class="fragment fade-in">
+                            <pre><code class="tsx">
+function Dashboard({ products }) {
+  const [query, setQuery] = useState("");
+
+  const handleDelete = (id: number) =>
+    console.log("delete", id);
+
+  return (
+    &lt;&gt;
+      &lt;input value={query}
+        onChange={e =&gt; setQuery(e.target.value)}
+      /&gt;
+      &lt;ProductTable
+        products={products}
+        onDelete={handleDelete}
+      /&gt;
+    &lt;/&gt;
+  );
+}
+                            </code></pre>
+                        </div>
+                        <div class="fragment fade-in">
+                            <pre><code class="tsx">
+const ProductTable = memo(({products,  onDelete,}: {
+  products: Product[];
+  onDelete: (id: number) => void;
+}) => {
+  return (
+    &lt;ul&gt;
+      {products.map(p =&gt; (
+        &lt;li key={p.id}&gt;
+          {p.name}
+          &lt;button onClick={() =&gt; onDelete(p.id)}&gt;
+            Remove
+          &lt;/button&gt;
+        &lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+});
+                            </code></pre>
+                        </div>
+                    </div>
+                    <p class="small-text fragment" style="margin-top:0.6rem;">What is the problem in this code?</p>
+                    <ul class="fragment">
+                        <li>Functions are recreated on every render</li>
+                        <li><code>ProductTable</code> re-renders on every query change</li>
+                    </ul>
+                    <aside class="notes">
+                        Show the code first and ask students what the issue is. Then reveal: handleDelete is a new function reference every render, so ProductTable always re-renders even though memo wraps it. useCallback solves this.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">useCallback Explained</h2>
+                    <pre><code class="tsx">
+const fn = useCallback(() => {
+  /* logic */
+}, [deps]);
+                    </code></pre>
+                    <p class="small-text">Memoizes a function to keep the same reference between renders.</p>
+                    <aside class="notes">
+                        useCallback returns the same function reference between renders as long as deps haven't changed. It's the function equivalent of useMemo.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">The Fix: useCallback</h2>
+                    <pre><code class="tsx">
+function Dashboard({ products }: { products: Product[] }) {
+  const [query, setQuery] = useState("");
+
+  // ✅ stable reference — same function every render
+  const handleDelete = useCallback((id: number) => {
+    console.log("delete", id);
+  }, []);
+
+  return (
+    &lt;&gt;
+      &lt;input value={query} onChange={e =&gt; setQuery(e.target.value)} /&gt;
+      &lt;ProductTable products={products} onDelete={handleDelete} /&gt;
+    &lt;/&gt;
+  );
+}
+                    </code></pre>
+                    <p class="small-text"><code>handleDelete</code> keeps the same reference — <code>ProductTable</code> no longer re-renders on every keystroke.</p>
+                    <aside class="notes">
+                        Wrapping handleDelete in useCallback with an empty deps array means the function reference never changes. ProductTable's memo now works correctly — it only re-renders when products actually change.
+                    </aside>
+                </section>
+
+                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🛠️</span>
+                        <h2>Demo Time</h2>
+                        <p>React.memo + useCallback</p>
+                        <a class="demo-link" href="/?target=day-4/demo/use-callback" target="_blank" rel="noopener">▶ Open demo</a>
+                    </div>
+                    <aside class="notes">
+                        Live demo: Dashboard with search input + memoized ProductTable. Show that typing only re-renders Dashboard, not ProductTable. Remove useCallback and show memo breaks.
+                    </aside>
+                </section>
+
+                <!--
+                LIVE CODE — React.memo + useCallback Together
+
+                // Heavy child — expensive to render (long list of rows)
+                const ProductTable = React.memo(({ products, onDelete }: Props) => {
+                  console.log("ProductTable rendered");
+                  return (
+                    <ul>
+                      {products.map(p => (
+                        <li key={p.id}>{p.name} <button onClick={() => onDelete(p.id)}>Remove</button></li>
+                      ))}
+                    </ul>
+                  );
+                });
+
+                // Parent — owns state unrelated to the table (e.g. a search input)
+                function Dashboard({ products }: { products: Product[] }) {
+                  const [query, setQuery] = useState("");
+
+                  // stable reference — ProductTable won't re-render when query changes
+                  const handleDelete = useCallback((id: number) => {
+                    console.log("delete", id);
+                  }, []);
+
+                  return (
+                    <>
+                      <input value={query} onChange={e => setQuery(e.target.value)} />
+                      <ProductTable products={products} onDelete={handleDelete} />
+                    </>
+                  );
+                }
+                -->
+
+                <section data-background="linear-gradient(135deg, #10281a 0%, #0a3026 60%, #0d3320 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🧩</span>
+                        <h2>Exercise</h2>
+                        <p>Stable Product Rows — apply React.memo + useCallback</p>
+                        <a class="demo-link" href="/?target=day-4/exercises/stable-product-rows/starter" target="_blank" rel="noopener">▶ Open exercise</a>
+                    </div>
+                    <aside class="notes">
+                        Hands-on exercise: the product rows re-render on every tick. Students figure out how to stop the unnecessary re-renders using React.memo and useCallback before we move on to useMemo.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">What Is useMemo?</h2>
+                    <ul>
+                        <li>Memoizes a value</li>
+                        <li>Avoids recalculating expensive logic on every render</li>
+                    </ul>
+                    <pre><code class="tsx">
+const value = useMemo(() => compute(), [deps]);
+                    </code></pre>
+                    <aside class="notes">
+                        useMemo caches the return value of a function. It only recomputes when dependencies change. Think of it as "remember this result until deps change."
+
+                        Gets: a function to run + a dependency array.
+                        Returns: the cached result of that function — not the function itself.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Problem: Expensive Calculation</h2>
+                    <pre><code class="tsx">
+function Stats({ n }: { n: number }) {
+  let total = 0;
+  for (let i = 0; i &lt; n; i++) total += i; // slow
+
+  return &lt;p&gt;Sum: {total}&lt;/p&gt;;
+}
+                    </code></pre>
+                    <p class="small-text">Recalculates on every render — even when <code>n</code> hasn't changed.</p>
+                    <aside class="notes">
+                        Without useMemo, the filter runs on every render even if products and query haven't changed. For large lists this is wasteful.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Solution: With useMemo</h2>
+                    <pre><code class="tsx">
+function Stats({ n }: { n: number }) {
+  const total = useMemo(() => {
+    let sum = 0;
+    for (let i = 0; i &lt; n; i++) sum += i;
+    return sum;
+  }, [n]);
+
+  return &lt;p&gt;Sum: {total}&lt;/p&gt;;
+}
+                    </code></pre>
+                    <p class="small-text">Recalculates only when <code>n</code> changes.</p>
+                    <aside class="notes">
+                        Now the filter only runs when products or query actually change. If the parent re-renders for other reasons, this computation is skipped.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">What useMemo Actually Does</h2>
+                    <ul>
+                        <li>Caches the result, not the function</li>
+                        <li>Dependency array controls recomputation</li>
+                    </ul>
+                    <aside class="notes">
+                        Important distinction: useMemo caches the result, not the function itself. If you forget a dependency, you get stale data. ESLint exhaustive-deps rule helps catch this.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">When to Use useMemo</h2>
+                    <ul>
+                        <li>Expensive calculations used in rendering</li>
+                        <li>Dependencies are stable</li>
+                        <li>Avoid for simple calculations — measure first</li>
+                    </ul>
+                    <aside class="notes">
+                        Simple math or string operations don't need useMemo. The overhead of memoization would be greater than the computation itself. Profile first.
+                    </aside>
+                </section>
+
+                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🛠️</span>
+                        <h2>Demo Time</h2>
+                        <p>useMemo — caching expensive calculations</p>
+                        <a class="demo-link" href="/?target=day-4/demo/use-memo" target="_blank" rel="noopener">▶ Open demo</a>
+                    </div>
+                    <aside class="notes">
+                        Live demo: show useMemo with the filtered product list. Comment out useMemo, show the calculation running on every keystroke. Re-add it and show it only runs when deps change.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">useMemo vs useCallback</h2>
+                    <table>
+                        <thead><tr><th>useMemo</th><th>useCallback</th></tr></thead>
+                        <tbody>
+                            <tr><td>Memoizes a value</td><td>Memoizes a function</td></tr>
+                            <tr><td>Returns the result</td><td>Returns the function</td></tr>
+                            <tr><td>useMemo(() =&gt; value)</td><td>useCallback(() =&gt; fn)</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="small-text">useCallback(fn) is roughly useMemo(() =&gt; fn).</p>
+                    <aside class="notes">
+                        Key mental model: useMemo caches a value, useCallback caches a function. useCallback(fn, deps) is syntactic sugar for useMemo(() => fn, deps).
+                    </aside>
+                </section>
+
+                <section data-background="linear-gradient(135deg, #10281a 0%, #0a3026 60%, #0d3320 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🧩</span>
+                        <h2>Exercise</h2>
+                        <p>Filtered Analytics Summary — memoize the expensive computation</p>
+                        <a class="demo-link" href="/?target=day-4/exercises/filtered-analytics-summary/starter" target="_blank" rel="noopener">▶ Open exercise</a>
+                    </div>
+                    <aside class="notes">
+                        Hands-on exercise: the analytics summary recalculates on every tick. Students work out how to recompute it only when the filter changes, using useMemo.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Common Mistakes</h2>
+                    <ul>
+                        <li>Memoizing everything "just in case"</li>
+                        <li>Missing dependencies in the deps array</li>
+                        <li>Optimizing before measuring</li>
+                    </ul>
+                    <aside class="notes">
+                        Common pitfalls: wrapping everything in memo/useMemo adds complexity and cost without benefit. Missing deps leads to stale closures. Passing a fresh object/array/function each render silently defeats React.memo. Always profile before optimizing.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Real-World Example (Summary)</h2>
+                    <ul>
+                        <li>List component → React.memo</li>
+                        <li>Expensive filtering → useMemo</li>
+                        <li>Event handlers → useCallback</li>
+                    </ul>
+                    <aside class="notes">
+                        Recap the three tools and when to reach for each. In practice, you often combine all three in a single feature.
+                    </aside>
+                </section>
+
+                <section class="auto-reveal">
+                    <h2 style="font-size:2.4em; margin:0;">
+                        <span class="auto-word" style="display:inline-block;">memo</span>
+                        <span class="auto-word" style="display:inline-block;">&nbsp;+ useCallback</span>
+                        <span class="auto-word" style="display:inline-block;">&nbsp;+ useMemo</span>
+                        <span class="auto-word" style="display:inline-block;">&nbsp;= 🗑️</span>
+                    </h2>
+                    <p class="fragment" style="font-size:2.4em; margin-top:1.4rem; color:var(--accent); font-weight:800; text-shadow:0 0 32px rgba(97,218,251,0.55);">Meet React Compiler.</p>
+                    <aside class="notes">
+                        Humorous pivot — everything we just learned can be handled automatically by the compiler. But the mental model is still essential for debugging and writing correct code.
+                    </aside>
+                </section>
+
+                <section>
+                    <div style="display:flex; flex-direction:column; gap:0.8rem;">
+                        <h2 style="margin:0; font-size:1.9em; font-weight:800;">React Compiler</h2>
+                        <p class="small-text" style="margin:0;">Introduced in React 19</p>
+                        <div class="two-col">
+                            <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                                <div class="card" style="font-size:0.82em;">
+                                    <strong class="highlight">🔧 Compile-time tool</strong>
+                                    <p style="margin:0.4rem 0 0; color:var(--text-soft);">Automatically optimizes re-renders at build time.</p>
+                                </div>
+                                <div class="card" style="font-size:0.82em;">
+                                    <strong class="highlight">💤 Less boilerplate</strong>
+                                    <p style="margin:0.4rem 0 0; color:var(--text-soft);">Reduces the need for manual <code>useMemo</code> and <code>useCallback</code>.</p>
+                                </div>
+                                <div class="card" style="font-size:0.82em;">
+                                    <strong class="highlight">🔍 Transparent</strong>
+                                    <p style="margin:0.4rem 0 0; color:var(--text-soft);">Works behind the scenes — no API changes needed.</p>
+                                </div>
+                            </div>
+                            <div class="image-frame">
+                                <svg class="diagram-svg" viewBox="0 0 500 220" role="img" aria-label="Compiler pipeline illustration">
+                                    <rect x="20" y="85" width="130" height="50" rx="9" fill="#1f2937" stroke="#61dafb"/>
+                                    <text x="85" y="116" fill="#dbeafe" text-anchor="middle" font-size="14">Source Code</text>
+                                    <rect x="185" y="70" width="130" height="80" rx="9" fill="#0f172a" stroke="#61dafb"/>
+                                    <text x="250" y="116" fill="#dbeafe" text-anchor="middle" font-size="14">React Compiler</text>
+                                    <rect x="350" y="85" width="130" height="50" rx="9" fill="#1f2937" stroke="#61dafb"/>
+                                    <text x="415" y="116" fill="#dbeafe" text-anchor="middle" font-size="14">Optimized UI</text>
+                                    <line x1="150" y1="110" x2="185" y2="110" stroke="#61dafb" stroke-width="3"/>
+                                    <line x1="315" y1="110" x2="350" y2="110" stroke="#61dafb" stroke-width="3"/>
+                                </svg>
+                                <p class="small-text">Memoization applied automatically at compile time.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        React Compiler is the future of performance in React. It analyzes your code at build time and inserts memoization automatically. No runtime cost, no manual work.
+                    </aside>
+                </section>
+
+                <section>
+                    <div style="display:flex; flex-direction:column; gap:0.8rem;">
+                        <h2 style="margin:0; font-size:1.9em; font-weight:800;">Before the Compiler</h2>
+                        <pre><code class="tsx">
+// Parent.tsx
+function Parent({ value }: { value: number }) {
+  const expensive = useMemo(() =&gt; {
+    return heavyCalculation(value);
+  }, [value]);
+
+  return &lt;Child data={expensive} /&gt;;
+}
+                        </code></pre>
+                        <p class="small-text">Manual <code>useMemo</code> adds cognitive overhead and boilerplate to every component.</p>
+                    </div>
+                    <aside class="notes">
+                        This is what we've been writing all day — manual useMemo everywhere. It works but adds noise. The compiler eliminates this boilerplate.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">With React Compiler</h2>
+                    <pre><code class="tsx">
+function Parent({ value }) {
+  const expensive = heavyCalculation(value);
+  return &lt;Child data={expensive} /&gt;;
+}
+                    </code></pre>
+                    <ul>
+                        <li>No useMemo needed</li>
+                        <li>Same performance with cleaner code</li>
+                        <li>Compiler tracks dependencies and memoizes</li>
+                    </ul>
+                    <aside class="notes">
+                        Same behavior, cleaner code. The compiler figures out what depends on what and memoizes automatically. You write simple code, the compiler optimizes it.
+                    </aside>
+                </section>
+
+                                <section>
+                                        <h2 class="slide-title">How to Add the React Compiler</h2>
+                                        <div class="two-col" style="align-items: center;">
+                                                <div style="font-size: 0.9em; text-align: left;">
+                                                        <div style="margin-bottom: 1.5rem;">
+                                                                <p style="margin: 0 0 0.5rem 0;"><strong>1. Upgrade & Install</strong></p>
+                                                                <pre style="width: 100%; margin: 0; box-shadow: none;"><code class="bash" style="padding: 0.8rem; font-size: 0.8em; border-radius: 6px;">npm install react@latest react-dom@latest
+npm install babel-plugin-react-compiler</code></pre>
+                                                        </div>
+                                                        <div>
+                                                                <p style="margin: 0 0 0.5rem 0;"><strong>2. Update Config</strong></p>
+                                                                <p style="font-size: 0.8em; opacity: 0.7; margin: 0;">Add the babel plugin to your Vite config.</p>
+                                                        </div>
+                                                </div>
+                                                <div style="flex: 1.3;">
+                                                        <div style="background: #1e1e1e; border-radius: 8px; overflow: hidden; border: 1px solid #333;">
+                                                                <div style="background: #252526; padding: 4px 10px; font-size: 0.6em; color: #888; font-family: monospace; border-bottom: 1px solid #333;">vite.config.ts</div>
+                                                                <pre style="margin: 0;"><code class="ts" style="padding: 1rem; font-size: 0.8em; line-height: 1.4; max-height: none;">import react from "@vitejs/plugin-react";
+
+export default {
+  plugins: [
+    react({
+      babel: {
+        plugins: ["babel-plugin-react-compiler"],
+      },
+    }),
+  ],
+};</code></pre>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div style="margin-top: 1.5rem; padding: 0.8rem; background: rgba(97, 218, 251, 0.08); border-radius: 6px; font-size: 0.75em; text-align: left;">
+                                                <p style="margin: 0; color: #aaddff;">Once configured, the compiler automatically memoizes components and hooks—reducing the need for <code>useMemo</code> and <code>useCallback</code>.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Two steps: upgrade React and install the babel plugin. Add it to your Vite config and you're done. The compiler handles the rest behind the scenes.
+                                        </aside>
+                                </section>
+
+                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🛠️</span>
+                        <h2>Demo Time</h2>
+                        <p>React Compiler in action</p>
+                        <a class="demo-link" href="https://playground.react.dev/" target="_blank" rel="noopener">▶ Open React Playground</a>
+                    </div>
+                    <aside class="notes">
+                        Live demo: show a component without manual memoization, enable the compiler, and show that re-renders are automatically skipped.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Why We Still Need the Hooks</h2>
+                    <ul>
+                        <li>Legacy codebases and libraries still rely on manual memoization</li>
+                        <li>Understanding the "why" helps you debug when things go wrong</li>
+                        <li>React Compiler runs only on components that follow React's rules</li>
+                    </ul>
+                    <aside class="notes">
+                        Manual memoization is still everywhere in legacy code and third-party libraries. Knowing why hooks work the way they do makes you a better debugger. And the compiler is not magic — it can only optimize components that obey React's rules.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">React Rules the Compiler Checks</h2>
+                    <ul>
+                        <li>Only call Hooks at the top level of components and custom Hooks</li>
+                        <li>Props and state are immutable; never mutate them directly</li>
+                        <li>No side effects during render — use <code>useEffect</code> for side effects</li>
+                    </ul>
+                    <aside class="notes">
+                        The compiler can only optimize code that follows React's rules. If a component breaks purity, mutates state, or calls hooks conditionally, the compiler skips it or produces a warning. Following these rules is not just good practice — it unlocks automatic memoization.
+                    </aside>
+                </section>
+
+                <section>
+                    <div style="display:flex; flex-direction:column; gap:0.8rem;">
+                        <h2 style="margin:0; font-size:1.9em; font-weight:800;">What Else Is New in React 19?</h2>
+                        <p class="small-text" style="margin:0;">Beyond the compiler — quality-of-life upgrades that simplify everyday development.</p>
+                        <div class="two-col" style="margin-top:0.6rem; align-items:stretch;">
+                            <div class="card" style="font-size:0.82em; display:flex; align-items:center; justify-content:center; text-align:center;">
+                                <strong class="highlight">🔗 The <code>use</code> Hook</strong>
+                            </div>
+                            <div class="card" style="font-size:0.82em; display:flex; align-items:center; justify-content:center; text-align:center;">
+                                <strong class="highlight">🧩 Simplified Context</strong>
+                            </div>
+                            <div class="card" style="font-size:0.82em; display:flex; align-items:center; justify-content:center; text-align:center;">
+                                <strong class="highlight">📄 Document Metadata</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        React 19 ships more than the compiler. Over the next few slides we'll look at three everyday improvements: the use hook, simplified context, and native document metadata.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">The New <code>use</code> Hook</h2>
+                    <p class="small-text" style="margin:0 0 1rem;">Resolve promises <span class="highlight">directly in render</span> — no more <code>useEffect</code> + <code>useState</code> for simple fetches. Pairs with <code>&lt;Suspense&gt;</code>.</p>
+                    <div class="two-col">
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong>Before (Older React)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.62em; line-height:1.35;">function Profile({ id }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() =&gt; {
+    fetchUser(id).then((u) =&gt; {
+      setData(u);
+      setLoading(false);
+    });
+  }, [id]);
+
+  if (loading) return &lt;Spinner /&gt;;
+  return &lt;h1&gt;{data.name}&lt;/h1&gt;;
+}</code></pre>
+                        </div>
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong class="highlight">After (React 19)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.62em; line-height:1.35;">function Profile({ userPromise }) {
+  const data = use(userPromise);
+  return &lt;h1&gt;{data.name}&lt;/h1&gt;;
+}
+
+// Parent
+&lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
+  &lt;Profile userPromise={fetchUser(id)} /&gt;
+&lt;/Suspense&gt;</code></pre>
+                        </div>
+                    </div>
+                    <p class="small-text" style="margin:1rem 0 0;"><span class="highlight">&lt;Suspense&gt;</span> lets a component "wait" for async work — it shows a <code>fallback</code> (e.g. a spinner) until the data is ready, then renders the real content.</p>
+                    <aside class="notes">
+                        The use hook lets you read a promise during render. Suspense handles the loading state, so you delete the useEffect/useState boilerplate entirely.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Simplified Context</h2>
+                    <p class="small-text" style="margin:0 0 1rem;">Goodbye <code>.Provider</code> — render the context object <span class="highlight">directly as the component</span>.</p>
+                    <div class="two-col">
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong>Before (Older React)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.7em; line-height:1.4;">&lt;ThemeContext.Provider value={theme}&gt;
+  &lt;App /&gt;
+&lt;/ThemeContext.Provider&gt;</code></pre>
+                        </div>
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong class="highlight">After (React 19)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.7em; line-height:1.4;">&lt;ThemeContext value={theme}&gt;
+  &lt;App /&gt;
+&lt;/ThemeContext&gt;</code></pre>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        You can now use the context object itself as the provider. Less nesting, less ceremony — the .Provider suffix is no longer required.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Native Document Metadata</h2>
+                    <p class="small-text" style="margin:0 0 1rem;">React <span class="highlight">hoists</span> <code>&lt;title&gt;</code>, <code>&lt;meta&gt;</code> and <code>&lt;link&gt;</code> to <code>&lt;head&gt;</code> — no <code>document.title</code>, no <code>react-helmet</code>.</p>
+                    <div class="two-col">
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong>Before (Older React)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.66em; line-height:1.4;">function Home() {
+  useEffect(() =&gt; {
+    document.title = "Home";
+  }, []);
+
+  return &lt;h1&gt;Home&lt;/h1&gt;;
+}</code></pre>
+                        </div>
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong class="highlight">After (React 19)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.66em; line-height:1.4;">function Home() {
+  return (
+    &lt;&gt;
+      &lt;title&gt;Home&lt;/title&gt;
+      &lt;meta name="description"
+            content="Welcome" /&gt;
+      &lt;h1&gt;Home&lt;/h1&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        Render title, meta and link tags anywhere in your tree — React automatically moves them into the document head. No third-party libraries needed.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Day 5 Summary</h2>
+                    <ul class="check-list">
+                        <li>Memoization: cache values and functions to avoid unnecessary work</li>
+                        <li>React.memo, useCallback, useMemo — use when you have a real perf problem</li>
+                        <li>React Compiler automates memoization when you follow React's rules</li>
+                        <li>React 19 brings the <code>use</code> hook, simpler Context, and native document metadata</li>
+                    </ul>
+                    <aside class="notes">
+                        Recap the main takeaways: memoization is a powerful tool but not a default, the compiler is the future but requires clean React code, and React 19 has quality-of-life improvements. Measure first, optimize second.
+                    </aside>
+                </section>
+
+                <section>
+                    <div class="hero">
+                        <div>
+                            <h2>Thank You!</h2>
+                        </div>
+                        <div class="hero-visual">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React logo thank you">
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script> 
+    
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            plugins: [ RevealHighlight, RevealNotes ] // Ensure RevealNotes is listed here
+        });
+    </script>
+</body>
+</html>
