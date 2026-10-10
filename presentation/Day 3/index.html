@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Day 3 - Custom Hooks, useRef, and React Router Basics</title>
+  <title>Day 3 - Custom Hooks, useRef, Tanstack, and React Router Basics</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
@@ -277,6 +277,31 @@
       width: 100%;
       max-width: none;
     }
+
+    .reveal .no-hscroll pre code {
+      font-size: 0.55em;
+      white-space: pre-wrap;
+      overflow-x: hidden;
+    }
+
+    .reveal .tanstack-code pre code {
+      font-size: 0.7em;
+      max-height: none;
+      overflow: hidden;
+    }
+
+    .reveal .wide-code .two-col > div:first-child {
+      flex: 2.4;
+    }
+
+    .reveal .wide-code pre {
+      margin: 0;
+    }
+
+    .reveal .wide-code pre code {
+      max-height: none;
+      line-height: 1.25;
+    }
   </style>
 </head>
 
@@ -288,7 +313,7 @@
           <div class="hero">
             <div>
               <h1>Day 3</h1>
-              <h3>Custom Hooks, useRef & React Router Basics</h3>
+              <h3>Custom Hooks, useRef, Tanstack & React Router Basics</h3>
               <p>Client-side navigation, links, params, and nested routes</p>
               <span class="badge">Navigation without reloads</span>
             </div>
@@ -319,7 +344,7 @@
         <!-- Slide 2: Syllabus -->
         <section>
           <h3>What We Cover Today</h3>
-          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; gap: 1rem; margin-top: 0.7rem;">
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; gap: 1rem; margin-top: 0.7rem;">
             <div class="card" style="font-size: 0.78em; text-align: center">
               <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">01</div>
               <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">Custom Hooks</p>
@@ -330,26 +355,30 @@
             </div>
             <div class="card" style="font-size: 0.78em; text-align: center">
               <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">03</div>
-              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">React Router Setup & Path Matching</p>
+              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">TanStack Query: useQuery, Cache, useMutation</p>
             </div>
             <div class="card" style="font-size: 0.78em; text-align: center">
               <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">04</div>
-              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">Navigation with Links</p>
+              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">React Router Setup & Path Matching</p>
             </div>
             <div class="card" style="font-size: 0.78em; text-align: center">
               <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">05</div>
-              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">URL & Query Params</p>
+              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">Navigation with Links</p>
             </div>
             <div class="card" style="font-size: 0.78em; text-align: center">
               <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">06</div>
-              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">Nested Routes & Outlet</p>
+              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">URL & Query Params</p>
             </div>
             <div class="card" style="font-size: 0.78em; text-align: center">
               <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">07</div>
-              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">🧪 Exercise: Podcast Navigator</p>
+              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">Nested Routes & Outlet</p>
             </div>
             <div class="card" style="font-size: 0.78em; text-align: center">
               <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">08</div>
+              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">🧪 Exercise: Podcast Navigator</p>
+            </div>
+            <div class="card" style="font-size: 0.78em; text-align: center">
+              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">09</div>
               <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">Q&A / Wrap-Up</p>
             </div>
           </div>
@@ -761,7 +790,7 @@ function FocusInput() {
         </section>
 
         <!-- Slide 19b: Example - useRef for Constant Reference -->
-        <section class="carry-over-slide">
+        <section class="carry-over-slide no-hscroll wide-code">
           <h3>Example: useRef - Constant Reference</h3>
           <div class="two-col" style="margin-top: 1rem">
             <div>
@@ -844,6 +873,144 @@ function ClickCounter() {
               </p>
             </div>
           </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- TanStack Query -->
+        <!-- ============================================================ -->
+
+        <section>
+          <h2 class="slide-title">TanStack Query</h2>
+          <p>The industry standard for data fetching in React</p>
+          <ul>
+            <li><code>useQuery</code> - read data and track loading / error state</li>
+            <li>Cache - results are stored and shared by <code>queryKey</code></li>
+            <li><code>useMutation</code> - create, update, and delete data</li>
+          </ul>
+          <div class="small-text">
+            <p>Replaces hand-written <code>useEffect</code> + <code>useState</code> fetching code.</p>
+          </div>
+          <aside class="notes">
+            Connect this to the useFetch custom hook from earlier: TanStack Query is the production-grade version of
+            that idea.
+            Explain that it manages loading, error, caching, and refetching so we do not write that logic by hand.
+            Introduce the three pieces for this chapter: useQuery, the cache, and useMutation.
+          </aside>
+        </section>
+
+        <section class="no-hscroll tanstack-code">
+          <h2 class="slide-title">Setting Up TanStack Query</h2>
+          <pre><code class="tsx">
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    &lt;QueryClientProvider client={queryClient}&gt;
+      &lt;Products /&gt;
+    &lt;/QueryClientProvider&gt;
+  );
+}
+                    </code></pre>
+          <div class="small-text">
+            <p>Install with <code>pnpm add @tanstack/react-query</code></p>
+            <p><code>QueryClient</code> owns the cache</p>
+            <p><code>QueryClientProvider</code> makes it available to every component</p>
+          </div>
+          <aside class="notes">
+            Show the one-time setup: create a single QueryClient and wrap the app with QueryClientProvider.
+            Stress that there should be one client for the whole app, created outside the component so it is not
+            recreated on every render.
+          </aside>
+        </section>
+
+        <section class="no-hscroll tanstack-code">
+          <h2 class="slide-title">useQuery</h2>
+          <pre><code class="tsx">
+import { useQuery } from "@tanstack/react-query";
+
+function Products() {
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: () =&gt; fetch("/api/products").then((res) =&gt; res.json()),
+  });
+
+  if (isPending) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (isError) return &lt;p&gt;Error: {error.message}&lt;/p&gt;;
+
+  return &lt;ProductList products={data} /&gt;;
+}
+                    </code></pre>
+          <div class="small-text">
+            <ul>
+              <li><code>queryKey</code> uniquely identifies the data in the cache.</li>
+              <li><code>queryFn</code> returns a promise that resolves with the data.</li>
+              <li>The hook returns <code>data</code>, <code>isPending</code>, <code>isError</code>, and more.</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            Compare with the useFetch hook: no useEffect, no manual loading flag, no manual error state.
+            Explain queryKey as the cache address and queryFn as how to get the data when it is not cached.
+            Mention that a key with variables, such as ["product", id], gives each product its own cache entry.
+          </aside>
+        </section>
+
+        <section>
+          <h2 class="slide-title">The Query Cache</h2>
+          <pre><code class="tsx">
+useQuery({
+  queryKey: ["product", id],
+  queryFn: () =&gt; fetchProduct(id),
+  staleTime: 60_000, // fresh for 1 minute
+  gcTime: 5 * 60_000, // kept in cache for 5 minutes after unused
+});
+                    </code></pre>
+          <div class="small-text">
+            <ul>
+              <li>Same <code>queryKey</code> in two components = one request, shared result.</li>
+              <li><strong>Fresh</strong> data is served from cache without refetching.</li>
+              <li><strong>Stale</strong> data is shown instantly, then refetched in the background.</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            Explain the cache lifecycle: fresh, stale, and garbage collected.
+            By default data is stale immediately, so TanStack Query refetches on mount, window focus, and reconnect.
+            staleTime controls how long data counts as fresh; gcTime controls how long unused data stays in memory.
+            Demo idea: navigate away and back to show the cached data appearing instantly.
+          </aside>
+        </section>
+
+        <section class="no-hscroll tanstack-code">
+          <h2 class="slide-title">useMutation</h2>
+          <pre><code class="tsx">
+const queryClient = useQueryClient();
+
+const addProduct = useMutation({
+  mutationFn: (newProduct) =&gt;
+    fetch("/api/products", {
+      method: "POST",
+      body: JSON.stringify(newProduct),
+    }),
+  onSuccess: () =&gt; {
+    queryClient.invalidateQueries({ queryKey: ["products"] });
+  },
+});
+
+&lt;button onClick={() =&gt; addProduct.mutate({ name: "Mug" })}&gt;Add&lt;/button&gt;
+                    </code></pre>
+          <div class="small-text">
+            <ul>
+              <li><code>useMutation</code> is for writes: POST, PUT, PATCH, DELETE.</li>
+              <li><code>mutate()</code> triggers it; <code>isPending</code> tracks progress.</li>
+              <li><code>invalidateQueries</code> marks cached data stale so the list refetches.</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            Contrast with useQuery: queries read and run automatically, mutations write and run on demand.
+            The key pattern is invalidateQueries in onSuccess, which keeps the cached list in sync after a change.
+            Mention optimistic updates as a next step but do not go deep.
+          </aside>
         </section>
 
         <!-- ============================================================ -->
