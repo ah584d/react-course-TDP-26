@@ -23,9 +23,10 @@ The default launcher lives at `/`, for example `http://localhost:5173/` during l
 ### Run a single target directly
 
 ```bash
-npm run course -- day-1/demo/vite-basics
+npm run course -- day-1/demo/product-counter
 npm run course -- day-1/exercises/build-product-card/starter
 npm run course -- day-1/exercises/build-product-card/solution
+npm run course -- day-1/exercises/counter/starter
 npm run course -- day-2/exercises/fetch-and-render-a-list/solution
 ```
 
@@ -91,10 +92,22 @@ export default function Example() {
 - `day-1/demo/product-counter`
 - `day-1/exercises/build-product-card/starter`
 - `day-1/exercises/build-product-card/solution`
+- `day-1/exercises/pass-product-data-with-props/starter`
+- `day-1/exercises/pass-product-data-with-props/solution`
 - `day-1/exercises/build-product-card-with-prop/starter`
 - `day-1/exercises/build-product-card-with-prop/solution`
+- `day-1/exercises/counter/starter`
+- `day-1/exercises/counter/solution`
 - `day-1/exercises/podcast-episode-cards/starter`
 - `day-1/exercises/podcast-episode-cards/solution`
+
+Day 1 covers setup, components, JSX, typed props, events, primitive state,
+state snapshots, functional setters, introductory hook rules, and controlled inputs.
+Install React DevTools during setup, inspect components and props after those
+topics, and inspect state after introducing `useState`.
+The podcast exercise uses separate number and string state variables.
+Object/array immutability and detailed batching remain in Day 2; only its
+duplicated basic state walkthrough and introductory hook-rule slide are removed.
 
 ### Day 2
 - `day-2/exercises/fetch-and-render-a-list/starter`

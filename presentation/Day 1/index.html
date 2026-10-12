@@ -228,7 +228,7 @@
                         <div class="card" style="font-size:0.78em; text-align:center;">
                             <div style="font-size:1.8em; margin-bottom:0.3rem; color:var(--accent);">02</div>
                             <p style="margin:0 0 0.2rem; color:var(--accent); font-weight:600;">Setup</p>
-                            <p style="margin:0; color:var(--text-soft);">Vite + TypeScript project in minutes</p>
+                            <p style="margin:0; color:var(--text-soft);">Node, VS Code, Vite + TypeScript</p>
                         </div>
                         <div class="card" style="font-size:0.78em; text-align:center;">
                             <div style="font-size:1.8em; margin-bottom:0.3rem; color:var(--accent);">03</div>
@@ -248,11 +248,26 @@
                         <div class="card" style="font-size:0.78em; text-align:center;">
                             <div style="font-size:1.8em; margin-bottom:0.3rem; color:var(--accent);">06</div>
                             <p style="margin:0 0 0.2rem; color:var(--accent); font-weight:600;">State</p>
-                            <p style="margin:0; color:var(--text-soft);">Make the UI react to change</p>
+                            <p style="margin:0; color:var(--text-soft);">Counters, controlled inputs, hook rules</p>
                         </div>
                     </div>
                     <aside class="notes">
-                        Overview of today's 6 pillars. Emphasize that by end of day they'll be able to build a small interactive app. Each topic builds on the previous.
+                        Overview of today's 6 pillars. By the end, students can build components with typed props, click handlers, primitive state, and controlled inputs. Install DevTools during setup but demonstrate it only after components and props, then again after state. Leave object/array immutability and batching details to Day 2.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">How We’ll Work</h2>
+                    <div class="card" style="max-width:780px; margin:0.8rem auto; text-align:left;">
+                        <ul>
+                            <li>Work in small chunks and check in frequently</li>
+                            <li>Ask questions whenever something is unclear or if you get stuck</li>
+                            <li>Write your own code; don’t use AI tools - the point is to make mistakes and learn</li>
+                            <li>Help each other</li>
+                        </ul>
+                    </div>
+                    <aside class="notes">
+                        Set these as shared expectations for the full course. Make it clear that questions and asking for help are encouraged.
                     </aside>
                 </section>
 
@@ -302,8 +317,22 @@
                     </aside>
                 </section>
 
-                <section>
-                    <h2 class="slide-title">Setting Up React with Vite + TypeScript</h2>
+                                <section>
+                                        <h2 class="slide-title">Prepare Your Environment</h2>
+                                        <ul style="font-size:28px; line-height:1.6;">
+                                                <li>Install a current <a href="https://nodejs.org/en/download" target="_blank">Node.js LTS</a>; Vite 8 requires Node 20.19+ or 22.12+.</li>
+                                                <li>Check your terminal: <code>node --version</code> and <code>npm --version</code>.</li>
+                                                <li>Install <a href="https://code.visualstudio.com/" target="_blank">VS Code</a> and open the project folder.</li>
+                                                <li>Use VS Code's integrated terminal; check TypeScript errors in the Problems panel.</li>
+                                                <li>Install <a href="https://react.dev/learn/react-developer-tools" target="_blank">React DevTools</a> for Chrome or Firefox.</li>
+                                        </ul>
+                                        <aside class="notes">
+                                                Confirm everyone's Node and npm versions before scaffolding. Use a current Node LTS rather than installing the minimum version. VS Code includes TypeScript support; extensions are optional. Install React DevTools now, but do not tour its panels: students have not learned components yet. On corporate machines, follow the organization's registry and certificate setup; never disable TLS verification to fix an install.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <h2 class="slide-title">Setting Up React with Vite + TypeScript</h2>
                     <div style="margin-top:0.8rem;">
                         <pre style="font-size:0.75em;"><code class="bash">npm create vite@latest my-app -- --template react-ts
 cd my-app
@@ -329,7 +358,7 @@ npm run dev</code></pre>
                         </div>
                     </div>
                     <aside class="notes">
-                        Walk through each command live in the terminal. Explain that `--template react-ts` gives us TypeScript out of the box. After `npm run dev`, show the browser at localhost:5173. Point out the instant startup — no webpack bundling wait. If students have issues, common fix: make sure Node >= 18.
+                        Walk through each command live in the terminal. Explain that `--template react-ts` gives us TypeScript out of the box. Open the URL printed by Vite: the default is localhost:5173, but the port may differ. Check a supported Node version if scaffolding fails. For this course repository, dependencies are installed at the root and `npm run course` opens the launcher; its exercise entries are not the generated app's App.tsx.
                     </aside>
                 </section>
 
@@ -360,9 +389,54 @@ npm run dev</code></pre>
                     </aside>
                 </section>
 
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:1rem;">
-                                                <h2 class="slide-title">App Component (Concept)</h2>
+                <section>
+                    <h2 class="slide-title">Project Structure</h2>
+                    <table style="font-size:21px; width:100%;">
+                        <thead>
+                            <tr><th>File</th><th>Role</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>package.json</code></td>
+                                <td>Dependencies and commands</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>"dev": "vite"</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code>index.html</code></td>
+                                <td>HTML page with the root DOM element</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>&lt;div id="root"&gt;&lt;/div&gt;
+&lt;script type="module" src="/src/main.tsx"&gt;&lt;/script&gt;</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code>src/main.tsx</code></td>
+                                <td>Connects React to that DOM element</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>createRoot(document.getElementById('root')!).render(&lt;App /&gt;)</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code>src/App.tsx</code></td>
+                                <td>Starting component in the generated app</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>function App() { return &lt;h1&gt;Hello!&lt;/h1&gt; }</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code>src/App.css</code></td>
+                                <td>Styles imported by the component</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>.app { color: steelblue; }</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code>vite.config.ts</code></td>
+                                <td>Vite configuration and the React plugin</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>plugins: [react()]</code></pre></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <aside class="notes">
+                        Tour the scaffolded project in VS Code. Trace index.html to main.tsx to App.tsx without diving into rendering internals. Edit App.tsx to demonstrate hot updates. Then show the course launcher and explain that its preview tells students which exercises/day-1/.../entry.tsx file to edit; reusable child components live beside that entry.
+                    </aside>
+                </section>
+
+                                                                <section>
+                                                                                <div style="display:flex; flex-direction:column; gap:1rem;">
+                                                                                                <h2 class="slide-title">App Component (Concept)</h2>
                                                 <div class="two-col">
                                                         <ul style="margin:0;">
                                                                 <li><code>App.tsx</code> is the <span class="highlight">root component</span></li>
@@ -484,10 +558,18 @@ _jsx("h1", { children: ["Hello, ", name, "!"] });
                                 <p style="margin:0.15rem 0 0; font-size:0.62em; color:var(--text-soft);">Wrap siblings in a <code>&lt;div&gt;</code> or Fragment</p>
                             </div>
                             <pre style="margin:0 auto; flex:1; font-size:0.52em; display:flex; align-items:center; justify-content:center;"><code class="tsx">// ❌ Two roots
-return &lt;h1&gt;Hi&lt;/h1&gt; &lt;p&gt;Bye&lt;/p&gt;;
+return (
+    &lt;h1&gt;Hi&lt;/h1&gt;
+    &lt;p&gt;Bye&lt;/p&gt;
+);
 
 // ✅ Fragment wrapper
-return &lt;&gt;&lt;h1&gt;Hi&lt;/h1&gt;&lt;p&gt;Bye&lt;/p&gt;&lt;/&gt;;</code></pre>
+return (
+    &lt;&gt;
+        &lt;h1&gt;Hi&lt;/h1&gt;
+        &lt;p&gt;Bye&lt;/p&gt;
+    &lt;/&gt;
+);</code></pre>
                         </div>
 
                         <!-- Rule 2: Curly braces -->
@@ -510,7 +592,7 @@ return &lt;&gt;&lt;h1&gt;Hi&lt;/h1&gt;&lt;p&gt;Bye&lt;/p&gt;&lt;/&gt;;</code></p
                                 <section>
                                         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; text-align:center;">
                                                 <h2>Exercise - Build a Product Card</h2>
-                                                <a href="http://localhost:5173/?target=day-1/exercises/build-product-card/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
+                                                <a href="/?target=day-1/exercises/build-product-card/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
                                         </div>
                                 </section>
 
@@ -569,29 +651,19 @@ return &lt;&gt;&lt;h1&gt;Hi&lt;/h1&gt;&lt;p&gt;Bye&lt;/p&gt;&lt;/&gt;;</code></p
                                                 <div class="two-col" style="align-items:flex-start; gap:1.2rem;">
                                                         <div style="display:flex; flex-direction:column; gap:0.4rem;">
                                                                 <span style="font-size:0.68em; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent);">Parent — App.tsx</span>
-                                                                <pre style="margin:0;"><code class="ts">
-// App.tsx
-import Greeting from './Greeting';
+                                                                <pre style="margin:0; width:100%; box-sizing:border-box; font-size:0.42em;"><code class="tsx">import Greeting from './Greeting';
 
-function App() {
+export default function App() {
   return &lt;Greeting name="Dan" /&gt;;
-}
-
-export default App;
-                                                                </code></pre>
+}</code></pre>
                                                         </div>
                                                         <div style="display:flex; flex-direction:column; gap:0.4rem;">
                                                                 <span style="font-size:0.68em; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent);">Child — Greeting.tsx</span>
-                                                                <pre style="margin:0;"><code class="ts" data-line-numbers>
-// Greeting.tsx
-type GreetingProps = { name: string };
+                                                                <pre style="margin:0; width:100%; box-sizing:border-box; font-size:0.42em;"><code class="tsx">type GreetingProps = { name: string };
 
-function Greeting({ name }: GreetingProps) {
+export default function Greeting({ name }: GreetingProps) {
   return &lt;h1&gt;Hello, {name}!&lt;/h1&gt;;
-}
-
-export default Greeting;
-                                                                </code></pre>
+}</code></pre>
                                                         </div>
                                                 </div>
                                                 <p class="small-text">The type <code>GreetingProps</code> enforces the shape — TypeScript will error if <code>name</code> is missing or the wrong type.</p>
@@ -601,7 +673,70 @@ export default Greeting;
                                         </aside>
                                 </section>
 
-                                <!-- SLIDE 13 – Events: HTML vs React -->
+                                <section>
+                                        <h2 class="slide-title">How Props Work</h2>
+                                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.7rem; margin-top:0.5rem; text-align:left;">
+                                                <div class="card" style="font-size:0.68em;">
+                                                        <strong class="highlight">Flexible names, many values</strong>
+                                                        <p style="margin:0.25rem 0;">Names belong to the component API; a component can receive as many props as needed.</p>
+                                                        <pre style="margin:0; width:100%; box-sizing:border-box; font-size:0.68em;"><code class="tsx">&lt;ProductCard
+  title="Mug"
+  price={12}
+  inStock={true}
+/&gt;</code></pre>
+                                                </div>
+                                                <div class="card" style="font-size:0.68em;">
+                                                        <strong class="highlight">One props object</strong>
+                                                        <p style="margin:0.25rem 0;">React passes the values together in one object, often named <code>props</code>.</p>
+                                                        <pre style="margin:0; width:100%; box-sizing:border-box; font-size:0.68em;"><code class="tsx">function Greeting(props: GreetingProps) {
+  return &lt;h1&gt;{props.name}&lt;/h1&gt;;
+}</code></pre>
+                                                </div>
+                                                <div class="card" style="font-size:0.68em;">
+                                                        <strong class="highlight">Destructuring is shorthand</strong>
+                                                        <p style="margin:0.25rem 0;">JavaScript can pull a value directly from the props object.</p>
+                                                        <pre style="margin:0; width:100%; box-sizing:border-box; font-size:0.68em;"><code class="tsx">function Greeting({ name }: GreetingProps) {
+  return &lt;h1&gt;{name}&lt;/h1&gt;;
+}</code></pre>
+                                                </div>
+                                                <div class="card" style="font-size:0.68em;">
+                                                        <strong class="highlight">Props are read-only inputs</strong>
+                                                        <p style="margin:0.25rem 0;">The parent supplies values; the child receives them for rendering.</p>
+                                                        <pre style="margin:0; width:100%; box-sizing:border-box; font-size:0.68em;"><code class="tsx">&lt;Greeting name={userName} /&gt;</code></pre>
+                                                </div>
+                                        </div>
+                                        <aside class="notes">
+                                                Describe props as named values passed from parent to child. A component can receive multiple props; React collects them in one object argument. `props` is the parameter name we choose by convention, and destructuring is JavaScript shorthand for accessing its fields. Props are inputs, not values the child mutates.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <h2 class="slide-title">DevTools: Components and Props</h2>
+                                        <ol style="font-size:28px; line-height:1.6;">
+                                                <li>Open the completed product card in the course launcher.</li>
+                                                <li>Open browser developer tools and select <strong class="highlight">Components</strong>.</li>
+                                                <li>Select <code>ProductCard</code>, then its title and price children.</li>
+                                                <li>Inspect the props passed from parent to child.</li>
+                                        </ol>
+                                        <p class="small-text"><strong>Elements</strong> shows DOM tags; <strong>Components</strong> shows React components.</p>
+                                        <a href="/?target=day-1/exercises/build-product-card-with-prop/solution" target="_blank" style="font-size:26px;">Open the completed props example</a>
+                                        <aside class="notes">
+                                                Students now know components and props, so inspect familiar code rather than introducing a new example. If the Components tab is missing, confirm the extension is enabled and reload the app. Show how a React component can render several DOM elements. Return to this panel for state later; do not introduce the Profiler yet.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2rem; text-align:center;">
+                                                <h2>Exercise - Pass Product Data with Props</h2>
+                                                <p class="small-text">Pass the description prop, then define and pass a typed price prop.</p>
+                                                <a href="/?target=day-1/exercises/pass-product-data-with-props/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
+                                        </div>
+                                        <aside class="notes">
+                                                This is a props-only practice before events. ProductTitle is already connected as an example; have learners add the description and price props, then check the data appears in the product card.
+                                        </aside>
+                                </section>
+
+                                                                <!-- SLIDE 13 – Events: HTML vs React -->
                                 <section>
                                         <div style="display:flex; flex-direction:column; gap:1rem;">
                                                 <h2 class="slide-title">Events in React</h2>
@@ -720,7 +855,7 @@ function ProductList() {
                                 <section>
                                         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; text-align:center;">
                                                 <h2>Exercise - Build a Product Card with Props</h2>
-                                                <a href="http://localhost:5173/?target=day-1/exercises/build-product-card-with-prop/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
+                                                <a href="/?target=day-1/exercises/build-product-card-with-prop/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
                                         </div>
                                 </section>
 
@@ -883,8 +1018,28 @@ export default ProductCard;
                                 <section>
                                         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; text-align:center;">
                                                 <h2>Demo - Product Counter</h2>
-                                                <a href="http://localhost:5173/?target=day-1/demo/product-counter" target="_blank" style="color:var(--accent); font-size:1.1em;">Demo</a>
+                                                                                                <a href="/?target=day-1/demo/product-counter" target="_blank" style="color:var(--accent); font-size:1.1em;">Demo</a>
+                                                                                                <p class="small-text">In React DevTools, select ProductCard and watch its state change when you click.</p>
                                         </div>
+                                                                                <aside class="notes">
+                                                                                                State has now been explained. Select ProductCard in the Components panel, inspect its State hook, and click Add to Cart. Connect the new hook value with the updated button text. Each mounted card owns its state independently.
+                                                                                </aside>
+                                </section>
+
+                                <section>
+                                        <h2 class="slide-title">State Is a Snapshot</h2>
+                                        <pre style="font-size:26px;"><code class="ts">function handleAddToCart() {
+  setCount(count + 1);
+  console.log(count); // the value from this render
+}</code></pre>
+                                        <ul style="font-size:28px; line-height:1.6;">
+                                                <li>The handler reads the state from the render that created it.</li>
+                                                <li>The setter requests a new render; it does not assign to <code>count</code>.</li>
+                                                <li>The next render receives the updated state.</li>
+                                        </ul>
+                                        <aside class="notes">
+                                                Starting at zero, click once: the log is zero but the new UI shows one. This is not a failed update, and awaiting the setter does not change the current render's variable. Keep the explanation practical; Day 2 covers multiple queued updates and batching in detail.
+                                        </aside>
                                 </section>
 
                                 <!-- SLIDE 17 – Functional Updates -->
@@ -894,11 +1049,11 @@ export default ProductCard;
                                                 <div class="two-col" style="align-items:center; gap:1.4rem;">
                                                         <div style="display:flex; flex-direction:column; gap:0.6rem;">
                                                                 <pre style="margin:0;"><code class="ts" data-line-numbers>
-// ❌ Direct — can read stale value
+// Set a value calculated from this render
 setCount(count + 1);
 
-// ✅ Functional — always reads latest
-setCount(prev =&gt; prev + 1);
+// Calculate from the previous pending state
+setCount(previousCount =&gt; previousCount + 1);
                                                                 </code></pre>
                                                                 <p class="small-text">Use the functional form whenever the next value depends on the previous one.</p>
                                                         </div>
@@ -906,162 +1061,84 @@ setCount(prev =&gt; prev + 1);
                                                 </div>
                                         </div>
                                         <aside class="notes">
-                                                This trips up many beginners. If you call setCount(count + 1) twice in the same event handler, you get count+1 both times (not count+2) because count is a stale closure. The functional form always receives the actual current value. Rule of thumb: if new state depends on old state, use the functional form.
+                                                The direct form is valid for a single increment. Introduce the functional form as a clear expression of an update that depends on previous state. React passes previous pending state to the updater; the updater returns the next value and must stay pure. Students will use it in the counter exercise. Leave multiple-update queues and batching demonstrations to Day 2.
                                         </aside>
                                 </section>
 
-                                <!-- SLIDE 18a – Rule 1: Top Level Only -->
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                <h2 class="slide-title">Rules of Hooks <span style="font-size:0.6em; color:var(--text-soft);">(1/2)</span></h2>
-                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; align-items:start;">
-                                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                                <div class="card" style="border:1.5px solid rgba(239,68,68,0.5); padding:0.4rem 0.6rem;">
-                                                                        <strong style="color:#f87171; font-size:0.65em;">❌ Wrong</strong>
-                                                                        <pre style="margin:0.2rem 0 0; background:none; box-shadow:none; font-size:0.58em;"><code class="ts">if (isLoggedIn) {
-  const [x, setX] = useState(0);
-}
-for (const id of ids) {
-  useEffect(() =&gt; fetch(id));
+                <section>
+                    <h2 class="slide-title">Rules of Hooks</h2>
+                    <ul style="font-size:28px; line-height:1.6;">
+                        <li>Call hooks at the <strong class="highlight">top level</strong>, before early returns: not in conditions, loops, or event handlers.</li>
+                        <li>Call hooks only in <strong class="highlight">React function components</strong> or custom hooks.</li>
+                    </ul>
+                    <pre style="font-size:25px;"><code class="tsx">function Counter() {
+  const [count, setCount] = useState(0);
+  return &lt;button onClick={() =&gt; setCount(previousCount =&gt; previousCount + 1)}&gt;
+    {count}
+  &lt;/button&gt;;
 }</code></pre>
-                                                                </div>
-                                                                <div class="card" style="border:1.5px solid rgba(34,197,94,0.5); padding:0.4rem 0.6rem;">
-                                                                        <strong style="color:#4ade80; font-size:0.65em;">✅ Correct</strong>
-                                                                        <pre style="margin:0.2rem 0 0; background:none; box-shadow:none; font-size:0.58em;"><code class="ts">const [x, setX] = useState(0);
-useEffect(() =&gt; { /* ... */ });
-if (isLoggedIn) { /* use x */ }</code></pre>
-                                                                </div>
-                                                        </div>
-                                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                                <div class="card" style="font-size:0.72em; padding:0.5rem 0.7rem;">
-                                                                        <strong class="highlight">📏 Top level only</strong>
-                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft); line-height:1.45;">
-                                                                                Never call hooks inside <strong style="color:#fff;">loops</strong>, <strong style="color:#fff;">conditions</strong>, or <strong style="color:#fff;">nested functions</strong>.
-                                                                        </p>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                        <aside class="notes">
-                                                React relies on call ORDER to track which hook is which. If you wrap hook #2 in an if-statement that's false, hook #3 shifts to index #2 — state is corrupted.
-                                        </aside>
-                                </section>
+                    <p class="small-text">Declare the hook in the component; call its setter in the handler.</p>
+                    <aside class="notes">
+                        Keep this to the two practical rules. React needs hook calls in the same order on every render. Point out that the setter is not a hook, so it belongs in the click handler. Custom hooks are another allowed location, but their implementation comes later in the course. Do not introduce effects or a custom useToggle implementation here.
+                    </aside>
+                </section>
 
-                                <!-- SLIDE 18b – Rule 2: React Functions Only -->
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                <h2 class="slide-title">Rules of Hooks <span style="font-size:0.6em; color:var(--text-soft);">(2/2)</span></h2>
-                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; align-items:start;">
-                                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                                <div class="card" style="border:1.5px solid rgba(34,197,94,0.5); padding:0.4rem 0.6rem;">
-                                                                        <strong style="color:#4ade80; font-size:0.65em;">✅ Correct</strong>
-                                                                        <pre style="margin:0.2rem 0 0; background:none; box-shadow:none; font-size:0.58em;"><code class="ts">function Panel() {
-  const [open, setOpen] = useState(true);
-  return &lt;div&gt;{open &amp;&amp; '...'}&lt;/div&gt;;
-}
-function useToggle(init = false) {
-  const [on, setOn] = useState(init);
-  return [on, () =&gt; setOn(p =&gt; !p)];
+                <section>
+                    <h2 class="slide-title">Exercise - Increment and Decrement Counter</h2>
+                    <p style="font-size:28px;">Start at zero. Display the count. Add one or subtract one on each click.</p>
+                    <a href="/?target=day-1/exercises/counter/starter" target="_blank" style="font-size:30px;">Open Exercise</a>
+                    <p class="fragment" style="font-size:26px;"><a href="/?target=day-1/exercises/counter/solution" target="_blank">Open Solution</a></p>
+                    <aside class="notes">
+                        Students edit exercises/day-1/counter/starter/entry.tsx. Use one number state variable, two handlers, and functional setters. Negative counts are allowed. Ask students to predict the next displayed value before clicking. Review the solution only after practice; avoid array/object state and batching details.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">onChange: Reading an Input</h2>
+                    <pre style="font-size:25px;"><code class="tsx">import type { ChangeEvent } from 'react';
+
+function NoteInput() {
+  function handleChange(event: ChangeEvent&lt;HTMLInputElement&gt;) {
+    console.log(event.target.value);
+  }
+
+  return &lt;input type="text" onChange={handleChange} /&gt;;
 }</code></pre>
-                                                                </div>
-                                                        </div>
-                                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                                <div class="card" style="font-size:0.72em; padding:0.5rem 0.7rem;">
-                                                                        <strong class="highlight">⚛️ React functions only</strong>
-                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft); line-height:1.45;">
-                                                                                Only call hooks from <strong style="color:#fff;">function components</strong> or <strong style="color:#fff;">custom hooks</strong> (<code>use</code> prefix).
-                                                                        </p>
-                                                                </div>
-                                                                <div class="card" style="font-size:0.68em; padding:0.4rem 0.7rem; border-color:rgba(97,218,251,0.3);">
-                                                                        <strong class="highlight">🔌</strong> <code style="font-size:0.9em;">eslint-plugin-react-hooks</code> <span style="color:var(--text-soft);">catches both rules automatically.</span>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                        <aside class="notes">
-                                                Hooks are attached to React's internal fiber tree. A plain JS function has no fiber — useState has nowhere to store state. The `use` prefix is a convention AND enforced by the linter.
-                                        </aside>
-                                </section>
+                    <p style="font-size:28px;">React calls the handler as you type. Read the new text from <code>event.target.value</code>.</p>
+                    <aside class="notes">
+                        Compare onChange with onClick: both receive a function, and React supplies the event. ChangeEvent types the input event so TypeScript understands target.value. This example logs text but does not store it; the next slide connects the input to state.
+                    </aside>
+                </section>
 
-                                <!-- SLIDE 19a – State with Objects -->
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:0.8rem;">
-                                                <h2 class="slide-title">State with Objects</h2>
-                                                <div class="two-col" style="align-items:flex-start; gap:1.4rem;">
-                                                        <div style="display:flex; flex-direction:column; gap:0.6rem;">
-                                                                <pre style="margin:0;"><code class="ts" data-line-numbers>
-const [user, setUser] = useState({ name: 'Dan', age: 30 });
+                <section>
+                    <h2 class="slide-title">Controlled Inputs</h2>
+                    <pre style="font-size:25px;"><code class="tsx">import { useState } from 'react';
+import type { ChangeEvent } from 'react';
 
-// ✅ spread — creates a new object
-setUser(prev =&gt; ({ ...prev, age: 31 }));
-
-// ❌ mutate — React won't re-render
-user.age = 31;
-                                                                </code></pre>
-                                                        </div>
-                                                        <div class="card" style="font-size:0.82em;">
-                                                                <strong class="highlight">Why spread?</strong>
-                                                                <ul style="margin:0.5rem 0 0; color:var(--text-soft);">
-                                                                        <li>React uses <code>===</code> to detect changes</li>
-                                                                        <li>Mutating the same object keeps the same reference</li>
-                                                                        <li>Spread creates a <strong style="color:#fff;">new object</strong> — React sees the change</li>
-                                                                        <li>Only the updated property changes; the rest is copied</li>
-                                                                </ul>
-                                                        </div>
-                                                </div>
-                                                <p class="small-text">Never mutate state directly — always return a <span class="highlight">new reference</span> so React detects the change.</p>
-                                        </div>
-                                        <aside class="notes">
-                                                This is the #1 state bug beginners hit. React uses reference equality (===) to detect changes. If you mutate the same object, the reference doesn't change and React skips the re-render. Spread operator creates a shallow copy — that's a new reference. Show in the console: `const a = {x:1}; const b = a; a === b` is true, but `{...a} === a` is false. That's why spread works.
-                                        </aside>
-                                </section>
-
-                                <!-- SLIDE 19b – State with Arrays -->
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:0.8rem;">
-                                                <h2 class="slide-title">State with Arrays</h2>
-                                                <div class="two-col" style="align-items:flex-start; gap:1.4rem;">
-                                                        <div style="display:flex; flex-direction:column; gap:0.6rem;">
-                                                                <pre style="margin:0;"><code class="ts" data-line-numbers>
-const [items, setItems] = useState(['a', 'b', 'c']);
-
-// ✅ add
-setItems(prev =&gt; [...prev, 'd']);
-
-// ✅ remove
-setItems(prev =&gt; prev.filter(i =&gt; i !== 'b'));
-
-// ❌ wrong — mutates in place!
-items.push('d');
-setItems(items);
-                                                                </code></pre>
-                                                        </div>
-                                                        <div style="display:flex; flex-direction:column; gap:0.7rem;">
-                                                                <div class="card" style="font-size:0.78em; border:1.5px solid rgba(34,197,94,0.5);">
-                                                                        <strong style="color:#4ade80;">✅ Immutable methods</strong>
-                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft);"><code>map</code>, <code>filter</code>, <code>spread</code>, <code>slice</code>, <code>concat</code></p>
-                                                                </div>
-                                                                <div class="card" style="font-size:0.78em; border:1.5px solid rgba(239,68,68,0.5);">
-                                                                        <strong style="color:#f87171;">❌ Mutating methods</strong>
-                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft);"><code>push</code>, <code>pop</code>, <code>splice</code>, <code>sort</code> (in-place), <code>reverse</code></p>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                                <p class="small-text">Same rule as objects — always return a <span class="highlight">new array</span> so React sees the update.</p>
-                                        </div>
-                                        <aside class="notes">
-                                                For arrays: use map/filter/spread, never push/splice directly. The immutable vs mutating table is a handy cheat sheet — the left column returns a new array, the right column modifies in place. If you need sort, do [...items].sort() to copy first. Ask class: "What does filter return?" — a new array with items that pass the test.
-                                        </aside>
-                                </section>
+function NoteInput() {
+  const [note, setNote] = useState('');
+  function handleChange(event: ChangeEvent&lt;HTMLInputElement&gt;) {
+    setNote(event.target.value);
+  }
+  return &lt;div&gt;
+    &lt;input value={note} onChange={handleChange} /&gt;
+    &lt;p&gt;Note: {note}&lt;/p&gt;
+  &lt;/div&gt;;
+}</code></pre>
+                    <p style="font-size:26px;"><code>value</code> comes from state; <code>onChange</code> updates that state.</p>
+                    <aside class="notes">
+                        Trace typing to handler to setter to next render. Initialize note to an empty string and keep value a string. Supplying value without an updating onChange makes an input read-only. Setting text directly is appropriate because it comes from the event, not previous state. The podcast exercise combines this with an independent numeric likeCount state variable.
+                    </aside>
+                </section>
 
                                 <!-- EXERCISE SLIDE – Podcast Episode Cards -->
                                 <section>
                                         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; text-align:center;">
                                                 <h2>Exercise - Podcast Episode Cards</h2>
-                                                <a href="http://localhost:5173/?target=day-1/exercises/podcast-episode-cards/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
+                                                <a href="/?target=day-1/exercises/podcast-episode-cards/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
                                                 <div class="fragment" style="margin-top:1rem;">
                                                         <p style="font-size:0.85em; color:var(--text-soft);">File to review</p>
-                                                        <a href="http://localhost:5173/?target=day-1/exercises/podcast-episode-cards/solution" target="_blank" style="color:var(--accent); font-size:0.95em;">Open Solution</a>
+                                                        <a href="/?target=day-1/exercises/podcast-episode-cards/solution" target="_blank" style="color:var(--accent); font-size:0.95em;">Open Solution</a>
                                                 </div>
                                         </div>
                                 </section>
@@ -1074,7 +1151,7 @@ setItems(items);
                                                         <div class="card" style="font-size:0.76em; text-align:center;">
                                                                 <div style="font-size:1.4em; margin-bottom:0.2rem;">⚛️</div>
                                                                 <strong class="highlight">React &amp; SPAs</strong>
-                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Declarative UI library, Virtual DOM, single-page architecture</p>
+                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Declarative UI library, reusable components</p>
                                                         </div>
                                                         <div class="card" style="font-size:0.76em; text-align:center;">
                                                                 <div style="font-size:1.4em; margin-bottom:0.2rem;">⚡</div>
@@ -1094,15 +1171,19 @@ setItems(items);
                                                         <div class="card" style="font-size:0.76em; text-align:center;">
                                                                 <div style="font-size:1.4em; margin-bottom:0.2rem;">🗃️</div>
                                                                 <strong class="highlight">State &amp; useState</strong>
-                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Component-owned data, immutable updates, functional setters</p>
+                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Primitive state, snapshots, functional setters, hook rules</p>
+                                                        </div>
+                                                        <div class="card" style="font-size:0.76em; text-align:center;">
+                                                                <strong class="highlight">Events &amp; Inputs</strong>
+                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Click handlers, onChange, controlled inputs</p>
                                                         </div>
                                                 </div>
 
                                                 <div style="width:40px; height:2px; background:var(--accent); border-radius:2px; opacity:0.6; margin-top:0.4rem;"></div>
-                                                <p style="margin:0; font-size:0.72em; color:var(--text-soft);">Tomorrow: <strong style="color:#fff;">Conditional Rendering, Lists &amp; Keys, Forms, and useEffect</strong></p>
+                                                <p style="margin:0; font-size:0.72em; color:var(--text-soft);">Tomorrow: <strong style="color:#fff;">Lists &amp; Keys, Conditional Rendering, Object/Array State, Batching, and useEffect</strong></p>
                                         </div>
                                         <aside class="notes">
-                                                Quick recap of all six topics. Ask if there are any lingering questions. Remind students to practise by building small components on their own tonight. Preview Day 2: conditional rendering, rendering lists with map/key, controlled forms, and the useEffect hook for side effects.
+                                                Recap components, typed props, primitive state, snapshots, functional setters, hook rules, and controlled inputs. Students can inspect props and state in DevTools. Ask them to explain a click or keystroke through to the next render. Day 2 builds on these foundations with lists, conditional rendering, immutable object/array state, batching, and effects; no new Day 2 topics are promised here.
                                         </aside>
                                 </section>
             </section>
