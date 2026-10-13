@@ -12,6 +12,6 @@ export const meta: CourseTargetMeta = {
 }
 
 export const starterTasks = [
-  'Pass product data as props from ProductCard to children components.',
+  'Pass product data as props from ProductCard to children components. You will need to create props types in each component.',
   'Add an onClick handler to the button that logs the product title.',
 ]
