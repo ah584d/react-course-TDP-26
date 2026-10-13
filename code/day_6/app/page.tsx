@@ -21,7 +21,7 @@ export default function Home() {
           {/* Examples Menu */}
           <nav className="w-full ">
             <h3 className="text-xl font-semibold mb-6 text-black dark:text-zinc-50">
-              📚 Course Examples - Day 5
+              📚 Course Examples - Day 6
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
               <Link

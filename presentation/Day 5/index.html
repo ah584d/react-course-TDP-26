@@ -1,3388 +1,1081 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Day 5 - Next.js Framework</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css"
-    />
-
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css"
-    />
-
+<head>
+    <meta charset="utf-8">
+    <title>Day 5 - Performance Optimization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
+    
     <style>
-      :root {
-        --accent: #61dafb;
-        --nextjs: #000000;
-        --nextjs-light: #ffffff;
-        --accent-soft: rgba(97, 218, 251, 0.14);
-        --text-soft: #c8d2de;
-        --surface: rgba(255, 255, 255, 0.05);
-        --surface-border: rgba(255, 255, 255, 0.14);
-      }
-      .reveal {
-        background: radial-gradient(
-          circle at 10% 15%,
-          #1f2f47 0%,
-          #10131a 45%,
-          #080a0f 100%
-        );
-      }
-      .reveal h1,
-      .reveal h2,
-      .reveal h3,
-      .reveal h4 {
-        text-transform: none;
-        letter-spacing: 0.01em;
-      }
-      .reveal h1 {
-        text-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-      }
-      .reveal ul {
-        font-size: 0.86em;
-      }
-      .reveal code {
-        font-size: 0.7em;
-      }
-      .reveal pre {
-        border-radius: 12px;
-        border: 1px solid var(--surface-border);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
-        width: 100%;
-        max-width: none;
-        overflow: hidden;
-      }
-      .reveal table {
-        font-size: 0.75em;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid var(--surface-border);
-      }
-      .reveal table th,
-      .reveal table td {
-        padding: 0.5rem 0.7rem;
-        border-color: rgba(255, 255, 255, 0.12);
-      }
-      .small-text {
-        font-size: 0.7em;
-        color: var(--text-soft);
-      }
-      .highlight {
-        color: var(--accent);
-      }
-      .nextjs-color {
-        color: var(--nextjs-light);
-        font-weight: bold;
-      }
-      .two-col {
-        display: flex;
-        gap: 1.5rem;
-        align-items: flex-start;
-      }
-      .two-col > div {
-        flex: 1;
-      }
-      .card {
-        padding: 0.9rem 1rem;
-        border: 1px solid var(--surface-border);
-        border-radius: 12px;
-        background: var(--surface);
-        backdrop-filter: blur(4px);
-        overflow: hidden;
-      }
-      .step-card {
-        font-size: 0.82em;
-        line-height: 1.4;
-      }
-      .step-card ol {
-        margin: 0;
-        padding-left: 1.2rem;
-      }
-      .code-card pre {
-        margin: 0;
-        font-size: 0.7em;
-      }
-      .hero {
-        display: grid;
-        grid-template-columns: 1.25fr 1fr;
-        gap: 1.6rem;
-        align-items: center;
-        text-align: left;
-      }
-      .hero p {
-        color: var(--text-soft);
-      }
-      .hero-visual {
-        padding: 1rem;
-        border: 1px solid var(--surface-border);
-        border-radius: 16px;
-        background: linear-gradient(
-          160deg,
-          rgba(97, 218, 251, 0.14),
-          rgba(30, 41, 59, 0.35)
-        );
-        text-align: center;
-      }
-      .logo-row {
-        margin-top: 0.8rem;
-        display: flex;
-        gap: 0.8rem;
-        align-items: center;
-        justify-content: center;
-      }
-      .badge {
-        display: inline-block;
-        padding: 0.2rem 0.55rem;
-        border-radius: 999px;
-        background: var(--accent-soft);
-        color: var(--accent);
-        font-size: 0.5em;
-        border: 1px solid rgba(97, 218, 251, 0.45);
-        margin-top: 0.5rem;
-      }
-      .roadmap {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        margin-top: 0.8rem;
-        justify-content: center;
-      }
-      .roadmap span {
-        font-size: 0.45em;
-        border: 1px solid rgba(97, 218, 251, 0.4);
-        background: rgba(97, 218, 251, 0.1);
-        color: #d5f6ff;
-        border-radius: 999px;
-        padding: 0.23rem 0.55rem;
-      }
-      .check-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        font-size: 0.78em;
-        line-height: 1.65;
-      }
-      .check-list li::before {
-        content: "✓ ";
-        color: var(--accent);
-      }
-      .adv-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.7rem;
-        margin-top: 0.7rem;
-        text-align: left;
-        font-size: 0.58em;
-      }
-      .adv-item {
-        border: 1px solid var(--surface-border);
-        border-radius: 10px;
-        background: rgba(15, 23, 42, 0.45);
-        padding: 0.55rem;
-      }
-      .label {
-        font-size: 0.5em;
-        color: #8fb5d8;
-        margin-bottom: 0.2rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-      }
-      @media (max-width: 900px) {
-        .hero,
-        .two-col {
-          grid-template-columns: 1fr;
-          display: block;
+        :root {
+            --accent: #61dafb;
+            --accent-soft: rgba(97, 218, 251, 0.14);
+            --text-soft: #c8d2de;
+            --surface: rgba(255, 255, 255, 0.05);
+            --surface-border: rgba(255, 255, 255, 0.14);
+        }
+        .reveal {
+            background: radial-gradient(circle at 10% 15%, #1f2f47 0%, #10131a 45%, #080a0f 100%);
+        }
+        .reveal h1, .reveal h2, .reveal h3 { text-transform: none; letter-spacing: 0.01em; }
+        .reveal h1 { text-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+        .reveal ul { font-size: 0.86em; }
+        .reveal code { font-size: 0.9em; }
+        .reveal pre {
+            border-radius: 12px;
+            border: 1px solid var(--surface-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+        }
+        .reveal table {
+            font-size: 0.75em;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--surface-border);
+        }
+        .reveal table th,
+        .reveal table td {
+            padding: 0.5rem 0.7rem;
+            border-color: rgba(255,255,255,0.12);
+        }
+        .small-text { font-size: 0.7em; color: var(--text-soft); }
+        .highlight { color: var(--accent); }
+        .two-col { display: flex; gap: 1.5rem; align-items: flex-start; }
+        .two-col > div { flex: 1; }
+        .card {
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--surface-border);
+            border-radius: 12px;
+            background: var(--surface);
+            backdrop-filter: blur(4px);
+        }
+        .step-card { font-size: 0.82em; line-height: 1.4; }
+        .step-card ol { margin: 0; padding-left: 1.2rem; }
+        .code-card pre { margin: 0; font-size: 0.7em; }
+        .hero {
+            display: grid;
+            grid-template-columns: 1.25fr 1fr;
+            gap: 1.6rem;
+            align-items: center;
+            text-align: left;
+        }
+        .hero p { color: var(--text-soft); }
+        .hero-visual {
+            padding: 1rem;
+            border: 1px solid var(--surface-border);
+            border-radius: 16px;
+            background: linear-gradient(160deg, rgba(97,218,251,0.14), rgba(30,41,59,0.35));
+            text-align: center;
+        }
+        .hero-visual img {
+            width: min(200px, 100%);
+            height: auto;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.35));
+        }
+        .logo-row {
+            margin-top: 0.8rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .logo-row img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            opacity: 0.92;
+        }
+        .image-frame {
+            border: 1px solid var(--surface-border);
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.55);
+            padding: 0.8rem;
+            text-align: center;
+        }
+        .concept-img {
+            width: min(240px, 100%);
+            height: auto;
+        }
+        .diagram-svg {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            background: rgba(10, 16, 26, 0.55);
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 0.5em;
+            border: 1px solid rgba(97,218,251,0.45);
+            margin-top: 0.5rem;
+        }
+        .roadmap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+        .roadmap span {
+            font-size: 0.45em;
+            border: 1px solid rgba(97,218,251,0.4);
+            background: rgba(97,218,251,0.1);
+            color: #d5f6ff;
+            border-radius: 999px;
+            padding: 0.23rem 0.55rem;
+        }
+        .check-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            font-size: 0.78em;
+            line-height: 1.65;
+        }
+        .check-list li::before {
+            content: "✓ ";
+            color: var(--accent);
         }
         .adv-grid {
-          grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+            margin-top: 0.7rem;
+            text-align: left;
+            font-size: 0.58em;
         }
-        .hero-visual,
-        .two-col > div + div {
-          margin-top: 1rem;
+        .adv-item {
+            border: 1px solid var(--surface-border);
+            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.45);
+            padding: 0.55rem;
         }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="reveal">
-      <div class="slides">
-        <section>
-          <section>
-            <div
-              style="
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                gap: 1.4rem;
-                padding: 1.5rem 0;
-              "
-            >
-              <div>
-                <h1
-                  style="
-                    margin: 0;
-                    font-size: 2.6em;
-                    font-weight: 800;
-                    letter-spacing: -0.01em;
-                    line-height: 1.05;
-                  "
-                >
-                  Next.js<br />
-                  <span style="color: var(--accent)">Full-Stack Framework</span>
-                </h1>
-                <p
-                  style="
-                    margin-top: 0.8rem;
-                    font-size: 0.75em;
-                    color: var(--text-soft);
-                  "
-                >
-                  Instructor: Avraham Hamu (~5 hours)
-                </p>
-              </div>
-              <div
-                style="
-                  width: 40px;
-                  height: 2px;
-                  background: var(--accent);
-                  border-radius: 2px;
-                  opacity: 0.6;
-                "
-              ></div>
-            </div>
-          </section>
-
-          <!-- Slide 2: Syllabus -->
-          <section>
-            <h3>What We Cover Today</h3>
-            <div
-              style="
-                display: grid;
-                grid-template-columns: repeat(5, minmax(0, 1fr));
-                width: 92vw;
-                max-width: 92vw;
-                position: relative;
-                left: 50%;
-                transform: translateX(-50%);
-                gap: 1rem;
-                margin-top: 0.7rem;
-              "
-            >
-              <div class="card" style="font-size: 0.85em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  01
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  What is Next.js?
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  02
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  App Router & Routing
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  03
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  Layouts & Navigation
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  04
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  Server vs Client Components
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  05
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  Data Fetching & Rendering
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  06
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  Params (Async)
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  07
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  Reserved Files & Suspense
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  08
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  Best Practices
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  09
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  🧪 Hands-On Exercises
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  10
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  Q&A / Wrap-Up
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Slide 3: What is Next.js -->
-          <section>
-            <h3>What is Next.js?</h3>
-            <p class="small-text">
-              A React framework with built-in features for production
-            </p>
-
-            <div class="card" style="margin-top: 2rem">
-              <h4>🎯 Core Philosophy</h4>
-              <p style="font-size: 0.85em; margin-top: 0.5rem">
-                React gives you the tools → Next.js gives you the structure
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 3b: React vs Next.js -->
-          <section>
-            <h3>React vs Next.js</h3>
-            <div class="two-col" style="margin-top: 2rem">
-              <div>
-                <h4>React Alone:</h4>
-                <ul style="font-size: 0.8em">
-                  <li>UI library only</li>
-                  <li>You configure routing</li>
-                  <li>You handle (Search Engine Optimization)</li>
-                  <li><span class="highlight">You setup build tools</span></li>
-                  <li>Client-side only</li>
-                </ul>
-              </div>
-
-              <div>
-                <h4>Next.js Adds:</h4>
-                <ul style="font-size: 0.8em">
-                  <li>Full framework</li>
-                  <li>Built-in routing</li>
-                  <li>SEO-friendly by default</li>
-                  <li>Zero config needed</li>
-                  <li>
-                    <span class="highlight">Server + Client rendering</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          <!-- Slide 4: Why Next.js - Part 1 -->
-          <section>
-            <h3>Why Use Next.js?</h3>
-            <div style="text-align: left; font-size: 0.85em; margin-top: 1rem">
-              <div
-                class="card"
-                style="margin-bottom: 1rem; background: var(--accent-soft)"
-              >
-                <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8">
-                  <li style="margin-bottom: 1em">
-                    <strong style="color: var(--accent)"
-                      >⚡ Performance:</strong
-                    >
-                    Server-side rendering, automatic code splitting, and image
-                    optimization for lightning-fast apps
-                  </li>
-                  <li style="margin-bottom: 1em">
-                    <strong style="color: var(--accent)">🔍 SEO:</strong>
-                    Pre-rendered pages, metadata API, and sitemap generation
-                    make your site search-engine friendly
-                  </li>
-                  <li style="margin-bottom: 1em">
-                    <strong style="color: var(--accent)">🛣️ Routing:</strong>
-                    File-based routing with built-in layouts, loading states,
-                    and error handling
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          <!-- Slide 5: Why Next.js - Part 2 -->
-          <section>
-            <h3>Why Use Next.js? (continued)</h3>
-            <div style="text-align: left; font-size: 0.85em; margin-top: 1rem">
-              <div
-                class="card"
-                style="margin-bottom: 1rem; background: var(--accent-soft)"
-              >
-                <ul style="margin: 0; padding-left: 1.5rem; line-height: 1.8">
-                  <li style="margin-bottom: 1em">
-                    <strong style="color: var(--accent)">🔧 Full-Stack:</strong>
-                    API routes, server actions, and seamless database
-                    integration
-                  </li>
-                  <li style="margin-bottom: 1em">
-                    <strong style="color: var(--accent)">🔧 Deployment:</strong>
-                    Deploy anywhere - Vercel offers one-click deployment, but
-                    Next.js works on any Node.js hosting platform (AWS, Azure,
-                    Google Cloud, DigitalOcean, Netlify, or even your own
-                    server)
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <p class="small-text" style="margin-top: 1rem">
-              💡 A complete framework that handles routing, rendering, data
-              fetching, and deployment
-            </p>
-          </section>
-
-          <!-- Slide 6c: App Router vs Pages Router -->
-          <section>
-            <p class="small-text">Next.js has two routing systems</p>
-
-            <div class="two-col" style="margin-top: 1.5rem">
-              <div class="card" style="background: var(--accent-soft)">
-                <h4>📁 Pages Router</h4>
-                <p style="font-size: 0.65em; color: var(--text-soft)">
-                  (Legacy - Still supported)
-                </p>
-                <ul style="font-size: 0.65em; margin-top: 0.5rem">
-                  <li>pages/ directory</li>
-                  <li>
-                    <span class="highlight">Client components by default</span>
-                  </li>
-                  <li>getServerSideProps</li>
-                  <li>getStaticProps</li>
-                </ul>
-              </div>
-
-              <div
-                class="card"
-                style="
-                  border: 2px solid var(--accent);
-                  background: var(--accent-soft);
-                "
-              >
-                <h4>🆕 App Router</h4>
-                <p style="font-size: 0.75em; color: var(--text-soft)">
-                  (Recommended since Next.js 13+)
-                </p>
-                <ul style="font-size: 0.65em; margin-top: 0.5rem">
-                  <li>app/ directory</li>
-                  <li>
-                    <span class="highlight">Server components by default</span>
-                  </li>
-                  <li>Layouts & templates</li>
-                  <li>Streaming & suspense</li>
-                  <li>Better performance</li>
-                </ul>
-              </div>
-            </div>
-
-            <div
-              class="card"
-              style="margin-top: 1rem; background: var(--accent-soft)"
-            >
-              <p style="font-size: 0.75em">
-                💡 Default in Nextjs version 16 -
-                <span class="highlight">App Router</span>
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 6b: App Router Explained -->
-          <section>
-            <h3>Next.js routing system</h3>
-            <p class="small-text">
-              The new recommended routing system since Next.js 13+ [default in
-              version 16]
-            </p>
-
-            <div
-              class="two-col"
-              style="margin-top: 1.5rem; align-items: stretch"
-            >
-              <div>
-                <div
-                  class="card"
-                  style="height: 100%; background: var(--accent-soft)"
-                >
-                  <h4 style="font-size: 0.9em; margin-bottom: 1rem">
-                    Old Directory Structure
-                  </h4>
-                  <pre><code class="plaintext" style="font-size: 0.6em;">my-app/
-├── app/
-│   ├── layout.tsx       ← Root layout
-│   ├── page.tsx         ← / route
-│   ├── about/
-│   │   └── page.tsx     ← /about
-│   ├── blog/
-│   │   ├── page.tsx     ← /blog
-│   │   └── [slug]/
-│   │       └── page.tsx ← /blog/:slug
-│   └── api/
-│       └── route.ts     ← API route
-├── public/
-└── package.json</code></pre>
-                </div>
-              </div>
-
-              <div>
-                <div
-                  class="card"
-                  style="height: 100%; background: var(--accent-soft)"
-                >
-                  <h4 style="font-size: 0.9em; margin-bottom: 1rem">
-                    New Directory Structure
-                  </h4>
-                  <pre><code class="plaintext" style="font-size: 0.6em;">my-app/
-├── pages/
-│   ├── index.tsx        ← / route
-│   ├── about.tsx        ← /about
-│   ├── blog/
-│   │   ├── index.tsx    ← /blog
-│   │   └── [slug].tsx   ← /blog/:slug
-│   └── api/
-│       └── hello.ts     ← API route
-├── public/
-├── styles/
-└── package.json</code></pre>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Slide 7: Getting Started -->
-          <section>
-            <h3>Getting Started</h3>
-            <div class="card" style="margin-top: 1.5rem">
-              <div class="label">Create a Next.js App</div>
-              <pre><code class="bash" style="font-size: 0.7em;">npx create-next-app@latest my-app
-
-# Interactive prompts:
-# ✅ TypeScript? Yes
-# ✅ ESLint? Yes
-# ✅ Tailwind CSS? Yes (optional)
-# ✅ App Router? Yes
-# ❌ src/ directory? No (for simplicity)
-
-cd my-app
-npm run dev
-# Opens at http://localhost:3000</code></pre>
-            </div>
-
-            <div class="roadmap" style="margin-top: 1.5rem">
-              <span>Next.js 16+</span>
-              <span>React 19+</span>
-              <span>TypeScript</span>
-            </div>
-          </section>
-
-          <!-- Slide 9: File-Based Routing -->
-          <section>
-            <h3>File-Based Routing</h3>
-            <p class="small-text">No need to configure routes manually!</p>
-
-            <table style="margin-top: 1.5rem; font-size: 0.65em">
-              <thead>
-                <tr>
-                  <th>File Path</th>
-                  <th>URL</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>app/page.tsx</td>
-                  <td>/</td>
-                  <td>Home page</td>
-                </tr>
-                <tr>
-                  <td>app/basic-routing/page.tsx</td>
-                  <td>/basic-routing</td>
-                  <td>Basic routing page</td>
-                </tr>
-                <tr>
-                  <td>app/basic-routing/contact/page.tsx</td>
-                  <td>/basic-routing/contact</td>
-                  <td>Nested route</td>
-                </tr>
-                <tr>
-                  <td>app/basic-routing/contact/team/page.tsx</td>
-                  <td>/basic-routing/contact/team</td>
-                  <td>Deep nested route</td>
-                </tr>
-                <tr>
-                  <td>app/post/[slug]/page.tsx</td>
-                  <td>/post/my-post</td>
-                  <td>post route</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.75em">
-                💡 Create a folder + add page.tsx → Instant route!
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide: What Are Dynamic Routes? -->
-          <section>
-            <h3>What Are Dynamic Routes?</h3>
-            <p class="small-text">
-              Pages that handle
-              <span class="highlight">variable URL segments</span> with the same
-              component
-            </p>
-
-            <div class="two-col" style="margin-top: 1.5rem">
-              <div>
-                <div class="label">Static Routes (one page per path)</div>
-                <pre
-                  style="background: rgba(255, 100, 100, 0.08)"
-                ><code class="plaintext" style="font-size: 0.6em;">/post/hello-world   → page.tsx
-/post/nextjs-rocks  → page.tsx
-/post/my-post       → page.tsx
-❌ Can't create a file for every slug!</code></pre>
-              </div>
-
-              <div>
-                <div class="label">Dynamic Route (one page, any value)</div>
-                <pre
-                  style="background: rgba(97, 218, 251, 0.08)"
-                ><code class="plaintext" style="font-size: 0.6em;">/post/[slug]        → page.tsx
-
-✅ /post/hello-world
-✅ /post/nextjs-rocks
-✅ /post/my-post
-All handled by ONE component!</code></pre>
-              </div>
-            </div>
-
-            <div class="card" style="margin-top: 1.5rem">
-              <h4 style="font-size: 0.75em; margin-bottom: 0.5rem">
-                📂 Folder Convention
-              </h4>
-              <pre
-                style="margin: 0"
-              ><code class="plaintext" style="font-size: 0.6em;">app/
-└── post/
-    └── [slug]/        ← square brackets = dynamic segment
-        └── page.tsx   ← receives { params: { slug } }</code></pre>
-            </div>
-          </section>
-
-          <!-- Slide: How Params Travel (Server → Client) -->
-          <section>
-            <h3>How Params Travel: Server → Client</h3>
-            <p class="small-text">Understanding the request-response flow</p>
-
-            <div class="card" style="margin-top: 1.5rem">
-              <h4 style="font-size: 0.8em; margin-bottom: 0.5rem">
-                🔄 The Flow
-              </h4>
-              <ol
-                style="
-                  font-size: 0.7em;
-                  line-height: 1.8;
-                  text-align: left;
-                  padding-left: 1.5rem;
-                "
-              >
-                <li>
-                  <strong style="color: var(--accent)">Client</strong> (Browser)
-                  sends HTTP request to server with URL
-                </li>
-                <li>
-                  <strong style="color: var(--accent)">Server</strong> (Next.js)
-                  processes the request, extracts params, and generates HTML
-                </li>
-                <li>
-                  <strong style="color: var(--accent)">Server</strong> sends
-                  back fully rendered HTML page
-                </li>
-                <li>
-                  <strong style="color: var(--accent)">Client</strong> receives
-                  and displays the page
-                </li>
-              </ol>
-            </div>
-          </section>
-
-          <!-- Slide: Dynamic Parameter Extraction -->
-          <section>
-            <h4>Dynamic Parameter Extraction</h4>
-            <p class="small-text">How Next.js extracts values from URLs</p>
-
-            <div class="two-col" style="margin-top: 1rem">
-              <div
-                class="card"
-                style="text-align: left; background: var(--accent-soft)"
-              >
-                <h4 style="font-size: 0.7em; margin-bottom: 0.3rem">
-                  📂 File Structure
-                </h4>
-                <pre
-                  style="margin: 0.3rem 0"
-                ><code class="plaintext" style="font-size: 0.55em;">app/
-└── post/
-    └── [slug]/
-        └── page.tsx</code></pre>
-                <p style="font-size: 0.45em; margin-top: 0.3rem">
-                  The <code>[slug]</code> folder name tells Next.js: <br />
-                  <em>"This segment is dynamic!"</em>
-                </p>
-              </div>
-
-              <div
-                class="card"
-                style="text-align: left; background: rgba(34, 197, 94, 0.1)"
-              >
-                <h4 style="font-size: 0.7em; margin-bottom: 0.3rem">
-                  🔍 URL Matching
-                </h4>
-                <table
-                  style="font-size: 0.55em; width: 100%; margin-top: 0.3rem"
-                >
-                  <tbody>
-                    <tr>
-                      <td style="padding: 0.2rem"><strong>URL:</strong></td>
-                      <td style="padding: 0.2rem">
-                        <code>/post/hello-world</code>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td style="padding: 0.2rem"><strong>Pattern:</strong></td>
-                      <td style="padding: 0.2rem"><code>/post/[slug]</code></td>
-                    </tr>
-                    <tr>
-                      <td style="padding: 0.2rem">
-                        <strong>Extracted:</strong>
-                      </td>
-                      <td style="padding: 0.2rem; color: #22c55e">
-                        <code>slug = "hello-world"</code>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="card" style="margin-top: 1rem">
-              <h4 style="font-size: 0.65em; margin-bottom: 0.5rem">
-                💡 How It Works
-              </h4>
-              <pre
-                style="margin: 0"
-              ><code class="tsx" style="font-size: 0.55em;">// page.tsx receives params automatically
-export default async function PostPage({ params }: { params: Promise&lt;{ slug: string }&gt; }) {
-  const { slug } = await params;  // "hello-world"
-
-  // Use slug to fetch data, render content, etc.
-  const post = await getPostBySlug(slug);
-  return &lt;article&gt;{post.title}&lt;/article&gt;;
-}</code></pre>
-            </div>
-          </section>
-
-          <!-- Slide: Params Type Conversion -->
-          <section>
-            <h5>⚠️ Important: Params Are Always Strings</h5>
-            <p class="small-text">Type conversion is needed for numbers</p>
-
-            <div
-              class="card"
-              style="margin-top: 2rem; background: rgba(251, 191, 36, 0.1)"
-            >
-              <h4 style="font-size: 0.5em; margin-bottom: 1rem; color: #f59e0b">
-                The Problem
-              </h4>
-              <p style="font-size: 0.4em; line-height: 1.6">
-                URL segments are always extracted as <strong>strings</strong>.
-                Even if your URL is <code>/products/123</code>, the param will
-                be <code>"123"</code> (string), not <code>123</code> (number).
-              </p>
-            </div>
-
-            <div class="two-col" style="margin-top: 1.5rem">
-              <div class="card" style="background: rgba(239, 68, 68, 0.1)">
-                <h4 style="font-size: 0.75em; margin-bottom: 0.5rem">
-                  ❌ Wrong
-                </h4>
-                <pre
-                  style="margin: 0"
-                ><code class="tsx" style="font-size: 0.6em;">const { id } = await params;
-// id is "123" (string)
-
-if (id > 100) {  // ⚠️ Comparing string!
-  // Unexpected behavior
-}</code></pre>
-              </div>
-
-              <div class="card" style="background: rgba(34, 197, 94, 0.1)">
-                <h4 style="font-size: 0.75em; margin-bottom: 0.5rem">
-                  ✅ Correct
-                </h4>
-                <pre
-                  style="margin: 0"
-                ><code class="tsx" style="font-size: 0.6em;">const { id: idString } = await params;
-const id = parseInt(idString);
-// id is 123 (number)
-
-if (id > 100) {  // ✅ Comparing number
-  // Works as expected
-}</code></pre>
-              </div>
-            </div>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.7em; margin: 0">
-                💡 <strong>Tip:</strong> Use <code>parseInt()</code> for
-                integers, <code>parseFloat()</code> for decimals, or
-                <code>Number()</code> for general conversion.
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide: Dynamic Routes Code -->
-          <section>
-            <h3 style="font-size: 1.8em; margin-bottom: 0.3rem">
-              Dynamic Routes
-            </h3>
-            <p class="small-text" style="margin-bottom: 0.5rem">
-              Handle routes with parameters
-            </p>
-
-            <div
-              style="
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 1rem;
-                margin-top: 0.8rem;
-                max-width: 85vw;
-                height: 35rem;
-                width: 70rem;
-                position: relative;
-                left: 50%;
-                transform: translateX(-50%);
-              "
-            >
-              <div style="display: flex; flex-direction: column">
-                <div class="label" style="margin-bottom: 0.3rem">
-                  Dynamic slug: app/post/[slug]/page.tsx
-                </div>
-                <pre
-                  style="
-                    flex: 1;
-                    margin: 0;
-                    max-height: none;
-                    overflow: visible;
-                  "
-                ><code class="tsx" style="font-size: 0.68em; line-height: 1.4;">export default async function DynamicRoute({
-  params,
-}: {
-  params: Promise&lt;{ slug: string }&gt;;
-}) {
-  const { slug } = await params;
-
-  return (
-    &lt;div&gt;
-      &lt;h1&gt;Dynamic Route: {slug}&lt;/h1&gt;
-    &lt;/div&gt;
-  );
-}
-
-// URL: /post/my-post → slug = "my-post"</code></pre>
-              </div>
-
-              <div style="display: flex; flex-direction: column">
-                <div class="label" style="margin-bottom: 0.3rem">
-                  Multiple params
-                </div>
-                <pre
-                  style="
-                    flex: 1;
-                    margin: 0;
-                    max-height: none;
-                    overflow: visible;
-                  "
-                ><code class="tsx" style="font-size: 0.68em; line-height: 1.4;">// app/shop/[category]/[id]/page.tsx
-
-export default async function ShopItem({
-  params,
-}: {
-  params: Promise&lt;{ category: string; id: string }&gt;;
-}) {
-  const { category, id } = await params;
-
-  return (
-    &lt;div&gt;
-      &lt;p&gt;Category: {category}&lt;/p&gt;
-      &lt;p&gt;Product ID: {id}&lt;/p&gt;
-    &lt;/div&gt;
-  );
-}
-
-// URL: /shop/phones/123
-// category = "phones", id = "123"</code></pre>
-              </div>
-            </div>
-          </section>
-
-          <!-- Slide 14.2: Demo 🛠️ -->
-          <section>
-            <h3>Demo 🛠️</h3>
-            <div
-              class="card"
-              style="
-                margin-top: 2rem;
-                padding: 2.5rem;
-                text-align: center;
-                background: var(--accent-soft);
-              "
-            >
-              <p
-                style="
-                  font-size: 1.2em;
-                  margin: 0 0 1rem;
-                  color: var(--accent);
-                  font-weight: bold;
-                "
-              >
-                Open the live demo in the course app
-              </p>
-              <p
-                style="
-                  font-size: 0.9em;
-                  margin: 0;
-                  color: var(--text-soft);
-                  line-height: 1.6;
-                "
-              >
-                Page:
-                <code style="color: var(--accent)">/basic-routing</code>
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide: Exercise 1 — Instructions -->
-          <section>
-            <h3>🧪 Exercise 1 — Pages & Navigation</h3>
-            <p class="small-text">→ live coding / hands-on</p>
-
-            <div
-              class="card step-card"
-              style="margin-top: 1rem; text-align: left"
-            >
-              <p
-                style="
-                  font-size: 0.75em;
-                  margin-bottom: 0.5rem;
-                  color: var(--text-soft);
-                "
-              >
-                Phase 1 — Create two new pages
-              </p>
-              <ol style="font-size: 0.8em; line-height: 1.8">
-                <li>
-                  Create a <span class="highlight">contact</span> folder under
-                  <code>app/basic-routing/</code> with a <code>page.tsx</code>
-                </li>
-                <li>
-                  Create a <span class="highlight">team</span> folder under
-                  <code>app/basic-routing/</code> with a <code>page.tsx</code>
-                </li>
-                <li>
-                  Navigate to <code>/basic-routing/contact</code> and
-                  <code>/basic-routing/team</code>
-                </li>
-              </ol>
-              <p
-                style="
-                  font-size: 0.75em;
-                  margin-top: 1rem;
-                  margin-bottom: 0.5rem;
-                  color: var(--text-soft);
-                "
-              >
-                Phase 2 — Deep (nested) routing
-              </p>
-              <ol start="4" style="font-size: 0.8em; line-height: 1.8">
-                <li>
-                  Drag the <span class="highlight">team</span> folder
-                  <strong>into</strong> the
-                  <span class="highlight">contact</span> folder
-                </li>
-                <li>
-                  Navigate to <code>/basic-routing/contact/team</code> — it
-                  works!
-                </li>
-              </ol>
-            </div>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.7em">⏱️ Time: 20 minutes</p>
-            </div>
-          </section>
-
-          <!-- Slide: Exercise 1 — Code Snippets -->
-          <section>
-            <h3>🧪 Exercise 1 — Pages & Navigation</h3>
-            <div class="two-col" style="margin-top: 1.5rem">
-              <div>
-                <div class="label">app/basic-routing/contact/page.tsx</div>
-                <pre><code class="tsx" style="font-size: 0.6em;">export default function Contact() {
-  return (
-    &lt;main&gt;
-      &lt;h1&gt;Contact Us&lt;/h1&gt;
-      &lt;p&gt;Get in touch with our team&lt;/p&gt;
-    &lt;/main&gt;
-  );
-}</code></pre>
-              </div>
-
-              <div>
-                <div class="label">app/basic-routing/team/page.tsx</div>
-                <pre><code class="tsx" style="font-size: 0.6em;">export default function Team() {
-  return (
-    &lt;main&gt;
-      &lt;h1&gt;Our Team&lt;/h1&gt;
-      &lt;p&gt;Meet the people behind the product&lt;/p&gt;
-    &lt;/main&gt;
-  );
-}</code></pre>
-              </div>
-            </div>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.75em">
-                Phase 2: drag <code>team/</code> into <code>contact/</code> →
-                URL becomes
-                <span class="highlight">/basic-routing/contact/team</span>
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 13: Navigation -->
-          <section>
-            <h3>Navigation with Link</h3>
-            <div class="card" style="margin-top: 1.5rem">
-              <div class="label">Don't use &lt;a&gt; tags!</div>
-              <pre><code class="tsx" style="font-size: 0.65em;">import Link from 'next/link';
-
-export default function Navigation() {
-  return (
-    &lt;nav&gt;
-      &lt;Link href="/"&gt;Home&lt;/Link&gt;
-      &lt;Link href="/about"&gt;About&lt;/Link&gt;
-      &lt;Link href="/blog"&gt;Blog&lt;/Link&gt;
-    &lt;/nav&gt;
-  );
-}</code></pre>
-            </div>
-
-            <div class="card" style="margin-top: 0.5rem">
-              <h4 style="font-size: 0.6em">Why Link over &lt;a&gt;?</h4>
-              <ul style="font-size: 0.5em">
-                <li>✅ Client-side navigation (no page reload)</li>
-                <li>✅ Faster transitions</li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- Slide: Root Layout -->
-          <section>
-            <h3>Root Layout</h3>
-            <p class="small-text">
-              The top-level layout that wraps your entire app
-            </p>
-
-            <div
-              class="card"
-              style="
-                margin-top: 1.5rem;
-                text-align: left;
-                background: var(--accent-soft);
-              "
-            >
-              <h4
-                style="
-                  font-size: 0.85em;
-                  margin-bottom: 0.8rem;
-                  color: var(--accent);
-                "
-              >
-                📁 app/layout.tsx
-              </h4>
-              <p
-                style="
-                  font-size: 0.75em;
-                  line-height: 1.7;
-                  margin-bottom: 0.8rem;
-                "
-              >
-                The Root Layout is <strong>required</strong> in every Next.js
-                app. It defines the outermost HTML structure that wraps all
-                pages.
-              </p>
-              <ul style="font-size: 0.75em; line-height: 1.7">
-                <li>
-                  Must return <code>&lt;html&gt;</code> and
-                  <code>&lt;body&gt;</code> tags
-                </li>
-                <li>
-                  Receives a <code>children</code> prop — this is where your
-                  page content renders
-                </li>
-                <li>
-                  Applied to <strong>every page</strong> in your application
-                </li>
-                <li>
-                  Perfect place for global navigation, footer, fonts, and
-                  analytics
-                </li>
-                <li>
-                  Does <strong>not re-render</strong> when users navigate
-                  between pages
-                </li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- Slide: Layout Benefits -->
-          <section>
-            <h3 style="font-size: 1.6em">Layout Benefits</h3>
-            <p class="small-text" style="font-size: 0.6em">
-              Why layouts are powerful in Next.js
-            </p>
-
-            <div class="two-col" style="margin-top: 1.5rem; gap: 0.8rem">
-              <div class="card" style="background: rgba(34, 197, 94, 0.1)">
-                <h4 style="font-size: 0.7em; margin-bottom: 0.4rem">
-                  💡 Common Use Cases
-                </h4>
-                <ul style="font-size: 0.65em; line-height: 1.6">
-                  <li>Global navigation bar</li>
-                  <li>Footer</li>
-                  <li>Analytics scripts</li>
-                  <li>Global styles/fonts</li>
-                  <li>Theme providers</li>
-                  <li>Authentication wrappers</li>
-                </ul>
-              </div>
-
-              <div class="card" style="background: rgba(251, 191, 36, 0.1)">
-                <h4 style="font-size: 0.7em; margin-bottom: 0.4rem">
-                  ⚡ Performance Note
-                </h4>
-                <p
-                  style="
-                    font-size: 0.65em;
-                    line-height: 1.6;
-                    margin: 0 0 0.8rem;
-                  "
-                >
-                  Because layouts don't re-render on navigation, your
-                  header/footer stay mounted, making page transitions instant
-                  and smooth.
-                </p>
-                <p
-                  style="
-                    font-size: 0.6em;
-                    line-height: 1.5;
-                    margin: 0;
-                    color: var(--accent);
-                  "
-                >
-                  💡 This means no "flash" when navigating between pages — the
-                  layout stays constant while only the page content changes.
-                </p>
-              </div>
-            </div>
-
-            <div
-              class="card"
-              style="
-                margin-top: 1rem;
-                background: rgba(97, 218, 251, 0.15);
-                border: 2px solid var(--accent);
-              "
-            >
-              <p
-                style="
-                  font-size: 0.6em;
-                  margin: 0;
-                  text-align: center;
-                  color: var(--accent);
-                "
-              >
-                📝 <strong>Note to self:</strong> Show code example from
-                <code>code/day_5/app/layout.tsx</code>
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 13.5: What is a Layout? -->
-          <section>
-            <h3>What is a Layout?</h3>
-            <p class="small-text">
-              A consistent UI wrapper that persists across multiple pages
-            </p>
-
-            <svg
-              class="diagram-svg"
-              viewBox="0 0 800 500"
-              style="
-                margin-top: 0.5rem;
-                max-width: 700px;
-                width: 100%;
-                border-radius: 12px;
-              "
-            >
-              <!-- Background / Browser Window -->
-              <rect
-                x="0"
-                y="0"
-                width="800"
-                height="480"
-                fill="rgba(255, 255, 255, 0.05)"
-                stroke="var(--surface-border)"
-                stroke-width="2"
-                rx="12"
-              />
-
-              <!-- Address bar mock -->
-              <rect
-                x="0"
-                y="0"
-                width="800"
-                height="40"
-                fill="rgba(0, 0, 0, 0.3)"
-                rx="12"
-                stroke="none"
-              />
-              <path
-                d="M0,40 h800"
-                stroke="var(--surface-border)"
-                stroke-width="2"
-              />
-
-              <circle cx="25" cy="20" r="6" fill="#ef4444" />
-              <circle cx="45" cy="20" r="6" fill="#f59e0b" />
-              <circle cx="65" cy="20" r="6" fill="#22c55e" />
-
-              <rect
-                x="90"
-                y="10"
-                width="620"
-                height="20"
-                rx="10"
-                fill="rgba(255,255,255,0.1)"
-              />
-              <text
-                x="400"
-                y="24"
-                text-anchor="middle"
-                fill="#8fb5d8"
-                font-size="12"
-                font-family="monospace"
-              >
-                localhost:3000/dashboard
-              </text>
-
-              <!-- Header (Layout) -->
-              <rect
-                x="20"
-                y="60"
-                width="760"
-                height="60"
-                rx="8"
-                fill="rgba(97, 218, 251, 0.15)"
-                stroke="var(--accent)"
-                stroke-width="2"
-                stroke-dasharray="4,4"
-              />
-              <text
-                x="400"
-                y="96"
-                text-anchor="middle"
-                fill="var(--accent)"
-                font-size="20"
-                font-weight="bold"
-              >
-                Header (layout.tsx)
-              </text>
-
-              <!-- Sidebar (Layout) -->
-              <rect
-                x="20"
-                y="125"
-                width="200"
-                height="290"
-                rx="8"
-                fill="rgba(97, 218, 251, 0.15)"
-                stroke="var(--accent)"
-                stroke-width="2"
-                stroke-dasharray="4,4"
-              />
-              <text
-                x="120"
-                y="280"
-                text-anchor="middle"
-                fill="var(--accent)"
-                font-size="20"
-                font-weight="bold"
-              >
-                Sidebar
-              </text>
-              <text
-                x="120"
-                y="305"
-                text-anchor="middle"
-                fill="rgba(97, 218, 251, 0.8)"
-                font-size="14"
-              >
-                (layout.tsx)
-              </text>
-
-              <!-- Main Content (Page) -->
-              <rect
-                x="235"
-                y="125"
-                width="545"
-                height="290"
-                rx="8"
-                fill="rgba(34, 197, 94, 0.15)"
-                stroke="#22c55e"
-                stroke-width="2"
-              />
-              <text
-                x="507"
-                y="260"
-                text-anchor="middle"
-                fill="#22c55e"
-                font-size="26"
-                font-weight="bold"
-              >
-                Page Content (children)
-              </text>
-              <text
-                x="507"
-                y="290"
-                text-anchor="middle"
-                fill="rgba(34, 197, 94, 0.8)"
-                font-size="16"
-              >
-                This part changes when navigating!
-              </text>
-
-              <!-- Footer (Layout) -->
-              <rect
-                x="20"
-                y="420"
-                width="760"
-                height="40"
-                rx="8"
-                fill="rgba(97, 218, 251, 0.15)"
-                stroke="var(--accent)"
-                stroke-width="2"
-                stroke-dasharray="4,4"
-              />
-              <text
-                x="400"
-                y="446"
-                text-anchor="middle"
-                fill="var(--accent)"
-                font-size="16"
-                font-weight="bold"
-              >
-                Footer (layout.tsx)
-              </text>
-            </svg>
-
-            <div class="card">
-              <p style="font-size: 0.5em">
-                💡 <strong>Layouts do not re-render</strong> when navigating.
-                Only the
-                <span style="color: #22c55e; font-weight: bold"
-                  >Page Content</span
-                >
-                mounts/unmounts.
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 14: Layouts -->
-          <section>
-            <h3>Layouts - Shared UI</h3>
-            <p class="small-text">
-              Wrap pages with shared components (nav, footer)
-            </p>
-
-            <pre
-              style="margin-top: 1.5rem"
-            ><code class="tsx" style="font-size: 0.58em;">// app/layout.tsx - Root layout for ALL pages
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    &lt;html lang="en"&gt;
-      &lt;body&gt;
-        &lt;header&gt;
-          &lt;nav&gt;{/* Navigation */}&lt;/nav&gt;
-        &lt;/header&gt;
-        &lt;main&gt;{children}&lt;/main&gt;
-        &lt;footer&gt;© 2026 My App&lt;/footer&gt;
-      &lt;/body&gt;
-    &lt;/html&gt;
-  );
-}</code></pre>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.75em">
-                💡 Layout wraps all APP automatically - no need to import!
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 14.05: Demo 🛠️ Layouts -->
-          <section>
-            <h3>Demo 🛠️</h3>
-            <div
-              class="card"
-              style="
-                margin-top: 2rem;
-                padding: 2.5rem;
-                text-align: center;
-                background: var(--accent-soft);
-              "
-            >
-              <p
-                style="
-                  font-size: 1.2em;
-                  margin: 0 0 1rem;
-                  color: var(--accent);
-                  font-weight: bold;
-                "
-              >
-                Open the live demo in the course app
-              </p>
-              <p
-                style="
-                  font-size: 0.9em;
-                  margin: 0;
-                  color: var(--text-soft);
-                  line-height: 1.6;
-                "
-              >
-                Explore how layouts work:
-                <code style="color: var(--accent)">app/layout.tsx</code>
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 14.1: Nested Layouts -->
-          <section>
-            <h3>Nested Layouts</h3>
-            <p class="small-text">Layouts can be nested per route</p>
-
-            <div class="two-col" style="margin-top: 3rem; gap: 2rem">
-              <div
-                class="card"
-                style="
-                  text-align: left;
-                  transform: scale(1);
-                  transform-origin: top center;
-                "
-              >
-                <h4 style="font-size: 0.9em">File Structure</h4>
-                <pre><code class="plaintext" style="font-size: 0.6em;">app/
-├── layout.tsx         ← Root (Applies to all)
-├── page.tsx           ← Home page
-└── basic-routing/
-    ├── layout.tsx     ← Nested (Applies to basic-routing/*)
-    └── page.tsx       ← Basic Routing page</code></pre>
-              </div>
-
-              <div
-                class="card"
-                style="
-                  text-align: left;
-                  transform: scale(1);
-                  transform-origin: top center;
-                "
-              >
-                <h4 style="font-size: 0.9em">Result</h4>
-                <div
-                  style="
-                    border: 2px solid #555;
-                    padding: 10px;
-                    font-size: 0.7em;
-                  "
-                >
-                  Root Layout (Nav, Footer)
-                  <div
-                    style="
-                      border: 2px dashed var(--accent);
-                      padding: 10px;
-                      margin-top: 10px;
-                    "
-                  >
-                    Basic Routing Layout (Sidebar)
-                    <div
-                      style="
-                        background: rgba(255, 255, 255, 0.1);
-                        padding: 10px;
-                        margin-top: 10px;
-                      "
-                    >
-                      Page Content
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Slide 14.4: CSR vs SSR (Visual) -->
-          <section>
-            <h3>Visualizing CSR vs SSR</h3>
-            <p class="small-text">How the browser gets your UI</p>
-
-            <svg
-              class="diagram-svg"
-              viewBox="0 0 800 450"
-              style="
-                margin-top: 1.5rem;
-                max-width: 750px;
-                width: 100%;
-                border-radius: 12px;
-                background: rgba(0, 0, 0, 0.2);
-              "
-            >
-              <!-- CSR Section -->
-              <text
-                x="400"
-                y="40"
-                text-anchor="middle"
-                fill="#22c55e"
-                font-size="22"
-                font-weight="bold"
-              >
-                Client-Side Rendering (CSR)
-              </text>
-
-              <!-- Server CSR -->
-              <rect
-                x="50"
-                y="60"
-                width="160"
-                height="120"
-                rx="8"
-                fill="rgba(80,80,80,0.3)"
-                stroke="#888"
-                stroke-width="2"
-              />
-              <text
-                x="130"
-                y="95"
-                text-anchor="middle"
-                fill="#ddd"
-                font-size="18"
-                font-weight="bold"
-              >
-                Server
-              </text>
-              <text
-                x="130"
-                y="125"
-                text-anchor="middle"
-                fill="#aaa"
-                font-size="14"
-              >
-                Sends basic HTML shell
-              </text>
-              <text
-                x="130"
-                y="145"
-                text-anchor="middle"
-                fill="#aaa"
-                font-size="14"
-              >
-                (&lt;div id="root"&gt;&lt;/div&gt;) + JS
-              </text>
-
-              <!-- Arrow CSR -->
-              <path
-                d="M 220 120 L 320 120"
-                stroke="#888"
-                stroke-width="2"
-                marker-end="url(#arrowhead)"
-              />
-              <text
-                x="270"
-                y="110"
-                text-anchor="middle"
-                fill="#aaa"
-                font-size="14"
-              >
-                Network
-              </text>
-
-              <!-- Browser CSR -->
-              <rect
-                x="330"
-                y="60"
-                width="160"
-                height="120"
-                rx="8"
-                fill="rgba(34,197,94,0.15)"
-                stroke="#22c55e"
-                stroke-width="2"
-              />
-              <text
-                x="410"
-                y="95"
-                text-anchor="middle"
-                fill="#22c55e"
-                font-size="18"
-                font-weight="bold"
-              >
-                Browser
-              </text>
-              <text
-                x="410"
-                y="125"
-                text-anchor="middle"
-                fill="#fff"
-                font-size="14"
-              >
-                Downloads JS
-              </text>
-              <text
-                x="410"
-                y="145"
-                text-anchor="middle"
-                fill="#fff"
-                font-size="14"
-              >
-                &amp; Builds UI
-              </text>
-
-              <!-- User sees CSR -->
-              <path
-                d="M 500 120 L 580 120"
-                stroke="#888"
-                stroke-width="2"
-                marker-end="url(#arrowhead)"
-              />
-              <rect
-                x="590"
-                y="60"
-                width="160"
-                height="120"
-                rx="8"
-                fill="rgba(255,255,255,0.1)"
-                stroke="#ddd"
-                stroke-width="2"
-              />
-              <text
-                x="670"
-                y="95"
-                text-anchor="middle"
-                fill="#fff"
-                font-size="18"
-                font-weight="bold"
-              >
-                User Visually
-              </text>
-              <text
-                x="670"
-                y="125"
-                text-anchor="middle"
-                fill="#f59e0b"
-                font-size="14"
-              >
-                Blank screen...
-              </text>
-              <text
-                x="670"
-                y="145"
-                text-anchor="middle"
-                fill="#22c55e"
-                font-size="14"
-              >
-                Visible later
-              </text>
-
-              <!-- Divider -->
-              <line
-                x1="50"
-                y1="225"
-                x2="750"
-                y2="225"
-                stroke="#444"
-                stroke-dasharray="8,4"
-                stroke-width="2"
-              />
-
-              <!-- SSR Section -->
-              <text
-                x="400"
-                y="270"
-                text-anchor="middle"
-                fill="var(--accent)"
-                font-size="22"
-                font-weight="bold"
-              >
-                Server-Side Rendering (SSR)
-              </text>
-
-              <!-- Server SSR -->
-              <rect
-                x="50"
-                y="290"
-                width="160"
-                height="120"
-                rx="8"
-                fill="rgba(97,218,251,0.15)"
-                stroke="var(--accent)"
-                stroke-width="2"
-              />
-              <text
-                x="130"
-                y="325"
-                text-anchor="middle"
-                fill="var(--accent)"
-                font-size="18"
-                font-weight="bold"
-              >
-                Server
-              </text>
-              <text
-                x="130"
-                y="355"
-                text-anchor="middle"
-                fill="#fff"
-                font-size="14"
-              >
-                Generates
-              </text>
-              <text
-                x="130"
-                y="375"
-                text-anchor="middle"
-                fill="#fff"
-                font-size="14"
-              >
-                Full HTML
-              </text>
-
-              <!-- Arrow SSR -->
-              <path
-                d="M 220 350 L 320 350"
-                stroke="#888"
-                stroke-width="2"
-                marker-end="url(#arrowhead)"
-              />
-              <text
-                x="270"
-                y="340"
-                text-anchor="middle"
-                fill="#aaa"
-                font-size="14"
-              >
-                Network
-              </text>
-
-              <!-- Browser SSR -->
-              <rect
-                x="330"
-                y="290"
-                width="160"
-                height="120"
-                rx="8"
-                fill="rgba(97,218,251,0.05)"
-                stroke="#8fb5d8"
-                stroke-width="2"
-              />
-              <text
-                x="410"
-                y="315"
-                text-anchor="middle"
-                fill="#8fb5d8"
-                font-size="18"
-                font-weight="bold"
-              >
-                Browser
-              </text>
-              <text
-                x="410"
-                y="340"
-                text-anchor="middle"
-                fill="#fff"
-                font-size="14"
-              >
-                1. Shows HTML fast
-              </text>
-              <text
-                x="410"
-                y="360"
-                text-anchor="middle"
-                fill="#fff"
-                font-size="14"
-              >
-                2. Loads React
-              </text>
-              <text
-                x="410"
-                y="380"
-                text-anchor="middle"
-                fill="#fff"
-                font-size="14"
-              >
-                3. 💧 "Hydrates" (Adds JS)
-              </text>
-
-              <!-- User sees SSR -->
-              <path
-                d="M 500 350 L 580 350"
-                stroke="#888"
-                stroke-width="2"
-                marker-end="url(#arrowhead)"
-              />
-              <rect
-                x="590"
-                y="290"
-                width="160"
-                height="120"
-                rx="8"
-                fill="rgba(255,255,255,0.1)"
-                stroke="#ddd"
-                stroke-width="2"
-              />
-              <text
-                x="670"
-                y="315"
-                text-anchor="middle"
-                fill="#fff"
-                font-size="18"
-                font-weight="bold"
-              >
-                User Visually
-              </text>
-              <text
-                x="670"
-                y="340"
-                text-anchor="middle"
-                fill="#22c55e"
-                font-size="14"
-              >
-                1. Visible instantly ⚡
-              </text>
-              <text
-                x="670"
-                y="360"
-                text-anchor="middle"
-                fill="#aaa"
-                font-size="14"
-              >
-                (But not clickable)
-              </text>
-              <text
-                x="670"
-                y="380"
-                text-anchor="middle"
-                fill="#38bdf8"
-                font-size="14"
-              >
-                2. Becomes Interactive 👆
-              </text>
-
-              <defs>
-                <marker
-                  id="arrowhead"
-                  markerWidth="10"
-                  markerHeight="7"
-                  refX="9"
-                  refY="3.5"
-                  orient="auto"
-                >
-                  <polygon points="0 0, 10 3.5, 0 7" fill="#888" />
-                </marker>
-              </defs>
-            </svg>
-          </section>
-
-          <!-- Slide 14.45: What is Hydration? -->
-          <section>
-            <h3 style="font-size: 1.5em">What is Hydration? 💧</h3>
-            <p class="small-text" style="font-size: 0.6em">
-              Making static HTML interactive
-            </p>
-
-            <div
-              class="card"
-              style="
-                margin-top: 1rem;
-                text-align: left;
-                background: rgba(97, 218, 251, 0.1);
-              "
-            >
-              <h4
-                style="
-                  font-size: 0.7em;
-                  margin-bottom: 0.5rem;
-                  color: var(--accent);
-                "
-              >
-                The Process
-              </h4>
-              <p style="font-size: 0.6em; line-height: 1.5; margin-bottom: 0">
-                React "wakes up" server HTML by attaching events & state.
-              </p>
-            </div>
-
-            <div class="two-col" style="margin-top: 1rem; gap: 0.8rem">
-              <div class="card" style="background: rgba(251, 191, 36, 0.1)">
-                <h4 style="font-size: 0.65em; margin-bottom: 0.3rem">
-                  1️⃣ Server sends HTML
-                </h4>
-                <p style="font-size: 0.55em; line-height: 1.5">
-                  Server renders HTML. User sees content but can't interact yet.
-                </p>
-              </div>
-
-              <div class="card" style="background: rgba(97, 218, 251, 0.1)">
-                <h4 style="font-size: 0.65em; margin-bottom: 0.3rem">
-                  2️⃣ React hydrates
-                </h4>
-                <p style="font-size: 0.55em; line-height: 1.5">
-                  React loads & attaches event handlers (onClick, etc.).
-                </p>
-              </div>
-
-              <div class="card" style="background: rgba(34, 197, 94, 0.1)">
-                <h4 style="font-size: 0.65em; margin-bottom: 0.3rem">
-                  3️⃣ Fully interactive
-                </h4>
-                <p style="font-size: 0.55em; line-height: 1.5">
-                  Page becomes fully interactive. All features work.
-                </p>
-              </div>
-
-              <div class="card" style="background: rgba(139, 92, 246, 0.1)">
-                <h4 style="font-size: 0.65em; margin-bottom: 0.3rem">
-                  ⚡ Best of Both
-                </h4>
-                <p style="font-size: 0.55em; line-height: 1.5">
-                  Fast initial load + Full interactivity.
-                </p>
-              </div>
-            </div>
-
-            <div class="card" style="margin-top: 0.8rem">
-              <p style="font-size: 0.6em; margin: 0">
-                💡 React expects server & client HTML to match. Mismatches =
-                hydration errors.
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 14.5: Client vs Server Rendering -->
-          <section>
-            <h3>Client vs Server Rendering</h3>
-            <p class="small-text">
-              Where does your component become &lt;html&gt;?
-            </p>
-
-            <div class="two-col" style="margin-top: 1rem">
-              <div
-                class="card"
-                style="
-                  text-align: left;
-                  background: rgba(34, 197, 94, 0.1);
-                  border-color: #22c55e;
-                "
-              >
-                <h4 style="font-size: 0.8em; color: #22c55e">
-                  Client-Side Rendering (CSR)
-                </h4>
-                <ul
-                  style="
-                    font-size: 0.65em;
-                    line-height: 1.5;
-                    padding-left: 1.2rem;
-                  "
-                >
-                  <li>
-                    Browser downloads a basic HTML shell (e.g.,
-                    <code>&lt;div id="root"&gt;&lt;/div&gt;</code>) + JS.
-                  </li>
-                  <li>
-                    React runs in browser, creating and mounting the UI
-                    dynamically.
-                  </li>
-                  <li>Slower initial load, big JS bundle.</li>
-                  <li>Used in traditional React (Vite).</li>
-                </ul>
-              </div>
-
-              <div
-                class="card"
-                style="
-                  text-align: left;
-                  background: rgba(97, 218, 251, 0.1);
-                  border-color: var(--accent);
-                "
-              >
-                <h4 style="font-size: 0.8em; color: var(--accent)">
-                  Server-Side Rendering (SSR)
-                </h4>
-                <ul
-                  style="
-                    font-size: 0.65em;
-                    line-height: 1.5;
-                    padding-left: 1.2rem;
-                  "
-                >
-                  <li>Server generates HTML.</li>
-                  <li>Browser gets full HTML immediately.</li>
-                  <li>React "hydrates" it to make it interactive.</li>
-                  <li>Faster load, better SEO.</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          <!-- Slide 14.7: Mental Shift Model -->
-          <section>
-            <h3>Mental Shift Model</h3>
-            <p class="small-text">Thinking in boundaries</p>
-
-            <div class="card" style="margin-top: 1.5rem; text-align: left">
-              <h4
-                style="
-                  font-size: 0.9em;
-                  text-align: center;
-                  margin-bottom: 1rem;
-                "
-              >
-                The Network Boundary
-              </h4>
-
-              <div
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: stretch;
-                  font-size: 0.7em;
-                "
-              >
-                <div
-                  style="flex: 1; padding: 1rem; border-right: 2px dashed #666"
-                >
-                  <strong style="color: var(--accent); font-size: 1.2em"
-                    >Server (Back-end)</strong
-                  >
-                  <ul
-                    style="
-                      margin-top: 1rem;
-                      padding-left: 1rem;
-                      line-height: 1.6;
-                    "
-                  >
-                    <li>Keep secrets safe (API keys)</li>
-                    <li>Direct DB Queries</li>
-                    <li>No JS sent to browser</li>
-                    <li><em>Default in Next.js</em></li>
-                  </ul>
-                </div>
-                <div style="flex: 1; padding: 1rem">
-                  <strong style="color: #22c55e; font-size: 1.2em"
-                    >Client (Front-end)</strong
-                  >
-                  <ul
-                    style="
-                      margin-top: 1rem;
-                      padding-left: 1rem;
-                      line-height: 1.6;
-                    "
-                  >
-                    <li>Interactive (onClick)</li>
-                    <li>State (useState)</li>
-                    <li>Browser APIs (window, localStorage)</li>
-                    <li><em>Requires 'use client'</em></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- Slide 15: Server Components -->
-          <section>
-            <p class="small-text">The default in Next.js App Router</p>
-
-            <div class="two-col" style="margin-top: 1.5rem">
-              <div class="card">
-                <h4 style="font-size: 0.8em">🖥️ Server Components</h4>
-                <p style="font-size: 0.65em; color: var(--text-soft)">
-                  (default)
-                </p>
-                <ul style="font-size: 0.65em; line-height: 1.7">
-                  <li>Render on server</li>
-                  <li>Can access backend directly</li>
-                  <li>No JavaScript to browser</li>
-                  <li>Better performance</li>
-                  <li>SEO-friendly</li>
-                </ul>
-              </div>
-
-              <div class="card">
-                <h4 style="font-size: 0.8em">💻 Client Components</h4>
-                <p style="font-size: 0.65em; color: var(--text-soft)">
-                  ('use client')
-                </p>
-                <ul style="font-size: 0.65em; line-height: 1.7">
-                  <li>Render in browser</li>
-                  <li>Can use hooks (useState)</li>
-                  <li>Can use event handlers</li>
-                  <li>Interactive</li>
-                  <li>Adds JavaScript bundle</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="card">
-              <p style="font-size: 0.65em">
-                💡 Use Server Components by default, Client only when needed!
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 15.5: Server Component Demo 🛠️ -->
-          <section>
-            <h3>Demo 🛠️</h3>
-            <div
-              class="card"
-              style="
-                margin-top: 2rem;
-                padding: 2.5rem;
-                text-align: center;
-                background: var(--accent-soft);
-              "
-            >
-              <p
-                style="
-                  font-size: 1.2em;
-                  margin: 0 0 1rem;
-                  color: var(--accent);
-                  font-weight: bold;
-                "
-              >
-                Open the live demo in the course app
-              </p>
-              <p
-                style="
-                  font-size: 0.9em;
-                  margin: 0;
-                  color: var(--text-soft);
-                  line-height: 1.6;
-                "
-              >
-                Page:
-                <code style="color: var(--accent)">/server-component</code>
-                &nbsp;&nbsp;
-                <code style="color: var(--accent)">/client-component</code>
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 15.6: Summary CSR vs SSR -->
-          <section>
-            <h3>Summary: CSR vs SSR</h3>
-            <p class="small-text">How rendering approaches compare</p>
-
-            <table style="margin-top: 1.5rem; font-size: 0.55em; width: 100%">
-              <thead>
-                <tr>
-                  <th>Feature</th>
-                  <th>
-                    <strong style="color: #22c55e">CSR</strong> (Vite/React)
-                  </th>
-                  <th>
-                    <strong style="color: #fbbf24">SSR</strong> (Next.js)
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Initial HTML</strong></td>
-                  <td>Empty <code>&lt;div&gt;</code></td>
-                  <td>Fully rendered</td>
-                </tr>
-                <tr>
-                  <td><strong>JS Bundle Size</strong></td>
-                  <td>All components are sent to the browser</td>
-                  <td>Client components are sent for hydration</td>
-                </tr>
-                <tr>
-                  <td><strong>Initial Load (User)</strong></td>
-                  <td>UI appears after JavaScript loads</td>
-                  <td>HTML is visible immediately</td>
-                </tr>
-                <tr>
-                  <td><strong>Hooks/Interactivity</strong></td>
-                  <td>✅ Yes</td>
-                  <td>✅ Yes after hydration</td>
-                </tr>
-                <tr>
-                  <td><strong>Direct DB Access</strong></td>
-                  <td>❌ No — use an API or server</td>
-                  <td>✅ Server-rendered code can access the database</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.6em; margin: 0">
-                💡 <strong style="color: #22c55e">CSR:</strong> The browser
-                renders the UI and provides interactivity.<br />
-                <strong style="color: #fbbf24">SSR:</strong> The server sends
-                the initial HTML, then client JavaScript can hydrate interactive
-                parts.
-              </p>
-            </div>
-          </section>
-
-  <section>
-            <h3>Demo 🛠️: SSR vs CSR</h3>
-            <div
-              class="card"
-              style="
-                margin-top: 2rem;
-                padding: 2.5rem;
-                text-align: center;
-                background: var(--accent-soft);
-              "
-            >
-              <p
-                style="
-                  font-size: 1.2em;
-                  margin: 0 0 1rem;
-                  color: var(--accent);
-                  font-weight: bold;
-                "
-              >
-                Open the SSR vs CSR exercise in the course app
-              </p>
-              <p
-                style="
-                  font-size: 0.9em;
-                  margin: 0;
-                  color: var(--text-soft);
-                  line-height: 1.6;
-                "
-              >
-                Page:
-                <code style="color: var(--accent)">/ssr-vs-csr</code>
-              </p>
-              <p
-                class="small-text"
-                style="margin: 1rem 0 0; line-height: 1.5"
-              >
-                Compare the server-rendered time with the live client clock,
-                then click the counter to see client-side interactivity.
-              </p>
-            </div>
-          </section>
-          <!-- Slide 16: Client Components -->
-          <section>
-            <h4>When to Use Client Components</h4>
-            <div class="card">
-              <pre><code class="tsx" style="font-size: 0.65em;">'use client';
-
-import { useState } from 'react';
-
-export default function Counter() {
-  const [count, setCount] = useState(0);
-
-  return (
-    &lt;div&gt;
-      &lt;p&gt;Count: {count}&lt;/p&gt;
-      &lt;button onClick={() => setCount(count + 1)}&gt;
-        Increment
-      &lt;/button&gt;
-    &lt;/div&gt;
-  );
-}</code></pre>
-            </div>
-
-            <div class="card" style="margin-top: 1rem">
-              <h4 style="font-size: 0.4em">Use Client when you need:</h4>
-              <ul style="font-size: 0.4em">
-                <li>useState, useEffect, or other hooks</li>
-                <li>Event handlers (onClick, onChange)</li>
-                <li>Browser APIs (localStorage, window)</li>
-                <li>Third-party libraries that use hooks</li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- Slide 17: Data Fetching -->
-          <section>
-            <h3>Data Fetching in Server Components</h3>
-            <p class="small-text">Super simple - just async/await!</p>
-
-            <pre
-              style="margin-top: 1.5rem"
-            ><code class="tsx" style="font-size: 0.6em;">// app/posts/page.tsx - Server Component
-async function getPosts() {
-  const res = await fetch('https://api.example.com/posts');
-  return res.json();
-}
-
-export default async function PostsPage() {
-  const posts = await getPosts();
-
-  return (
-    &lt;div&gt;
-      &lt;h1&gt;Blog Posts&lt;/h1&gt;
-      {posts.map((post) => (
-        &lt;article key={post.id}&gt;
-          &lt;h2&gt;{post.title}&lt;/h2&gt;
-          &lt;p&gt;{post.excerpt}&lt;/p&gt;
-        &lt;/article&gt;
-      ))}
-    &lt;/div&gt;
-  );
-}</code></pre>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.75em">
-                ✨ No useEffect, no loading state management - it's automatic!
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide: Exercise 2 — Starships Data Fetching -->
-          <section>
-            <h3>🧪 Exercise 2 — Fetching Data</h3>
-            <p class="small-text">Render a list directly from your component</p>
-
-            <div class="two-col" style="margin-top: 1.5rem">
-              <div class="card" style="text-align: left">
-                <h4 style="font-size: 0.85em; margin-bottom: 0.5rem">
-                  🎯 Goal
-                </h4>
-                <ol
-                  style="
-                    font-size: 0.75em;
-                    line-height: 1.6;
-                    padding-left: 1.2rem;
-                    margin: 0;
-                  "
-                >
-                  <li>
-                    Create a new folder and <code>page.tsx</code> for
-                    <code>/starships</code>.
-                  </li>
-                  <li>Use the Star Wars API to fetch a list of starships.</li>
-                  <li>
-                    Display the name and model of each starship in a list.
-                  </li>
-                </ol>
-              </div>
-
-              <div class="card" style="text-align: left">
-                <h4 style="font-size: 0.85em; margin-bottom: 0.5rem">
-                  📋 The Fetch Function
-                </h4>
-                <pre
-                  style="margin: 0"
-                ><code class="tsx" style="font-size: 0.65em;">async function getStarships() {
-  const res = await fetch('https://swapi.dev/api/starships');
-  return res.json();
-}</code></pre>
-              </div>
-            </div>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.7em">⏱️ Time: 15 minutes</p>
-            </div>
-          </section>
-
-          <!-- Slide: Exercise 2 — Solution -->
-          <section>
-            <h3>✅ Exercise 2 — Solution</h3>
-            <div class="card" style="margin-top: 1.5rem">
-              <div class="label">app/starships/page.tsx</div>
-              <pre><code class="tsx" style="font-size: 0.6em;">async function getStarships() {
-  const res = await fetch('https://swapi.dev/api/starships');
-  return res.json();
-}
-
-export default async function StarshipsPage() {
-  const data = await getStarships();
-
-  return (
-    &lt;main&gt;
-      &lt;h1&gt;Star Wars Starships&lt;/h1&gt;
-      &lt;ul&gt;
-        {data.results.map((ship: any) => (
-          &lt;li key={ship.name}&gt;
-            &lt;strong&gt;{ship.name}&lt;/strong&gt; - {ship.model}
-          &lt;/li&gt;
-        ))}
-      &lt;/ul&gt;
-    &lt;/main&gt;
-  );
-}</code></pre>
-            </div>
-          </section>
-
-          <!-- Slide 17.1: Streaming -->
-          <section>
-            <h3>Streaming Data with Suspense</h3>
-            <p class="small-text">
-              Show UI immediately while data continues to load
-            </p>
-
-            <div class="card" style="margin-top: 1rem; text-align: left">
-              <h4 style="font-size: 0.8em">React Suspense</h4>
-              <p
-                style="
-                  font-size: 0.65em;
-                  color: var(--text-soft);
-                  line-height: 1.4;
-                "
-              >
-                Instead of waiting for all data to load before showing the page,
-                you can <strong>stream</strong> parts of the UI as they become
-                ready.
-              </p>
-            </div>
-
-            <pre
-              style="margin-top: 1rem"
-            ><code class="tsx" style="font-size: 0.58em;">import { Suspense } from 'react';
-import { PostFeed } from './components';
-
-export default function Home() {
-  return (
-    &lt;main&gt;
-      &lt;h1&gt;Dashboard&lt;/h1&gt;
-
-      {/* Renders immediately, shows fallback while loading */}
-      &lt;Suspense fallback={&lt;p&gt;Loading generic feed...&lt;/p&gt;}&gt;
-        &lt;PostFeed /&gt;
-      &lt;/Suspense&gt;
-    &lt;/main&gt;
-  );
-}
-
-// This async Server Component streams its content
-export async function PostFeed() {
-  const posts = await fetch('https://api.example.com/posts')
-    .then((res) =&gt; res.json());
-
-  return (
-    &lt;section&gt;
-      &lt;h2&gt;Latest Posts&lt;/h2&gt;
-      {posts.map((post) =&gt; (
-        &lt;article key={post.id}&gt;{post.title}&lt;/article&gt;
-      ))}
-    &lt;/section&gt;
-  );
-}</code></pre>
-          </section>
-
-          <!-- Slide: Demo Streaming -->
-          <section>
-            <h3>Demo 🛠️</h3>
-            <div
-              class="card"
-              style="
-                margin-top: 2rem;
-                padding: 2.5rem;
-                text-align: center;
-                background: var(--accent-soft);
-              "
-            >
-              <p
-                style="
-                  font-size: 1.2em;
-                  margin: 0 0 1rem;
-                  color: var(--accent);
-                  font-weight: bold;
-                "
-              >
-                Open the live demo in the course app
-              </p>
-              <p
-                style="
-                  font-size: 0.9em;
-                  margin: 0;
-                  color: var(--text-soft);
-                  line-height: 1.6;
-                "
-              >
-                Page:
-                <code style="color: var(--accent)">/streaming-demo</code>
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 17.6: Server Actions -->
-          <section>
-            <h3>Server Actions</h3>
-            <p class="small-text">
-              Run secure server code directly from components
-            </p>
-
-            <div class="card" style="margin-top: 1rem; text-align: left">
-              <h4 style="font-size: 0.8em; color: var(--accent); margin: 0 0 0.5rem">
-                The idea
-              </h4>
-              <p
-                style="
-                  font-size: 0.65em;
-                  color: var(--text-soft);
-                  line-height: 1.4;
-                  margin: 0 0 0.7rem;
-                "
-              >
-                A Server Action is a server function that a form or button can
-                call directly. Next.js sends the input to the server and runs
-                the function there.
-              </p>
-              <h4 style="font-size: 0.8em; color: var(--accent); margin: 0 0 0.5rem">
-                Why use it instead of REST?
-              </h4>
-              <ul
-                style="
-                  font-size: 0.65em;
-                  color: var(--text-soft);
-                  line-height: 1.4;
-                  margin: 0;
-                  padding-left: 1.2rem;
-                "
-              >
-                <li>Less code for mutations inside one Next.js app.</li>
-                <li>No separate API route, fetch call, or JSON plumbing.</li>
-                <li>Useful for forms that only this app needs to submit.</li>
-              </ul>
-              <p
-                style="
-                  font-size: 0.6em;
-                  color: var(--text-soft);
-                  line-height: 1.4;
-                  margin: 0.7rem 0 0;
-                "
-              >
-                Use REST instead when other apps, mobile clients, or third-party
-                consumers need the same API. Always validate input and check
-                permissions in either approach.
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 17.7: Server Actions Code -->
-          <section>
-            <h3>Server Actions: Form Example</h3>
-            <p class="small-text">
-              Submit a form directly to a server-side function
-            </p>
-
-            <pre
-              style="margin-top: 1rem"
-            ><code class="tsx" style="font-size: 0.58em;">export default function Form() {
-  // This function runs on the SERVER!
-  async function createPost(formData: FormData) {
-    'use server'; // The magic directive ✨
-
-    const title = formData.get('title');
-    await db.post.create({ title }); // Direct DB mutation!
-  }
-
-  return (
-    &lt;form action={createPost}&gt;
-      &lt;input type="text" name="title" /&gt;
-      &lt;button type="submit"&gt;Submit&lt;/button&gt;
-    &lt;/form&gt;
-  );
-}</code></pre>
-          </section>
-
-          <!-- Slide 17.8: Server Actions Demo -->
-          <section>
-            <h3>Demo 🛠️: Server Actions</h3>
-            <div
-              class="card"
-              style="
-                margin-top: 2rem;
-                padding: 2.5rem;
-                text-align: center;
-                background: var(--accent-soft);
-              "
-            >
-              <p
-                style="
-                  font-size: 1.2em;
-                  margin: 0 0 1rem;
-                  color: var(--accent);
-                  font-weight: bold;
-                "
-              >
-                Try the Server Action in the course app
-              </p>
-              <p
-                style="
-                  font-size: 0.9em;
-                  margin: 0;
-                  color: var(--text-soft);
-                  line-height: 1.6;
-                "
-              >
-                Page:
-                <code style="color: var(--accent)">/server-action-demo</code>
-              </p>
-              <p
-                class="small-text"
-                style="margin: 1rem 0 0; line-height: 1.5"
-              >
-                Submit a shoutout and see it saved by a server function without
-                a separate API route.
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 17.8: Special Files -->
-          <section>
-            <h3>Reserved Filenames</h3>
-            <p class="small-text">Next.js automatically uses these files</p>
-
-            <div class="card" style="margin-top: 1.5rem; text-align: left">
-              <p
-                style="
-                  font-size: 0.75em;
-                  color: var(--text-soft);
-                  line-height: 1.6;
-                "
-              >
-                In the App Router, files with specific names have special
-                magical behavior. Next.js wraps your <code>page.tsx</code> with
-                these automatically!
-              </p>
-
-              <table style="margin-top: 1rem; width: 100%; border: none">
-                <tbody style="font-size: 0.75em; line-height: 1.8">
-                  <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1)">
-                    <td
-                      style="
-                        padding: 0.5rem;
-                        color: var(--accent);
-                        font-family: monospace;
-                      "
-                    >
-                      layout.tsx
-                    </td>
-                    <td style="padding: 0.5rem">
-                      Wraps the page (and all children) in shared UI.
-                    </td>
-                  </tr>
-                  <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1)">
-                    <td
-                      style="
-                        padding: 0.5rem;
-                        color: #f59e0b;
-                        font-family: monospace;
-                      "
-                    >
-                      loading.tsx
-                    </td>
-                    <td style="padding: 0.5rem">
-                      Shown AUTOMATICALLY while <code>page.tsx</code> is
-                      fetching data.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      style="
-                        padding: 0.5rem;
-                        color: #ef4444;
-                        font-family: monospace;
-                      "
-                    >
-                      error.tsx
-                    </td>
-                    <td style="padding: 0.5rem">
-                      Catches any errors inside the folder and shows fallback
-                      UI.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.7em">
-                💡 You <strong>never import</strong> these files! Just create
-                them, and Next.js handles the rest.
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 18: Loading States -->
-          <section>
-            <h3>Loading States</h3>
-            <p class="small-text">Show loading UI while data fetches</p>
-
-            <div class="two-col" style="margin-top: 1.5rem">
-              <div>
-                <div class="label">app/posts/loading.tsx</div>
-                <pre><code class="tsx" style="font-size: 0.65em;">export default function Loading() {
-  return (
-    &lt;div&gt;
-      &lt;p&gt;Loading posts...&lt;/p&gt;
-      &lt;div className="spinner"&gt;&lt;/div&gt;
-    &lt;/div&gt;
-  );
-}</code></pre>
-              </div>
-
-              <div>
-                <div class="label">app/posts/error.tsx</div>
-                <pre><code class="tsx" style="font-size: 0.65em;">'use client';
-
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error;
-  reset: () => void;
-}) {
-  return (
-    &lt;div&gt;
-      &lt;h2&gt;Something went wrong!&lt;/h2&gt;
-      &lt;button onClick={reset}&gt;Try again&lt;/button&gt;
-    &lt;/div&gt;
-  );
-}</code></pre>
-              </div>
-            </div>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.5em">
-                💡 Next.js automatically shows loading.tsx while page loads!
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 18.1: Loading States Demo -->
-          <section>
-            <h3>Demo 🛠️: Loading States</h3>
-            <div
-              class="card"
-              style="
-                margin-top: 2rem;
-                padding: 2.5rem;
-                text-align: center;
-                background: var(--accent-soft);
-              "
-            >
-              <p
-                style="
-                  font-size: 1.2em;
-                  margin: 0 0 1rem;
-                  color: var(--accent);
-                  font-weight: bold;
-                "
-              >
-                Try the loading state in the course app
-              </p>
-              <p
-                style="
-                  font-size: 0.9em;
-                  margin: 0;
-                  color: var(--text-soft);
-                  line-height: 1.6;
-                "
-              >
-                Page:
-                <code style="color: var(--accent)">/loading-example</code>
-              </p>
-              <p
-                class="small-text"
-                style="margin: 1rem 0 0; line-height: 1.5"
-              >
-                Navigate to the page and watch the loading UI appear while the
-                data is being fetched.
-              </p>
-            </div>
-          </section>
-
-
-          <!-- Slide 22: Best Practices -->
-          <section>
-            <h3>Next.js Best Practices</h3>
-
-            <div class="two-col" style="margin-top: 1.5rem">
-              <div class="card">
-                <h4 style="font-size: 0.9em">✅ DO</h4>
-                <ul style="font-size: 0.75em; line-height: 1.7">
-                  <li>Use Server Components by default</li>
-                  <li>Add metadata to all pages</li>
-                  <li>Use next/image for images</li>
-                  <li>Use next/link for navigation</li>
-                  <li>Keep client components small</li>
-                  <li>Use TypeScript</li>
-                </ul>
-              </div>
-
-              <div class="card">
-                <h4 style="font-size: 0.9em">❌ DON'T</h4>
-                <ul style="font-size: 0.75em; line-height: 1.7">
-                  <li>Use &lt;a&gt; tags for internal links</li>
-                  <li>Fetch Component data in Client Components</li>
-                  <li>Make everything 'use client'</li>
-                  <li>Ignore loading states</li>
-                  <li>Forget error handling</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          <!-- Slide 22.5: Next.js Summary -->
-          <section>
-            <h3>Next.js Summary</h3>
-            <div class="card" style="margin-top: 1.5rem">
-              <h4 style="font-size: 0.9em; margin-bottom: 0.5rem">
-                🌟 Core Concepts
-              </h4>
-              <ul style="font-size: 0.75em; line-height: 1.6; text-align: left">
-                <li>
-                  <strong>App Router:</strong> Folder-based routing where only
-                  <code>page.tsx</code> is publicly accessible.
-                </li>
-                <li>
-                  <strong>Rendering:</strong> RSCs (Server) are default for
-                  SEO/Performance. CSR (Client) is for interactivity.
-                </li>
-                <li>
-                  <strong>Data Fetching:</strong> Fetch data on the Server using
-                  async/await directly in your components.
-                </li>
-                <li>
-                  <strong>Params:</strong> Dynamic route params (e.g.,
-                  <code>[id]</code>) are now <strong>Asynchronous</strong> and
-                  must be awaited.
-                </li>
-                <li>
-                  <strong>Suspense/Streaming:</strong> Use
-                  <code>loading.tsx</code> (or Suspense directly) for instant UI
-                  while data loads.
-                </li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- Slide 23: Key Takeaways -->
-          <section>
-            <h4>🧠 Key Takeaways</h4>
-
-            <div class="card" style="margin-top: 1.5rem">
-              <ul class="check-list" style="font-size: 0.7em">
-                <li>
-                  Next.js is a React framework with built-in routing, SSR, and
-                  more
-                </li>
-                <li>App Router uses file-based routing (folder = route)</li>
-                <li>Server Components are the default (fast & SEO-friendly)</li>
-                <li>Use 'use client' only when you need interactivity</li>
-                <li>Data fetching is simple with async/await</li>
-                <li>Built-in loading and error handling</li>
-                <li>Deploy to Vercel with one click</li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- Slide 17.2: Static vs Dynamic Rendering -->
-          <section>
-            <h3>Static Rendering</h3>
-            <p class="small-text">Default behavior in Next.js</p>
-
-            <div class="two-col" style="margin-top: 1.5rem">
-              <div class="card" style="text-align: left">
-                <h4 style="font-size: 0.8em; color: var(--accent)">
-                  Static Rendering (SSG)
-                </h4>
-                <ul
-                  style="
-                    font-size: 0.65em;
-                    line-height: 1.5;
-                    padding-left: 1.2rem;
-                  "
-                >
-                  <li>Pre-rendered at build time.</li>
-                  <li>Incredibly fast (served from CDN).</li>
-                  <li>Best for blog posts, marketing pages.</li>
-                </ul>
-              </div>
-
-              <div class="card" style="text-align: left">
-                <h4 style="font-size: 0.8em; color: #fbbf24">
-                  Dynamic Rendering
-                </h4>
-                <ul
-                  style="
-                    font-size: 0.65em;
-                    line-height: 1.5;
-                    padding-left: 1.2rem;
-                  "
-                >
-                  <li>Rendered on-demand for each request.</li>
-                  <li>
-                    Triggered automatically if you use <code>cookies()</code>,
-                    <code>headers()</code>, or URL <code>searchParams</code>.
-                  </li>
-                  <li>Best for user dashboards, real-time data.</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          <!-- Slide 17.3: Rendering Strategies Comparison -->
-          <section>
-            <h3>Rendering Strategies Overview</h3>
-            <p class="small-text">
-              Next.js supports multiple rendering strategies
-            </p>
-
-            <table style="margin-top: 1.5rem; font-size: 0.58em">
-              <thead>
-                <tr>
-                  <th>Strategy</th>
-                  <th>When Rendered</th>
-                  <th>Performance</th>
-                  <th>Use Case</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <strong style="color: var(--accent)">SSG</strong><br /><span
-                      style="font-size: 0.85em; color: var(--text-soft)"
-                      >Static Site Generation</span
-                    >
-                  </td>
-                  <td>Build time</td>
-                  <td>⚡⚡⚡ Fastest</td>
-                  <td>Blog, landing pages</td>
-                </tr>
-                <tr>
-                  <td>
-                    <strong style="color: #fbbf24">SSR</strong><br /><span
-                      style="font-size: 0.85em; color: var(--text-soft)"
-                      >Server-Side Rendering</span
-                    >
-                  </td>
-                  <td>Each request</td>
-                  <td>⚡⚡ Fast</td>
-                  <td>User dashboards, personalized content</td>
-                </tr>
-                <tr>
-                  <td>
-                    <strong style="color: #a78bfa">ISR</strong><br /><span
-                      style="font-size: 0.85em; color: var(--text-soft)"
-                      >Incremental Static Regeneration</span
-                    >
-                  </td>
-                  <td>Build + background updates</td>
-                  <td>⚡⚡⚡ Fastest + Fresh</td>
-                  <td>E-commerce products, news sites</td>
-                </tr>
-                <tr>
-                  <td>
-                    <strong style="color: #fb923c">CSR</strong><br /><span
-                      style="font-size: 0.85em; color: var(--text-soft)"
-                      >Client-Side Rendering</span
-                    >
-                  </td>
-                  <td>In browser</td>
-                  <td>⚡ Slowest initial load</td>
-                  <td>Interactive apps, private data</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.7em">
-                💡 You can mix strategies in the same app - choose the best for
-                each page!
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 17.4: When to Use Each Strategy -->
-          <section>
-            <h3>Which Strategy Should I Use?</h3>
-            <p class="small-text">Decision guide for data fetching</p>
-
-            <div
-              style="
-                margin-top: 1.5rem;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 1rem;
-                font-size: 0.75em;
-              "
-            >
-              <div
-                class="card"
-                style="text-align: left; background: var(--accent-soft)"
-              >
-                <h4
-                  style="
-                    font-size: 0.9em;
-                    color: var(--accent);
-                    margin-bottom: 0.5rem;
-                  "
-                >
-                  ✅ Use SSG when:
-                </h4>
-                <ul
-                  style="
-                    font-size: 0.85em;
-                    line-height: 1.6;
-                    padding-left: 1.2rem;
-                  "
-                >
-                  <li>Content doesn't change often</li>
-                  <li>Same for all users</li>
-                  <li>Can be pre-rendered</li>
-                  <li><strong>Examples:</strong> Blog posts, about pages</li>
-                </ul>
-                <pre
-                  style="margin-top: 0.5rem; font-size: 0.8em"
-                ><code class="tsx">// Default in Next.js - just fetch!
-export default async function Blog() {
-  const posts = await getPosts();
-  return &lt;PostList posts={posts} /&gt;
-}</code></pre>
-              </div>
-
-              <div
-                class="card"
-                style="text-align: left; background: rgba(251, 191, 36, 0.14)"
-              >
-                <h4
-                  style="
-                    font-size: 0.9em;
-                    color: #fbbf24;
-                    margin-bottom: 0.5rem;
-                  "
-                >
-                  ✅ Use SSR when:
-                </h4>
-                <ul
-                  style="
-                    font-size: 0.85em;
-                    line-height: 1.6;
-                    padding-left: 1.2rem;
-                  "
-                >
-                  <li>Data changes frequently</li>
-                  <li>Personalized per user</li>
-                  <li>Need request data (cookies)</li>
-                  <li><strong>Examples:</strong> Dashboards, shopping carts</li>
-                </ul>
-                <pre
-                  style="margin-top: 0.5rem; font-size: 0.8em"
-                ><code class="tsx">// Use cookies(), headers(), or searchParams
-export default async function Dashboard() {
-  const session = cookies().get('session');
-  const data = await getUserData(session);
-  return &lt;Dashboard data={data} /&gt;
-}</code></pre>
-              </div>
-            </div>
-          </section>
-
-          <!-- Slide 17.5: When to Use Each Strategy Continued -->
-          <section>
-            <h3>Which Strategy Should I Use? (continued)</h3>
-            <p class="small-text">Decision guide for data fetching</p>
-
-            <div
-              style="
-                margin-top: 1.5rem;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 1rem;
-                font-size: 0.75em;
-              "
-            >
-              <div
-                class="card"
-                style="text-align: left; background: rgba(167, 139, 250, 0.14)"
-              >
-                <h4
-                  style="
-                    font-size: 0.9em;
-                    color: #a78bfa;
-                    margin-bottom: 0.5rem;
-                  "
-                >
-                  ✅ Use ISR when:
-                </h4>
-                <ul
-                  style="
-                    font-size: 0.85em;
-                    line-height: 1.6;
-                    padding-left: 1.2rem;
-                  "
-                >
-                  <li>Want static speed + fresh data</li>
-                  <li>Content updates occasionally</li>
-                  <li>Lots of pages (1000s)</li>
-                  <li>
-                    <strong>Examples:</strong> Product pages, news articles
-                  </li>
-                </ul>
-                <pre
-                  style="margin-top: 0.5rem; font-size: 0.8em"
-                ><code class="tsx">// Revalidate every 60 seconds
-export const revalidate = 60;
-
-export default async function Product() {
-  const product = await getProduct();
-  return &lt;ProductPage product={product} /&gt;
-}</code></pre>
-              </div>
-
-              <div
-                class="card"
-                style="text-align: left; background: rgba(251, 146, 60, 0.14)"
-              >
-                <h4
-                  style="
-                    font-size: 0.9em;
-                    color: #fb923c;
-                    margin-bottom: 0.5rem;
-                  "
-                >
-                  ✅ Use CSR when:
-                </h4>
-                <ul
-                  style="
-                    font-size: 0.85em;
-                    line-height: 1.6;
-                    padding-left: 1.2rem;
-                  "
-                >
-                  <li>Private/sensitive data</li>
-                  <li>Highly interactive UI</li>
-                  <li>No SEO needed</li>
-                  <li>
-                    <strong>Examples:</strong> Admin panels, real-time charts
-                  </li>
-                </ul>
-                <pre
-                  style="margin-top: 0.5rem; font-size: 0.8em"
-                ><code class="tsx">// Client component with useEffect
-'use client';
-export default function RealTimeChart() {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    fetchData().then(setData);
-  }, []);
-  return &lt;Chart data={data} /&gt;
-}</code></pre>
-              </div>
-            </div>
-          </section>
-
-          <!-- Final Slide -->
-          <section>
-            <img
-              src="assets/image.png"
-              alt="Colorful dotted arc"
-              style="
+        .flow-caption {
+            margin-top: 0.45rem;
+            font-size: 0.5em;
+            color: var(--text-soft);
+        }
+        .split-code {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.1rem;
+            text-align: left;
+            margin-top: 0.75rem;
+        }
+        .label {
+            font-size: 0.5em;
+            color: #8fb5d8;
+            margin-bottom: 0.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .mini {
+            font-size: 0.62em;
+            line-height: 1.5;
+            color: var(--text-soft);
+            margin-top: 0.5rem;
+        }
+        @media (max-width: 900px) {
+            .hero,
+            .two-col {
+                grid-template-columns: 1fr;
                 display: block;
-                width: min(90vw, 1100px);
-                max-height: 75vh;
-                object-fit: contain;
-                margin: 0 auto;
-              "
-            />
-          </section>
+            }
+            .split-code,
+            .adv-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-visual,
+            .two-col > div + div {
+                margin-top: 1rem;
+            }
+        }
+        .demo-slide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+        .demo-slide .demo-icon { font-size: 3.5em; line-height: 1; }
+        .demo-slide h2 {
+            font-size: 2.2em;
+            margin: 0;
+            color: var(--accent);
+            text-shadow: 0 0 32px rgba(97,218,251,0.5);
+        }
+        .demo-slide p { color: var(--text-soft); font-size: 0.95em; margin: 0; }
+        .demo-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+            padding: 0.5rem 1.1rem;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 0.55em;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid rgba(97, 218, 251, 0.4);
+        }
+        .demo-link:hover { background: rgba(97, 218, 251, 0.24); }
+        .reveal .controls { color: var(--accent) !important; }
 
-        </section>
-      </div>
+        /* Auto-play word reveal (no clicks needed) */
+        .auto-reveal .auto-word { opacity: 0; }
+        .reveal section.present.auto-reveal .auto-word {
+            animation: autoWordIn 0.8s ease forwards;
+        }
+        .reveal section.present.auto-reveal .auto-word:nth-of-type(1) { animation-delay: 0.5s; }
+        .reveal section.present.auto-reveal .auto-word:nth-of-type(2) { animation-delay: 1.8s; }
+        .reveal section.present.auto-reveal .auto-word:nth-of-type(3) { animation-delay: 3.1s; }
+        .reveal section.present.auto-reveal .auto-word:nth-of-type(4) { animation-delay: 4.4s; }
+        @keyframes autoWordIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <section>
+                    <div class="hero">
+                        <div>
+                            <h1>Day 5</h1>
+                            <h3>Performance Optimization</h3>
+                            <p>Memoization, Rendering, the React Compiler &amp; What's New in React 19</p>
+                            <span class="badge">Measure, then optimize</span>
+                            <span class="badge">React 19</span>
+                        </div>
+                        <div class="hero-visual">
+                            <svg class="diagram-svg" viewBox="0 0 520 220" role="img" aria-label="Performance chart illustration">
+                                <rect x="55" y="55" width="60" height="130" rx="8" fill="#334155"/>
+                                <rect x="145" y="90" width="60" height="95" rx="8" fill="#334155"/>
+                                <rect x="235" y="120" width="60" height="65" rx="8" fill="#334155"/>
+                                <rect x="325" y="75" width="60" height="110" rx="8" fill="#334155"/>
+                                <rect x="415" y="105" width="60" height="80" rx="8" fill="#61dafb"/>
+                                <text x="260" y="32" fill="#dbeafe" text-anchor="middle" font-size="16">Fewer unnecessary renders = smoother UI</text>
+                            </svg>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        Welcome to Day 5. Today we focus on performance optimization — understanding when and how to prevent unnecessary work in React.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">What Is Memoization?</h2>
+                    <p class="small-text">Same input → return cached result, skip the work.</p>
+                    <pre><code class="js">const cache = {};
+
+function double(n) {
+  if (cache[n]) return cache[n];
+  cache[n] = n * 2;
+  return cache[n];
+}
+
+double(8); // computes → 16
+double(8); // cached  → 16</code></pre>
+                    <aside class="notes">
+                        Start with memoization in general before React. We save a previous result in a cache, and when the same input comes back, we skip the work and reuse the answer.
+                        This is the core idea behind React.memo, useMemo, and useCallback: avoid doing the same work again when nothing important changed.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Why Performance Optimization Matters</h2>
+                    <ul>
+                        <li>Large component trees and frequent re-renders</li>
+                        <li>Expensive calculations or passing functions as props</li>
+                        <li>Slow UI interactions</li>
+                        <li>React is fast, but unnecessary re-renders hurt</li>
+                        <li><strong>Don't optimize until you have a real performance problem</strong></li>
+                    </ul>
+                    <aside class="notes">
+                        Set the stage: React is already fast, but as apps grow, unnecessary renders accumulate. We optimize the bottlenecks, not everything.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">How React Renders</h2>
+                    <h6 class="slide-title">(Quick Refresher)</h6>
+
+                    <ul>
+                        <li>A component re-renders when its state changes</li>
+                        <li>When its props change</li>
+                        <li>When its parent re-renders</li>
+                        <li>By default: parent render triggers child renders</li>
+                    </ul>
+                    <aside class="notes">
+                        Quick refresher on the render cycle. Emphasize that parent re-renders cascade down to all children by default — this is the root cause of most perf issues.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">What Is an Unnecessary Re-render?</h2>
+                    <pre><code class="tsx">
+function App() {
+  const [count, setCount] = useState(0);
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;+&lt;/button&gt;
+      &lt;HeavyComponent title="Products" /&gt;
+    &lt;/&gt;
+  );
+}
+                    </code></pre>
+                    <p class="small-text">HeavyComponent re-renders even though it does not use count. Optimization helps.</p>
+                    <aside class="notes">
+                        Walk through the example: clicking the button changes count, Parent re-renders, and HeavyComponent re-renders for no reason. This is the problem we solve.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Optimization Tools Overview</h2>
+                    <table>
+                        <thead><tr><th>Tool</th><th>Purpose</th></tr></thead>
+                        <tbody>
+                            <tr><td>React.memo</td><td>Prevent unnecessary re-renders</td></tr>
+                            <tr><td>useCallback</td><td>Cache function references</td></tr>
+                            <tr><td>useMemo</td><td>Cache expensive calculations</td></tr>
+                        </tbody>
+                    </table>
+                    <aside class="notes">
+                        Overview of our three main tools. We'll cover each one in depth. They solve different problems but work together.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">What Is React.memo?</h2>
+                    <ul>
+                        <li>Higher-order component</li>
+                        <li>Memoizes a component</li>
+                    </ul>
+                    <pre><code class="tsx">
+const MyComponent = React.memo(Component);
+                    </code></pre>
+                    <p class="highlight" style="font-weight:700; margin-top:0.6rem;">&#10003; Skips re-render if props did not change</p>
+                    <aside class="notes">
+                        React.memo is a higher-order component that wraps your component. It compares previous and next props — if they're the same, it skips re-rendering.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">React.memo Example</h2>
+                    <pre><code class="tsx">
+const HeavyComponent = memo(({ title }: { title: string }) =&gt; {
+  return &lt;h2&gt;{title}&lt;/h2&gt;;
+});
+
+function App() {
+  const [count, setCount] = useState(0);
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;+&lt;/button&gt;
+      &lt;HeavyComponent title="Products" /&gt;
+    &lt;/&gt;
+  );
+}
+                    </code></pre>
+                    <p class="small-text"><code>HeavyComponent</code> no longer re-renders when <code>count</code> changes — <code>title</code> is the same.</p>
+                    <aside class="notes">
+                        memo receives a function component and an optional custom comparison function.
+                        It returns a new component that behaves the same but skips re-rendering when props have not changed.
+                        Think of it as a wrapper — same component inside, with a "skip if same props" guard added on top.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Without vs With React.memo</h2>
+                    <table>
+                        <thead><tr><th>Without</th><th>With</th></tr></thead>
+                        <tbody>
+                            <tr><td>Parent renders → child <strong>always</strong> renders</td><td>Parent renders → child renders <strong>only if props changed</strong></td></tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <p class="small-text" style="margin-top:0.8rem;">Uses <strong>shallow comparison</strong> (===) — primitives by value, objects/arrays by reference.</p>
+                    <aside class="notes">
+                        Key concept: shallow comparison means === on each prop. Primitives are safe. Objects and arrays need stable references — this is where useMemo comes in later.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Shallow Comparison Examples</h2>
+                    <div class="split-code">
+                        <div class="fragment fade-in-then-semi-out">
+                            <div class="label">❌ Child ALWAYS re-renders</div>
+                            <pre><code class="tsx">
+function Parent() {
+ const [count, setCount] = useState(0);
+
+ // new array created every render
+ const items = ["a", "b", "c"];
+ return &lt;Box items={items} /&gt;;
+}
+
+                            </code></pre>
+                        </div>
+                        <div class="fragment fade-in">
+                            <div class="label">✅ Child does NOT re-render</div>
+                            <pre><code class="tsx">
+const items = ["a", "b", "c"];
+
+function Parent() {
+ const [count, setCount] = useState(0);
+
+ // same reference every render
+ return &lt;Box items={items} /&gt;;
+}                    </code></pre>
+                        </div>
+                    </div>
+                    <p class="small-text">Arrays are compared by <strong>reference</strong>, not by content.<br>Every render creates a new reference → memo thinks props changed.</p>
+                    <aside class="notes">
+                        Side-by-side comparison. Left: inline array creates a new reference every render, defeating memo. Right: array defined outside the component keeps the same reference. This is the most common mistake with React.memo.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">When React.memo Helps</h2>
+                    <ul>
+                        <li>Heavy components or long lists</li>
+                        <li>UI components with stable props</li>
+                        <li>Not useful when props change often or component is cheap</li>
+                        <li>Rule: measure first, optimize second</li>
+                    </ul>
+                    <aside class="notes">
+                        Don't wrap everything in memo. It has a cost (storing previous props, running comparison). Only use when the component is expensive or renders frequently with the same props.
+                    </aside>
+                </section>
+
+                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🛠️</span>
+                        <h2>Demo Time</h2>
+                        <p>React.memo in action</p>
+                        <a class="demo-link" href="/?target=day-4/demo/react-memo" target="_blank" rel="noopener">▶ Open demo</a>
+                    </div>
+                    <aside class="notes">
+                        Live demo: wrap a heavy component in React.memo, show the console.log only fires when props actually change.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Why useCallback Exists</h2>
+                    <div class="split-code" style="margin-left: -8%; margin-right: -8%; font-size: 0.78em;">
+                        <div class="fragment fade-in">
+                            <pre><code class="tsx">
+function Dashboard({ products }) {
+  const [query, setQuery] = useState("");
+
+  const handleDelete = (id: number) =>
+    console.log("delete", id);
+
+  return (
+    &lt;&gt;
+      &lt;input value={query}
+        onChange={e =&gt; setQuery(e.target.value)}
+      /&gt;
+      &lt;ProductTable
+        products={products}
+        onDelete={handleDelete}
+      /&gt;
+    &lt;/&gt;
+  );
+}
+                            </code></pre>
+                        </div>
+                        <div class="fragment fade-in">
+                            <pre><code class="tsx">
+const ProductTable = memo(({products,  onDelete,}: {
+  products: Product[];
+  onDelete: (id: number) => void;
+}) => {
+  return (
+    &lt;ul&gt;
+      {products.map(p =&gt; (
+        &lt;li key={p.id}&gt;
+          {p.name}
+          &lt;button onClick={() =&gt; onDelete(p.id)}&gt;
+            Remove
+          &lt;/button&gt;
+        &lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+});
+                            </code></pre>
+                        </div>
+                    </div>
+                    <p class="small-text fragment" style="margin-top:0.6rem;">What is the problem in this code?</p>
+                    <ul class="fragment">
+                        <li>Functions are recreated on every render</li>
+                        <li><code>ProductTable</code> re-renders on every query change</li>
+                    </ul>
+                    <aside class="notes">
+                        Show the code first and ask students what the issue is. Then reveal: handleDelete is a new function reference every render, so ProductTable always re-renders even though memo wraps it. useCallback solves this.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">useCallback Explained</h2>
+                    <pre><code class="tsx">
+const fn = useCallback(() => {
+  /* logic */
+}, [deps]);
+                    </code></pre>
+                    <p class="small-text">Memoizes a function to keep the same reference between renders.</p>
+                    <aside class="notes">
+                        useCallback returns the same function reference between renders as long as deps haven't changed. It's the function equivalent of useMemo.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">The Fix: useCallback</h2>
+                    <pre><code class="tsx">
+function Dashboard({ products }: { products: Product[] }) {
+  const [query, setQuery] = useState("");
+
+  // ✅ stable reference — same function every render
+  const handleDelete = useCallback((id: number) => {
+    console.log("delete", id);
+  }, []);
+
+  return (
+    &lt;&gt;
+      &lt;input value={query} onChange={e =&gt; setQuery(e.target.value)} /&gt;
+      &lt;ProductTable products={products} onDelete={handleDelete} /&gt;
+    &lt;/&gt;
+  );
+}
+                    </code></pre>
+                    <p class="small-text"><code>handleDelete</code> keeps the same reference — <code>ProductTable</code> no longer re-renders on every keystroke.</p>
+                    <aside class="notes">
+                        Wrapping handleDelete in useCallback with an empty deps array means the function reference never changes. ProductTable's memo now works correctly — it only re-renders when products actually change.
+                    </aside>
+                </section>
+
+                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🛠️</span>
+                        <h2>Demo Time</h2>
+                        <p>React.memo + useCallback</p>
+                        <a class="demo-link" href="/?target=day-4/demo/use-callback" target="_blank" rel="noopener">▶ Open demo</a>
+                    </div>
+                    <aside class="notes">
+                        Live demo: Dashboard with search input + memoized ProductTable. Show that typing only re-renders Dashboard, not ProductTable. Remove useCallback and show memo breaks.
+                    </aside>
+                </section>
+
+                <!--
+                LIVE CODE — React.memo + useCallback Together
+
+                // Heavy child — expensive to render (long list of rows)
+                const ProductTable = React.memo(({ products, onDelete }: Props) => {
+                  console.log("ProductTable rendered");
+                  return (
+                    <ul>
+                      {products.map(p => (
+                        <li key={p.id}>{p.name} <button onClick={() => onDelete(p.id)}>Remove</button></li>
+                      ))}
+                    </ul>
+                  );
+                });
+
+                // Parent — owns state unrelated to the table (e.g. a search input)
+                function Dashboard({ products }: { products: Product[] }) {
+                  const [query, setQuery] = useState("");
+
+                  // stable reference — ProductTable won't re-render when query changes
+                  const handleDelete = useCallback((id: number) => {
+                    console.log("delete", id);
+                  }, []);
+
+                  return (
+                    <>
+                      <input value={query} onChange={e => setQuery(e.target.value)} />
+                      <ProductTable products={products} onDelete={handleDelete} />
+                    </>
+                  );
+                }
+                -->
+
+                <section data-background="linear-gradient(135deg, #10281a 0%, #0a3026 60%, #0d3320 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🧩</span>
+                        <h2>Exercise</h2>
+                        <p>Stable Product Rows — apply React.memo + useCallback</p>
+                        <a class="demo-link" href="/?target=day-4/exercises/stable-product-rows/starter" target="_blank" rel="noopener">▶ Open exercise</a>
+                    </div>
+                    <aside class="notes">
+                        Hands-on exercise: the product rows re-render on every tick. Students figure out how to stop the unnecessary re-renders using React.memo and useCallback before we move on to useMemo.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">What Is useMemo?</h2>
+                    <ul>
+                        <li>Memoizes a value</li>
+                        <li>Avoids recalculating expensive logic on every render</li>
+                    </ul>
+                    <pre><code class="tsx">
+const value = useMemo(() => compute(), [deps]);
+                    </code></pre>
+                    <aside class="notes">
+                        useMemo caches the return value of a function. It only recomputes when dependencies change. Think of it as "remember this result until deps change."
+
+                        Gets: a function to run + a dependency array.
+                        Returns: the cached result of that function — not the function itself.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Problem: Expensive Calculation</h2>
+                    <pre><code class="tsx">
+function Stats({ n }: { n: number }) {
+  let total = 0;
+  for (let i = 0; i &lt; n; i++) total += i; // slow
+
+  return &lt;p&gt;Sum: {total}&lt;/p&gt;;
+}
+                    </code></pre>
+                    <p class="small-text">Recalculates on every render — even when <code>n</code> hasn't changed.</p>
+                    <aside class="notes">
+                        Without useMemo, the filter runs on every render even if products and query haven't changed. For large lists this is wasteful.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Solution: With useMemo</h2>
+                    <pre><code class="tsx">
+function Stats({ n }: { n: number }) {
+  const total = useMemo(() => {
+    let sum = 0;
+    for (let i = 0; i &lt; n; i++) sum += i;
+    return sum;
+  }, [n]);
+
+  return &lt;p&gt;Sum: {total}&lt;/p&gt;;
+}
+                    </code></pre>
+                    <p class="small-text">Recalculates only when <code>n</code> changes.</p>
+                    <aside class="notes">
+                        Now the filter only runs when products or query actually change. If the parent re-renders for other reasons, this computation is skipped.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">What useMemo Actually Does</h2>
+                    <ul>
+                        <li>Caches the result, not the function</li>
+                        <li>Dependency array controls recomputation</li>
+                    </ul>
+                    <aside class="notes">
+                        Important distinction: useMemo caches the result, not the function itself. If you forget a dependency, you get stale data. ESLint exhaustive-deps rule helps catch this.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">When to Use useMemo</h2>
+                    <ul>
+                        <li>Expensive calculations used in rendering</li>
+                        <li>Dependencies are stable</li>
+                        <li>Avoid for simple calculations — measure first</li>
+                    </ul>
+                    <aside class="notes">
+                        Simple math or string operations don't need useMemo. The overhead of memoization would be greater than the computation itself. Profile first.
+                    </aside>
+                </section>
+
+                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🛠️</span>
+                        <h2>Demo Time</h2>
+                        <p>useMemo — caching expensive calculations</p>
+                        <a class="demo-link" href="/?target=day-4/demo/use-memo" target="_blank" rel="noopener">▶ Open demo</a>
+                    </div>
+                    <aside class="notes">
+                        Live demo: show useMemo with the filtered product list. Comment out useMemo, show the calculation running on every keystroke. Re-add it and show it only runs when deps change.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">useMemo vs useCallback</h2>
+                    <table>
+                        <thead><tr><th>useMemo</th><th>useCallback</th></tr></thead>
+                        <tbody>
+                            <tr><td>Memoizes a value</td><td>Memoizes a function</td></tr>
+                            <tr><td>Returns the result</td><td>Returns the function</td></tr>
+                            <tr><td>useMemo(() =&gt; value)</td><td>useCallback(() =&gt; fn)</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="small-text">useCallback(fn) is roughly useMemo(() =&gt; fn).</p>
+                    <aside class="notes">
+                        Key mental model: useMemo caches a value, useCallback caches a function. useCallback(fn, deps) is syntactic sugar for useMemo(() => fn, deps).
+                    </aside>
+                </section>
+
+                <section data-background="linear-gradient(135deg, #10281a 0%, #0a3026 60%, #0d3320 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🧩</span>
+                        <h2>Exercise</h2>
+                        <p>Filtered Analytics Summary — memoize the expensive computation</p>
+                        <a class="demo-link" href="/?target=day-4/exercises/filtered-analytics-summary/starter" target="_blank" rel="noopener">▶ Open exercise</a>
+                    </div>
+                    <aside class="notes">
+                        Hands-on exercise: the analytics summary recalculates on every tick. Students work out how to recompute it only when the filter changes, using useMemo.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Common Mistakes</h2>
+                    <ul>
+                        <li>Memoizing everything "just in case"</li>
+                        <li>Missing dependencies in the deps array</li>
+                        <li>Optimizing before measuring</li>
+                    </ul>
+                    <aside class="notes">
+                        Common pitfalls: wrapping everything in memo/useMemo adds complexity and cost without benefit. Missing deps leads to stale closures. Passing a fresh object/array/function each render silently defeats React.memo. Always profile before optimizing.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Real-World Example (Summary)</h2>
+                    <ul>
+                        <li>List component → React.memo</li>
+                        <li>Expensive filtering → useMemo</li>
+                        <li>Event handlers → useCallback</li>
+                    </ul>
+                    <aside class="notes">
+                        Recap the three tools and when to reach for each. In practice, you often combine all three in a single feature.
+                    </aside>
+                </section>
+
+                <section class="auto-reveal">
+                    <h2 style="font-size:2.4em; margin:0;">
+                        <span class="auto-word" style="display:inline-block;">memo</span>
+                        <span class="auto-word" style="display:inline-block;">&nbsp;+ useCallback</span>
+                        <span class="auto-word" style="display:inline-block;">&nbsp;+ useMemo</span>
+                        <span class="auto-word" style="display:inline-block;">&nbsp;= 🗑️</span>
+                    </h2>
+                    <p class="fragment" style="font-size:2.4em; margin-top:1.4rem; color:var(--accent); font-weight:800; text-shadow:0 0 32px rgba(97,218,251,0.55);">Meet React Compiler.</p>
+                    <aside class="notes">
+                        Humorous pivot — everything we just learned can be handled automatically by the compiler. But the mental model is still essential for debugging and writing correct code.
+                    </aside>
+                </section>
+
+                <section>
+                    <div style="display:flex; flex-direction:column; gap:0.8rem;">
+                        <h2 style="margin:0; font-size:1.9em; font-weight:800;">React Compiler</h2>
+                        <p class="small-text" style="margin:0;">Introduced in React 19</p>
+                        <div class="two-col">
+                            <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                                <div class="card" style="font-size:0.82em;">
+                                    <strong class="highlight">🔧 Compile-time tool</strong>
+                                    <p style="margin:0.4rem 0 0; color:var(--text-soft);">Automatically optimizes re-renders at build time.</p>
+                                </div>
+                                <div class="card" style="font-size:0.82em;">
+                                    <strong class="highlight">💤 Less boilerplate</strong>
+                                    <p style="margin:0.4rem 0 0; color:var(--text-soft);">Reduces the need for manual <code>useMemo</code> and <code>useCallback</code>.</p>
+                                </div>
+                                <div class="card" style="font-size:0.82em;">
+                                    <strong class="highlight">🔍 Transparent</strong>
+                                    <p style="margin:0.4rem 0 0; color:var(--text-soft);">Works behind the scenes — no API changes needed.</p>
+                                </div>
+                            </div>
+                            <div class="image-frame">
+                                <svg class="diagram-svg" viewBox="0 0 500 220" role="img" aria-label="Compiler pipeline illustration">
+                                    <rect x="20" y="85" width="130" height="50" rx="9" fill="#1f2937" stroke="#61dafb"/>
+                                    <text x="85" y="116" fill="#dbeafe" text-anchor="middle" font-size="14">Source Code</text>
+                                    <rect x="185" y="70" width="130" height="80" rx="9" fill="#0f172a" stroke="#61dafb"/>
+                                    <text x="250" y="116" fill="#dbeafe" text-anchor="middle" font-size="14">React Compiler</text>
+                                    <rect x="350" y="85" width="130" height="50" rx="9" fill="#1f2937" stroke="#61dafb"/>
+                                    <text x="415" y="116" fill="#dbeafe" text-anchor="middle" font-size="14">Optimized UI</text>
+                                    <line x1="150" y1="110" x2="185" y2="110" stroke="#61dafb" stroke-width="3"/>
+                                    <line x1="315" y1="110" x2="350" y2="110" stroke="#61dafb" stroke-width="3"/>
+                                </svg>
+                                <p class="small-text">Memoization applied automatically at compile time.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        React Compiler is the future of performance in React. It analyzes your code at build time and inserts memoization automatically. No runtime cost, no manual work.
+                    </aside>
+                </section>
+
+                <section>
+                    <div style="display:flex; flex-direction:column; gap:0.8rem;">
+                        <h2 style="margin:0; font-size:1.9em; font-weight:800;">Before the Compiler</h2>
+                        <pre><code class="tsx">
+// Parent.tsx
+function Parent({ value }: { value: number }) {
+  const expensive = useMemo(() =&gt; {
+    return heavyCalculation(value);
+  }, [value]);
+
+  return &lt;Child data={expensive} /&gt;;
+}
+                        </code></pre>
+                        <p class="small-text">Manual <code>useMemo</code> adds cognitive overhead and boilerplate to every component.</p>
+                    </div>
+                    <aside class="notes">
+                        This is what we've been writing all day — manual useMemo everywhere. It works but adds noise. The compiler eliminates this boilerplate.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">With React Compiler</h2>
+                    <pre><code class="tsx">
+function Parent({ value }) {
+  const expensive = heavyCalculation(value);
+  return &lt;Child data={expensive} /&gt;;
+}
+                    </code></pre>
+                    <ul>
+                        <li>No useMemo needed</li>
+                        <li>Same performance with cleaner code</li>
+                        <li>Compiler tracks dependencies and memoizes</li>
+                    </ul>
+                    <aside class="notes">
+                        Same behavior, cleaner code. The compiler figures out what depends on what and memoizes automatically. You write simple code, the compiler optimizes it.
+                    </aside>
+                </section>
+
+                                <section>
+                                        <h2 class="slide-title">How to Add the React Compiler</h2>
+                                        <div class="two-col" style="align-items: center;">
+                                                <div style="font-size: 0.9em; text-align: left;">
+                                                        <div style="margin-bottom: 1.5rem;">
+                                                                <p style="margin: 0 0 0.5rem 0;"><strong>1. Upgrade & Install</strong></p>
+                                                                <pre style="width: 100%; margin: 0; box-shadow: none;"><code class="bash" style="padding: 0.8rem; font-size: 0.8em; border-radius: 6px;">npm install react@latest react-dom@latest
+npm install babel-plugin-react-compiler</code></pre>
+                                                        </div>
+                                                        <div>
+                                                                <p style="margin: 0 0 0.5rem 0;"><strong>2. Update Config</strong></p>
+                                                                <p style="font-size: 0.8em; opacity: 0.7; margin: 0;">Add the babel plugin to your Vite config.</p>
+                                                        </div>
+                                                </div>
+                                                <div style="flex: 1.3;">
+                                                        <div style="background: #1e1e1e; border-radius: 8px; overflow: hidden; border: 1px solid #333;">
+                                                                <div style="background: #252526; padding: 4px 10px; font-size: 0.6em; color: #888; font-family: monospace; border-bottom: 1px solid #333;">vite.config.ts</div>
+                                                                <pre style="margin: 0;"><code class="ts" style="padding: 1rem; font-size: 0.8em; line-height: 1.4; max-height: none;">import react from "@vitejs/plugin-react";
+
+export default {
+  plugins: [
+    react({
+      babel: {
+        plugins: ["babel-plugin-react-compiler"],
+      },
+    }),
+  ],
+};</code></pre>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <div style="margin-top: 1.5rem; padding: 0.8rem; background: rgba(97, 218, 251, 0.08); border-radius: 6px; font-size: 0.75em; text-align: left;">
+                                                <p style="margin: 0; color: #aaddff;">Once configured, the compiler automatically memoizes components and hooks—reducing the need for <code>useMemo</code> and <code>useCallback</code>.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Two steps: upgrade React and install the babel plugin. Add it to your Vite config and you're done. The compiler handles the rest behind the scenes.
+                                        </aside>
+                                </section>
+
+                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
+                    <div class="demo-slide">
+                        <span class="demo-icon">🛠️</span>
+                        <h2>Demo Time</h2>
+                        <p>React Compiler in action</p>
+                        <a class="demo-link" href="https://playground.react.dev/" target="_blank" rel="noopener">▶ Open React Playground</a>
+                    </div>
+                    <aside class="notes">
+                        Live demo: show a component without manual memoization, enable the compiler, and show that re-renders are automatically skipped.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Why We Still Need the Hooks</h2>
+                    <ul>
+                        <li>Legacy codebases and libraries still rely on manual memoization</li>
+                        <li>Understanding the "why" helps you debug when things go wrong</li>
+                        <li>React Compiler runs only on components that follow React's rules</li>
+                    </ul>
+                    <aside class="notes">
+                        Manual memoization is still everywhere in legacy code and third-party libraries. Knowing why hooks work the way they do makes you a better debugger. And the compiler is not magic — it can only optimize components that obey React's rules.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">React Rules the Compiler Checks</h2>
+                    <ul>
+                        <li>Only call Hooks at the top level of components and custom Hooks</li>
+                        <li>Props and state are immutable; never mutate them directly</li>
+                        <li>No side effects during render — use <code>useEffect</code> for side effects</li>
+                    </ul>
+                    <aside class="notes">
+                        The compiler can only optimize code that follows React's rules. If a component breaks purity, mutates state, or calls hooks conditionally, the compiler skips it or produces a warning. Following these rules is not just good practice — it unlocks automatic memoization.
+                    </aside>
+                </section>
+
+                <section>
+                    <div style="display:flex; flex-direction:column; gap:0.8rem;">
+                        <h2 style="margin:0; font-size:1.9em; font-weight:800;">What Else Is New in React 19?</h2>
+                        <p class="small-text" style="margin:0;">Beyond the compiler — quality-of-life upgrades that simplify everyday development.</p>
+                        <div class="two-col" style="margin-top:0.6rem; align-items:stretch;">
+                            <div class="card" style="font-size:0.82em; display:flex; align-items:center; justify-content:center; text-align:center;">
+                                <strong class="highlight">🔗 The <code>use</code> Hook</strong>
+                            </div>
+                            <div class="card" style="font-size:0.82em; display:flex; align-items:center; justify-content:center; text-align:center;">
+                                <strong class="highlight">🧩 Simplified Context</strong>
+                            </div>
+                            <div class="card" style="font-size:0.82em; display:flex; align-items:center; justify-content:center; text-align:center;">
+                                <strong class="highlight">📄 Document Metadata</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        React 19 ships more than the compiler. Over the next few slides we'll look at three everyday improvements: the use hook, simplified context, and native document metadata.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">The New <code>use</code> Hook</h2>
+                    <p class="small-text" style="margin:0 0 1rem;">Resolve promises <span class="highlight">directly in render</span> — no more <code>useEffect</code> + <code>useState</code> for simple fetches. Pairs with <code>&lt;Suspense&gt;</code>.</p>
+                    <div class="two-col">
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong>Before (Older React)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.62em; line-height:1.35;">function Profile({ id }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() =&gt; {
+    fetchUser(id).then((u) =&gt; {
+      setData(u);
+      setLoading(false);
+    });
+  }, [id]);
+
+  if (loading) return &lt;Spinner /&gt;;
+  return &lt;h1&gt;{data.name}&lt;/h1&gt;;
+}</code></pre>
+                        </div>
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong class="highlight">After (React 19)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.62em; line-height:1.35;">function Profile({ userPromise }) {
+  const data = use(userPromise);
+  return &lt;h1&gt;{data.name}&lt;/h1&gt;;
+}
+
+// Parent
+&lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
+  &lt;Profile userPromise={fetchUser(id)} /&gt;
+&lt;/Suspense&gt;</code></pre>
+                        </div>
+                    </div>
+                    <p class="small-text" style="margin:1rem 0 0;"><span class="highlight">&lt;Suspense&gt;</span> lets a component "wait" for async work — it shows a <code>fallback</code> (e.g. a spinner) until the data is ready, then renders the real content.</p>
+                    <aside class="notes">
+                        The use hook lets you read a promise during render. Suspense handles the loading state, so you delete the useEffect/useState boilerplate entirely.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Simplified Context</h2>
+                    <p class="small-text" style="margin:0 0 1rem;">Goodbye <code>.Provider</code> — render the context object <span class="highlight">directly as the component</span>.</p>
+                    <div class="two-col">
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong>Before (Older React)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.7em; line-height:1.4;">&lt;ThemeContext.Provider value={theme}&gt;
+  &lt;App /&gt;
+&lt;/ThemeContext.Provider&gt;</code></pre>
+                        </div>
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong class="highlight">After (React 19)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.7em; line-height:1.4;">&lt;ThemeContext value={theme}&gt;
+  &lt;App /&gt;
+&lt;/ThemeContext&gt;</code></pre>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        You can now use the context object itself as the provider. Less nesting, less ceremony — the .Provider suffix is no longer required.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Native Document Metadata</h2>
+                    <p class="small-text" style="margin:0 0 1rem;">React <span class="highlight">hoists</span> <code>&lt;title&gt;</code>, <code>&lt;meta&gt;</code> and <code>&lt;link&gt;</code> to <code>&lt;head&gt;</code> — no <code>document.title</code>, no <code>react-helmet</code>.</p>
+                    <div class="two-col">
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong>Before (Older React)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.66em; line-height:1.4;">function Home() {
+  useEffect(() =&gt; {
+    document.title = "Home";
+  }, []);
+
+  return &lt;h1&gt;Home&lt;/h1&gt;;
+}</code></pre>
+                        </div>
+                        <div>
+                            <p class="small-text" style="margin:0 0 0.4rem;"><strong class="highlight">After (React 19)</strong></p>
+                            <pre style="margin:0;"><code class="tsx" style="font-size:0.66em; line-height:1.4;">function Home() {
+  return (
+    &lt;&gt;
+      &lt;title&gt;Home&lt;/title&gt;
+      &lt;meta name="description"
+            content="Welcome" /&gt;
+      &lt;h1&gt;Home&lt;/h1&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        Render title, meta and link tags anywhere in your tree — React automatically moves them into the document head. No third-party libraries needed.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Day 5 Summary</h2>
+                    <ul class="check-list">
+                        <li>Memoization: cache values and functions to avoid unnecessary work</li>
+                        <li>React.memo, useCallback, useMemo — use when you have a real perf problem</li>
+                        <li>React Compiler automates memoization when you follow React's rules</li>
+                        <li>React 19 brings the <code>use</code> hook, simpler Context, and native document metadata</li>
+                    </ul>
+                    <aside class="notes">
+                        Recap the main takeaways: memoization is a powerful tool but not a default, the compiler is the future but requires clean React code, and React 19 has quality-of-life improvements. Measure first, optimize second.
+                    </aside>
+                </section>
+
+                <section>
+                    <div class="hero">
+                        <div>
+                            <h2>Thank You!</h2>
+                        </div>
+                        <div class="hero-visual">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React logo thank you">
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script> 
+    
     <script>
-      Reveal.initialize({
-        hash: true,
-        slideNumber: true,
-        plugins: [RevealHighlight, RevealNotes],
-      });
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            plugins: [ RevealHighlight, RevealNotes ] // Ensure RevealNotes is listed here
+        });
     </script>
-  </body>
+</body>
 </html>
