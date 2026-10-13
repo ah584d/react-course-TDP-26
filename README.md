@@ -92,10 +92,10 @@ export default function Example() {
 - `day-1/demo/product-counter`
 - `day-1/exercises/build-product-card/starter`
 - `day-1/exercises/build-product-card/solution`
-- `day-1/exercises/pass-product-data-with-props/starter`
-- `day-1/exercises/pass-product-data-with-props/solution`
-- `day-1/exercises/build-product-card-with-prop/starter`
-- `day-1/exercises/build-product-card-with-prop/solution`
+- `day-1/exercises/build-product-card-with-props/starter`
+- `day-1/exercises/build-product-card-with-props/solution`
+- `day-1/exercises/build-product-card-with-props-and-events/starter`
+- `day-1/exercises/build-product-card-with-props-and-events/solution`
 - `day-1/exercises/counter/starter`
 - `day-1/exercises/counter/solution`
 - `day-1/exercises/podcast-episode-cards/starter`

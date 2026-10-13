@@ -1,9 +1,9 @@
 import type { CourseTargetMeta } from '../../../../src/course.ts'
 
 export const meta: CourseTargetMeta = {
-  id: 'day-1/exercises/pass-product-data-with-props/solution',
-  title: 'Pass Product Data with Props',
-  description: 'Completed product data props exercise.',
+  id: 'day-1/exercises/build-product-card-with-props/solution',
+  title: 'Build a Product Card with Props',
+  description: 'Completed product card with data passed through props.',
   dayOrder: 1,
   dayLabel: 'Day 1',
   kind: 'exercise',
