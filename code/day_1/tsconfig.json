@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.app.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "../../node_modules/.tmp/day-1-demo.tsbuildinfo"
+  },
+  "include": ["src"]
+}
