@@ -1,16 +1,4 @@
-import type { CourseTargetMeta } from '../../../src/course.ts'
 import ProductCard from './ProductCard'
-
-export const meta: CourseTargetMeta = {
-  id: 'day-1/demo/product-counter',
-  title: 'Product Counter',
-  description: 'A product card with an Add to Cart button that increments a counter using useState.',
-  dayOrder: 1,
-  dayLabel: 'Day 1',
-  kind: 'demo',
-  variant: 'demo',
-  order: 1,
-}
 
 export default function ProductCounterDemo() {
   return (

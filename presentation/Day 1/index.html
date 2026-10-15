@@ -288,7 +288,7 @@
                         </div>
                     </div>
                     <aside class="notes">
-                        Overview of today's 6 pillars. By the end, students can build components with typed props, click handlers, primitive state, and controlled inputs. Install DevTools during setup but demonstrate it only after components and props, then again after state. Leave object/array immutability and batching details to Day 2.
+                        Overview of today's 6 pillars. By the end, students can build components with typed props, click handlers, primitive state, and controlled inputs. Install DevTools during setup but demonstrate it only after components and props, then again after state. Introduce snapshots and batching with the counter. Object/array immutability, lifting state, and derived values are in Day 2, accessible through the optional time-permitting link near the end of today's deck.
                     </aside>
                 </section>
 
@@ -454,6 +454,69 @@ heading.textContent = 'Hello, Dan!';</code></pre>
                                         </div>
                                         <aside class="notes">
                                                 This answers a question about React's behavior, not a claim that plain JavaScript rebuilds the page. querySelector finds an existing element; assigning textContent retains that element while replacing its text content. Both approaches can make targeted updates. React's distinction is managing those update steps for us. These are two alternative results at the same position, not two headings displayed together. Because the heading type and position remain the same, React can retain the h1 element and update its text during commit. Rendering calculates what is wanted; it is distinct from mutating DOM nodes. The browser then paints the page. A new render can produce the same result and require no DOM changes. Later, state setters will provide a reason to calculate the UI again. Reference for the teacher: https://react.dev/learn/render-and-commit. Avoid promising that React always retains every node: changes in element type or identity can replace nodes.
+                                        </aside>
+                                </section>
+
+                                <section class="rendering-topic">
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title" style="margin:0;">Example: Adding a Product to the Cart</h2>
+                                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; text-align:left;">
+                                                        <div style="min-width:0;">
+                                                                <strong class="highlight" style="display:block; margin-bottom:12px; font-size:25px;">Before clicking</strong>
+                                                                <div class="card">
+                                                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-bottom:12px; border-bottom:1px solid var(--surface-border); font-size:27px;">
+                                                                        <strong>Mug Store</strong>
+                                                                        <span>🛒 <span style="display:inline-block; min-width:32px; text-align:center;">0</span></span>
+                                                                </div>
+                                                                <p style="margin:12px 0; font-size:27px;">Coffee Mug — $12</p>
+                                                                <span style="display:inline-block; border:1px solid var(--surface-border); border-radius:8px; padding:8px 16px; font-size:24px;">Add to cart</span>
+                                                                </div>
+                                                        </div>
+                                                        <div class="fragment" data-fragment-index="0" style="min-width:0;">
+                                                                <strong class="highlight" style="display:block; margin-bottom:12px; font-size:25px;">After clicking</strong>
+                                                                <div class="card">
+                                                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-bottom:12px; border-bottom:1px solid var(--surface-border); font-size:27px;">
+                                                                        <strong>Mug Store</strong>
+                                                                        <span>🛒 <span style="display:inline-block; min-width:32px; text-align:center; background:var(--accent-soft); outline:2px solid var(--accent); border-radius:6px; color:var(--accent);">1</span></span>
+                                                                </div>
+                                                                <p style="margin:12px 0; font-size:27px;">Coffee Mug — $12</p>
+                                                                <span style="display:inline-block; border:1px solid var(--surface-border); border-radius:8px; padding:8px 16px; font-size:24px;">Add to cart</span>
+                                                                </div>
+                                                        </div>
+                                                        <div class="fragment" data-fragment-index="4" style="min-width:0;">
+                                                                <strong class="highlight" style="display:block; margin-bottom:12px; font-size:25px;">Compare the results</strong>
+                                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                                                                        <div style="min-width:0;">
+                                                                                <strong style="font-size:18px;">Before</strong>
+                                                                                <pre style="margin:8px 0 0; background:none; border:none; box-shadow:none; font-size:14px; line-height:24px; color:var(--text-soft);">Store
+├─ Cart: 0
+└─ Product
+   ├─ Coffee Mug
+   ├─ $12
+   └─ Add to cart</pre>
+                                                                        </div>
+                                                                        <div style="min-width:0;">
+                                                                                <strong style="font-size:18px;">After</strong>
+                                                                                <pre style="margin:8px 0 0; background:none; border:none; box-shadow:none; font-size:14px; line-height:24px; color:var(--text-soft);">Store
+<span style="color:var(--accent); background:var(--accent-soft);">├─ Cart: 1</span>
+└─ Product
+   ├─ Coffee Mug
+   ├─ $12
+   └─ Add to cart</pre>
+                                                                        </div>
+                                                                </div>
+                                                                <p style="margin:8px 0 0; font-size:19px; color:var(--text-soft);">Only the cart number changed.</p>
+                                                        </div>
+                                                </div>
+                                                <ol style="margin:0; font-size:25px; line-height:1.4; text-align:left;">
+                                                        <li class="fragment" data-fragment-index="1"><strong class="highlight">You click “Add to cart”.</strong> The application updates its cart data from zero items to one.</li>
+                                                        <li class="fragment" data-fragment-index="2"><strong class="highlight">React calculates what the page should show now.</strong> It compares the new result with the previous one: the cart number changed; the product details did not.</li>
+                                                        <li class="fragment" data-fragment-index="3"><strong class="highlight">React changes the cart number on the page.</strong> The existing elements stay in place; only the number's text needs updating in this example.</li>
+                                                </ol>
+                                                <p class="fragment" data-fragment-index="5" style="margin:0; font-size:27px; color:var(--text-soft);">React may calculate the UI again, but it only needs to change the cart number in the browser—not rebuild the store page.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                These are illustrative before-and-after store previews, not interactive buttons. Trace the click, updated cart data, comparison of the previous and next UI descriptions, and commit of the changed count text. The highlight marks only the cart number, not a replacement of the store header or product card. This example always shows a count, so updating zero to one only requires changing existing text; a badge that appears for the first time would also require adding an element. Unchanged DOM elements do not mean their component functions never ran again: this illustrates DOM changes, not which components execute. Plain JavaScript can also update this number directly; React manages determining and applying the update steps. Do not introduce state syntax yet: the later state examples explain how the application updates the count.
                                         </aside>
                                 </section>
 
@@ -641,35 +704,12 @@ function Greeting() {
 
                 <section class="rendering-topic">
                     <div style="display:flex; flex-direction:column; gap:12px;">
-                        <h2 class="slide-title" style="margin:0;">From Code to Page Elements</h2>
-                        <p style="margin:0; font-size:25px; color:var(--text-soft);">Now that we know JSX, compare two ways to build the same element tree.</p>
+                        <h2 class="slide-title" style="margin:0;">From JSX to Page Elements</h2>
+                        <p style="margin:0; font-size:25px; color:var(--text-soft);">Follow the JSX from a component to the browser's elements and the visible page.</p>
                         <div class="two-col" style="gap:20px; text-align:left;">
-                            <div class="card" style="min-width:0; font-size:24px;">
-                                <strong class="highlight">What the user sees</strong>
-                                <p style="margin:8px 0 0; font-size:28px;">Coffee Mug</p>
-                                <p style="margin:4px 0 0;">Price: $12</p>
-                            </div>
-                            <div class="card" style="min-width:0; font-size:24px;">
-                                <strong class="highlight">The browser's element tree</strong>
-                                <pre style="margin:8px 0 0; background:none; box-shadow:none; border:none; font-size:22px; line-height:26px; color:var(--text-soft);">div
-├── h2  (Coffee Mug)
-└── p   (Price: $12)</pre>
-                            </div>
-                        </div>
-                        <div class="two-col" style="gap:20px; text-align:left;">
-                            <div style="min-width:0;">
-                                <strong class="highlight" style="font-size:24px;">JavaScript: create and connect</strong>
-                                <pre style="margin:8px 0 0;"><code class="js" style="font-size:16px;">const card = document.createElement('div');
-const title = document.createElement('h2');
-title.textContent = 'Coffee Mug';
-const price = document.createElement('p');
-price.textContent = 'Price: $12';
-card.append(title, price);
-document.querySelector('#root').append(card);</code></pre>
-                            </div>
-                            <div class="fragment" style="min-width:0;">
-                                <strong class="highlight" style="font-size:24px;">React: write the elements together</strong>
-                                <pre style="margin:8px 0 0;"><code class="tsx">function ProductCard() {
+                            <div style="min-width:0; font-size:24px;">
+                                <strong class="highlight" style="display:block; margin-bottom:12px;">React code</strong>
+                                <pre><code class="tsx">function ProductCard() {
   return (
     &lt;div&gt;
       &lt;h2&gt;Coffee Mug&lt;/h2&gt;
@@ -678,11 +718,26 @@ document.querySelector('#root').append(card);</code></pre>
   );
 }</code></pre>
                             </div>
+                            <div class="fragment" style="min-width:0; font-size:24px;">
+                                <strong class="highlight" style="display:block; margin-bottom:12px;">The browser's element tree</strong>
+                                <div class="card">
+                                <pre style="background:none; box-shadow:none; border:none; font-size:22px; line-height:26px; color:var(--text-soft);">div
+├── h2  (Coffee Mug)
+└── p   (Price: $12)</pre>
+                                </div>
+                            </div>
                         </div>
-                        <p class="fragment" style="margin:0; font-size:25px; color:var(--text-soft);">Both produce the same browser elements. With JSX, the nesting is visible in your code—you do not create and connect each element yourself.</p>
+                        <div class="fragment" style="text-align:left; font-size:24px;">
+                            <strong class="highlight" style="display:block; margin-bottom:12px;">What the user sees</strong>
+                            <div class="card">
+                            <h3 style="margin:0; font-size:30px;">Coffee Mug</h3>
+                            <p style="margin:8px 0 0;">Price: $12</p>
+                            </div>
+                        </div>
+                        <p class="fragment" style="margin:0; font-size:25px; color:var(--text-soft);">JSX describes the elements and how they nest. React creates the corresponding browser elements.</p>
                     </div>
                     <aside class="notes">
-                        Apply the earlier DOM reminder without reteaching the definition. The top preview is illustrative; the corresponding card contains a div with an h2 and a p. Trace each createElement and append call to the same nesting shown in JSX. The plain JavaScript snippet assumes an existing root element and runs after it is available. The React snippet defines a component; it must be included in the mounted app, for example with a ProductCard tag, for React to create the browser elements. This is a comparison of building elements through code, not a claim that React makes static HTML shorter: plain static HTML is already a simple way to write this card. JSX was just introduced; here its benefit is readable nesting. Do not discuss the virtual DOM or re-renders on this slide.
+                        Connect the JSX students just learned to its browser result, without repeating the earlier JavaScript comparison or DOM definition. Trace the div containing an h2 and a p from JSX to the simplified element tree, then reveal the illustrative page preview. The preview's styling is illustrative; the snippet does not include CSS. ProductCard must be included in the mounted app, for example with a ProductCard tag, for React to create its browser elements. The function definition alone does not display anything. Keep this focused on readable nesting, not cart logic, the virtual DOM, or re-renders.
                     </aside>
                 </section>
 
@@ -779,21 +834,21 @@ export default App;</code></pre>
 
                                 <section class="rendering-topic">
                                         <div style="display:flex; flex-direction:column; gap:16px;">
-                                                <h2 class="slide-title" style="margin:0;">What Does “Rendering” Mean?</h2>
+                                                <h2 class="slide-title" style="margin:0;">Rendering Means Calling Your Components</h2>
                                                 <pre><code class="tsx">function Greeting() {
   return &lt;h1&gt;Hello, React!&lt;/h1&gt;;
 }</code></pre>
                                                 <div class="fragment card" style="text-align:left;">
                                                         <ol style="margin:0; font-size:28px; line-height:1.5;">
-                                                                <li>React calls <code>Greeting</code> to calculate its UI.</li>
-                                                                <li>The returned JSX describes a heading saying “Hello, React!”.</li>
-                                                                <li>React also calls nested components to complete the UI description.</li>
+                                                                <li>React calls <code>Greeting</code>.</li>
+                                                                <li>The function returns a description of the heading.</li>
+                                                                <li>If React needs to render it again, it runs the function again to get the next result.</li>
                                                         </ol>
                                                 </div>
-                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);"><strong class="highlight">Rendering</strong> means React calls components to calculate the UI. It does not necessarily mean changing the page.</p>
+                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);"><strong class="highlight">A component function doesn't run only once.</strong> React can call it again to calculate what to show.</p>
                                         </div>
                                         <aside class="notes">
-                                                Apply the introductory rendering model to code rather than repeating the DOM comparison lesson. React calls App and then the components it returns, such as Greeting, to calculate the UI. JSX describes the desired result; it is not a direct instruction to mutate the browser. Students do not manually call Greeting() to mount it: they use component tags and let React manage rendering. Rendering must be a pure calculation, not a place for side effects. Later, the state setter will request that React call a component again with its updated state.
+                                                Bridge from component syntax to execution: React manages when component functions run, and they can run more than once. Students use component tags rather than manually calling Greeting() to display it. Briefly recall that calculating a result does not necessarily change browser elements; do not repeat the virtual DOM, comparison, or commit explanation. Later, connect running the function again to local variables being initialized again and to state setters requesting a new render. Rendering must be a pure calculation, not a place for side effects.
                                         </aside>
                                 </section>
 
@@ -1078,59 +1133,56 @@ export default MyButton;
                                         </div>
                                 </section>
 
-                                <!-- SLIDE 15 – State & useState -->
                                 <section>
-                                        <div style="display:flex; flex-direction:column; gap:16px;">
-                                                <h2 class="slide-title">State &amp; useState Hook</h2>
-                                                <div class="card">
-                                                        <p style="margin:0; font-size:32px; color:var(--text-soft);">What about data <em class="highlight">owned</em> by a component that can change over time?</p>
+                                        <div style="display:flex; flex-direction:column; gap:24px;">
+                                                <h2 class="slide-title">Working with Changing Values</h2>
+                                                <div class="card" style="text-align:left;">
+                                                        <p style="margin:0; font-size:30px;">Let's build a counter that increases when we click.</p>
+                                                        <p style="margin:16px 0 0; font-size:28px; color:var(--text-soft);">We already know variables and click handlers. Is that enough?</p>
                                                 </div>
-                                                <div class="fragment card" style="text-align:left;">
-                                                        <strong class="highlight" style="font-size:30px;">For example: a counter</strong>
-                                                        <ul style="margin:12px 0 0; font-size:28px; line-height:1.5;">
-                                                                <li>The component owns the count.</li>
-                                                                <li>Clicking a button should change it and update what we see.</li>
-                                                        </ul>
-                                                </div>
-                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);">React calls this component-owned memory <strong class="highlight">state</strong>.</p>
+                                                <a href="/?target=day-1/demo/changing-values" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:32px;">Open Counter Demo</a>
+                                                <p style="margin:0; font-size:22px; color:var(--text-soft);"><code>code/day_1/src/Counter.tsx</code></p>
+                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);">Predict first: what will change on the page, and what will appear in the console?</p>
                                         </div>
                                         <aside class="notes">
-                                                Props come from outside the component. What about a count the component owns and changes itself? Introduce state as component-owned memory, without showing the hook syntax yet. Next, ask whether an ordinary local variable would be enough.
+                                                Before presenting, start the main course server from the repository root with npm run course. The counter is registered in the Day 1 launcher and uses this same server; no second terminal or demo port is needed.
+                                                Open the demo and its browser console. Show the local let counter and the read-only source panel, then ask for predictions before clicking. The console count increases but the displayed count stays zero. Focus on this mismatch: changing a local variable does not request a render.
+                                                Do not fix the code yet. Explain the observed problem, introduce useState and its placement rules, then return at the Let's Fix the Counter slide to edit the same file live.
                                         </aside>
                                 </section>
 
                                 <section>
-                                        <div style="display:flex; flex-direction:column; gap:12px;">
-                                                <h2 class="slide-title" style="margin:0;">Why Not Just Use <code>let</code>?</h2>
-                                                <strong style="font-size:26px; color:#f87171;">❌ The variable changes, but the UI does not</strong>
-                                                <pre style="margin:0; width:100%; font-size:20px;"><code class="tsx" style="max-height:none; line-height:24px;">function Counter() {
-  let count = 0;
-
-  function increaseCount() {
-    count += 1;
-    console.log(count); // Changes, but the UI stays the same
-  }
-
-  return &lt;button onClick={increaseCount}&gt;{count}&lt;/button&gt;;
-}</code></pre>
-                                                <div class="two-col" style="gap:16px; text-align:left;">
-                                                        <div class="card" style="font-size:24px; color:var(--text-soft);">Changing a local variable does not tell React to <strong class="highlight">render again</strong>.</div>
-                                                        <div class="card" style="font-size:24px; color:var(--text-soft);">On a subsequent render, <code>let count = 0</code> runs again, <strong class="highlight">resetting the local variable</strong>.</div>
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title">Why Didn't the Page Update?</h2>
+                                                <div class="card" style="text-align:left;">
+                                                        <strong class="highlight" style="font-size:30px;">The console count increased. The displayed count stayed at zero.</strong>
+                                                        <p style="margin:12px 0 0; font-size:28px; color:var(--text-soft);">Changing a local variable does not tell React to run the component again.</p>
                                                 </div>
-                                                <p style="margin:0; font-size:26px; color:var(--text-soft);">We need React to <strong class="highlight">remember the value between renders</strong> and <strong class="highlight">know when to render again</strong>.</p>
+                                                <div class="fragment card" style="text-align:left;">
+                                                        <strong class="highlight" style="display:block; font-size:30px;">We need a way to:</strong>
+                                                        <ul style="display:block; margin:12px 0 0 28px; font-size:26px; line-height:1.5;">
+                                                                <li>Store the counter's current value.</li>
+                                                                <li>Update that value and tell React to calculate the UI again.</li>
+                                                                <li>Keep the updated value when React runs the component again.</li>
+                                                        </ul>
+                                                </div>
+                                                <p class="fragment" style="margin:0; font-size:24px; color:var(--text-soft);"><strong class="highlight">Rendering again means running the component function again.</strong><br>With <code>let count = 0</code>, that line would run again too, creating a new local <code>count</code> starting at zero.</p>
+                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);">React calls this component-owned memory <strong class="highlight">state</strong>.</p>
                                         </div>
                                         <aside class="notes">
-                                                Clicking changes the variable captured by the handler, so console.log can show increasing numbers while the displayed count stays at zero. Mutation alone does not notify React. If another cause, such as a parent update, renders this component again, the function runs again and creates a new local count initialized to zero. These are two separate problems: persistence and requesting a render. useState solves both. Do not imply that every click resets the variable; this example does not re-render on click.
+                                                Start from the demo students just saw, rather than introducing another counter or repeating its code. Clicking changes the variable captured by the handler but does not notify React, so the log increases while the page stays at zero. React does not watch ordinary variable assignments: we update state through its setter to request a render. Reveal the local-variable explanation after the three requirements: asking for another render alone would not supply memory, because let count = 0 would run again. This is conditional, not something the broken demo did after each click. No manual render control is needed. State supplies component-owned memory, unlike props supplied from outside. Its setter provides the way to request a render.
                                         </aside>
                                 </section>
 
                                 <section>
                                         <div style="display:flex; flex-direction:column; gap:16px;">
                                                 <h2 class="slide-title">State with <code>useState</code></h2>
+                                                <p style="margin:0; font-size:26px; color:var(--text-soft);"><code>useState</code> is a built-in React Hook that lets a component <strong class="highlight">remember a value between renders</strong>. Its setter requests an update, so React runs the component again to calculate what to show.</p>
                                                 <div style="background:var(--accent-soft); border:1px solid rgba(97,218,251,0.3); border-radius:10px; padding:12px 16px; text-align:center;">
-                                                        <code style="font-size:0.82em; color:var(--accent);">const [<span style="color:#ffcc66;">value</span>, <span style="color:#b5f0a5;">setValue</span>] = useState&lt;T&gt;(<span style="color:#c8d2de;">initialValue</span>)</code>
-                                                        <p style="margin:12px 0 0; font-size:26px; color:var(--text-soft);"><code>const [count, setCount] = useState&lt;number&gt;(0)</code></p>
+                                                        <code style="font-size:28px; color:var(--accent);">const [<span style="color:#ffcc66;">count</span>, <span style="color:#b5f0a5;">setCount</span>] = useState&lt;number&gt;(0)</code>
+                                                        <p style="margin:12px 0 0; font-size:22px; color:var(--text-soft);"><code>const [value, setValue] = useState&lt;T&gt;(initialValue)</code></p>
                                                 </div>
+                                                <p class="fragment" style="margin:0; font-size:24px; color:var(--text-soft);">With <code>useState</code>, React remembers the updated count and gives it back to the component on the next render. <strong class="highlight">The initial <code>0</code> does not reset it.</strong></p>
 
                                                 <div class="fragment" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; font-size:24px;">
                                                         <div class="card" style="text-align:center;">
@@ -1150,10 +1202,6 @@ export default MyButton;
                                                                 <p style="margin:8px 0 0; color:var(--text-soft);">State type (<code>T</code>)</p>
                                                         </div>
                                                 </div>
-
-                                                <div class="fragment card">
-                                                        <p style="margin:0; font-size:28px; color:var(--text-soft);"><code>useState</code> preserves a value between renders. Its setter queues an update and requests a new render.</p>
-                                                </div>
                                         </div>
                                         <aside class="notes">
                                                 Connect this to the two problems with let: React remembers state between renders, and the setter requests a render when the state changes. The useState hook returns a tuple: [currentValue, setterFunction]. T is a placeholder for the state type, such as number: useState&lt;number&gt;(0). This makes count a number and setCount accept a number or an updater that returns a number. For simple initial values, TypeScript infers the type, so useState(0) is also typed as number. The initial value is only used on the very first render.
@@ -1163,21 +1211,39 @@ export default MyButton;
                 <section>
                     <h2 class="slide-title">Rules of Hooks</h2>
                     <ul style="font-size:28px; line-height:1.6;">
-                        <li>Call hooks at the <strong class="highlight">top level</strong>, before early returns: not in conditions, loops, or event handlers.</li>
-                        <li>Call hooks only in <strong class="highlight">React function components</strong> or custom hooks.</li>
+                        <li>Call <code>useState</code> at the component's <strong class="highlight">top level</strong>, before early returns, not inside conditions, loops, or handlers.</li>
+                        <li>Call the setter, <code>setCount</code>, <strong class="highlight">inside the click handler</strong>.</li>
                     </ul>
                     <pre style="font-size:22px;"><code class="tsx" style="max-height:none; line-height:24px;">function Counter() {
   const [count, setCount] = useState&lt;number&gt;(0);
   function increaseCount() {
     setCount(count + 1);
   }
-  return &lt;button onClick={increaseCount}&gt;{count}&lt;/button&gt;;
+  return &lt;button onClick={increaseCount}&gt;Count is {count}&lt;/button&gt;;
 }</code></pre>
                     <p class="small-text">Declare the hook in the component; call its setter in the handler.</p>
                     <aside class="notes">
-                        Students have just learned the hook's syntax. Establish its placement before tracing an update: useState is at the component's top level; its setter is not a hook and can be called in the click handler. This direct setter performs one increment. Functional updaters come after the snapshot explanation, so do not introduce them here. React needs hook calls in the same order on every render. Custom hook implementation comes later in the course.
+                        Establish placement before the live fix: useState is at the component's top level; its setter is not a hook and can be called in the click handler. Hooks may only be called in React function components or custom hooks, and React needs hook calls in the same order on every render. The setter can also be used in other appropriate callbacks, not only click handlers. This direct setter performs one increment. Keep functional updaters for after snapshots and custom hook implementation for later in the course.
                     </aside>
                 </section>
+
+                                <section>
+                                        <div style="display:flex; flex-direction:column; gap:24px;">
+                                                <h2 class="slide-title">Let's Fix the Counter</h2>
+                                                <div class="card" style="text-align:left;">
+                                                        <strong class="highlight" style="font-size:30px;">Same counter. Two changes.</strong>
+                                                        <ol style="margin:16px 0 0; font-size:28px; line-height:1.6;">
+                                                                <li>Replace the local variable with <code>useState</code>.</li>
+                                                                <li>Replace the mutation with <code>setCount(count + 1)</code>.</li>
+                                                        </ol>
+                                                </div>
+                                                <a href="/?target=day-1/demo/changing-values" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:32px;">Return to Counter Demo</a>
+                                                <p style="margin:0; font-size:22px; color:var(--text-soft);"><code>code/day_1/src/Counter.tsx</code></p>
+                                        </div>
+                                        <aside class="notes">
+                                                Return to the same running demo and edit Counter.tsx live in VS Code. Add import { useState } from 'react'; replace let count = 0 with const [count, setCount] = useState&lt;number&gt;(0); replace the mutation and console log in increaseCount with setCount(count + 1). Keep the existing button and its className. Save so the component and read-only source panel update together. Adding a hook may reset state during Fast Refresh; demonstrate clicks after saving rather than promising persistence across source edits. Confirm the displayed number now increases. Return to the slides to trace why it works.
+                                        </aside>
+                                </section>
 
                                 <!-- SLIDE 16 – useState Step 1: Declaration & Initial Render -->
                                 <section data-auto-animate>
@@ -1185,35 +1251,32 @@ export default MyButton;
                                                 <h2 data-id="s16-title" style="margin:0; font-weight:800;">useState in Action</h2>
                                                 <div style="display:flex; gap:1.4rem; align-items:flex-start;">
                                                         <pre data-id="s16-code" style="margin:0; flex:1.4;"><code class="tsx">
-// ProductCard.tsx
 import { useState } from 'react';
 
-function ProductCard() {
+export default function Counter() {
   const [count, setCount] = useState&lt;number&gt;(0);
 
-  function handleAddToCart() {
+  function increaseCount() {
     setCount(count + 1);
   }
 
   return (
-    &lt;button onClick={handleAddToCart}&gt;
-      Add to Cart ({count})
+    &lt;button className="counter" onClick={increaseCount}&gt;
+      Count is {count}
     &lt;/button&gt;
   );
 }
-
-export default ProductCard;
 </code></pre>
                                                         <div style="flex:1; display:flex; flex-direction:column; gap:0.6rem; justify-content:center; font-size:0.86em;">
                                                                 <p style="margin:0;">🏁 <strong class="highlight">Initial Render</strong></p>
                                                                 <p style="margin:0; color:var(--text-soft);"><code>useState&lt;number&gt;(0)</code> returns <code>[0, setCount]</code>.</p>
                                                                 <p style="margin:0; font-size:26px; color:var(--text-soft);">React calculates the UI, commits the initial DOM, and the browser displays it.</p>
-                                                                <p style="margin:0; color:var(--text-soft);">UI: <em style="color:#fff;">"Add to Cart (0)"</em></p>
+                                                                <p style="margin:0; color:var(--text-soft);">UI: <em style="color:#fff;">"Count is 0"</em></p>
                                                         </div>
                                                 </div>
                                         </div>
                                         <aside class="notes">
-                                                Walk through the ProductCard step by step. useState&lt;number&gt;(0) sets initial count to 0 and explicitly types the state as number. setCount accepts a number or an updater that returns a number. The button's onClick calls handleAddToCart which fires setCount with count + 1. Show this live in the demo project — students should follow along.
+                                                Trace the Counter students have just fixed, rather than introducing a new example. On its first render, useState&lt;number&gt;(0) supplies zero, and the returned button shows Count is 0. The type argument makes count a number. This is the initial render, not what happens after every click.
                                         </aside>
                                 </section>
 
@@ -1223,34 +1286,31 @@ export default ProductCard;
                                                 <h2 data-id="s16-title" style="margin:0; font-weight:800;">useState in Action</h2>
                                                 <div style="display:flex; gap:1.4rem; align-items:flex-start;">
                                                         <pre data-id="s16-code" style="margin:0; flex:1.4;"><code class="tsx">
-// ProductCard.tsx
 import { useState } from 'react';
 
-function ProductCard() {
+export default function Counter() {
   const [count, setCount] = useState&lt;number&gt;(0);
 
-  function handleAddToCart() {
+  function increaseCount() {
     setCount(count + 1);
   }
 
   return (
-    &lt;button onClick={handleAddToCart}&gt;
-      Add to Cart ({count})
+    &lt;button className="counter" onClick={increaseCount}&gt;
+      Count is {count}
     &lt;/button&gt;
   );
 }
-
-export default ProductCard;
 </code></pre>
                                                         <div style="flex:1; display:flex; flex-direction:column; gap:0.6rem; justify-content:center; font-size:0.86em;">
                                                                 <p style="margin:0;">🖱️ <strong style="color:#f59e0b;">Button Clicked</strong></p>
-                                                                <p style="margin:0; color:var(--text-soft);"><code>handleAddToCart()</code> → <code>setCount(count + 1)</code> fires.</p>
+                                                                <p style="margin:0; color:var(--text-soft);"><code>increaseCount()</code> → <code>setCount(count + 1)</code>.</p>
                                                                 <p style="margin:0; color:var(--text-soft);">The setter queues <strong style="color:#fff;">0 → 1</strong> and requests a new render.</p>
                                                         </div>
                                                 </div>
                                         </div>
                                         <aside class="notes">
-                                                When the button is clicked, setCount is called with count + 1. React doesn't update immediately — it queues the update and schedules a re-render. Note: this direct form works fine for simple cases. We'll see the functional updater form next, which is safer when updates depend on previous state.
+                                                Starting at zero, clicking calls increaseCount, which requests that the state become one. React queues this update; it does not mutate count inside the handler. The direct form is valid for this single increment. After tracing the next render, we will inspect state and explain snapshots before considering multiple updates in one handler.
                                         </aside>
                                 </section>
 
@@ -1260,64 +1320,94 @@ export default ProductCard;
                                                 <h2 data-id="s16-title" style="margin:0; font-weight:800;">useState in Action</h2>
                                                 <div style="display:flex; gap:1.4rem; align-items:flex-start;">
                                                         <pre data-id="s16-code" style="margin:0; flex:1.4;"><code class="tsx">
-// ProductCard.tsx
 import { useState } from 'react';
 
-function ProductCard() {
+export default function Counter() {
   const [count, setCount] = useState&lt;number&gt;(0);
 
-  function handleAddToCart() {
+  function increaseCount() {
     setCount(count + 1);
   }
 
   return (
-    &lt;button onClick={handleAddToCart}&gt;
-      Add to Cart ({count})
+    &lt;button className="counter" onClick={increaseCount}&gt;
+      Count is {count}
     &lt;/button&gt;
   );
 }
-
-export default ProductCard;
 </code></pre>
                                                         <div style="flex:1; display:flex; flex-direction:column; gap:0.6rem; justify-content:center; font-size:0.86em;">
                                                                 <p style="margin:0;">🔄 <strong style="color:#4ade80;">Re-render</strong></p>
                                                                 <p style="margin:0; color:var(--text-soft);"><code>count</code> is now <strong style="color:#fff;">1</strong>.</p>
+                                                                <p style="margin:0; font-size:26px; color:var(--text-soft);">React remembers the updated state. The initial <code>0</code> does not reset it.</p>
                                                                 <p style="margin:0; font-size:26px; color:var(--text-soft);">React calls the component again, then commits the changed count text. The browser displays it.</p>
-                                                                <p style="margin:0; color:var(--text-soft);">UI: <em style="color:#4ade80;">"Add to Cart (1)"</em> ✓</p>
+                                                                <p style="margin:0; color:var(--text-soft);">UI: <em style="color:#4ade80;">"Count is 1"</em> ✓</p>
                                                         </div>
                                                 </div>
                                         </div>
                                         <aside class="notes">
-                                                Connect the state cycle to render and commit: the click handler calls the setter, which queues an update. React calls ProductCard() again with the updated state, so useState returns [1, setCount]. React calculates the next UI, commits the changed count text while retaining the button element, and the browser displays the update. This cycle repeats every click. The component function runs again from top to bottom; a re-render does not mean rebuilding all its DOM.
+                                                Connect the working demo to render and commit: React calls Counter() again, and useState returns [1, setCount]. The initial zero is not reapplied: React remembers the updated state for this mounted component. React calculates the next UI, commits the changed count text while retaining the button element, and the browser displays the update. This cycle repeats every click. The function runs again from top to bottom; a re-render does not mean rebuilding all its DOM.
                                         </aside>
                                 </section>
 
-                                <!-- DEMO SLIDE – Product Counter -->
                                 <section>
-                                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; text-align:center;">
-                                                <h2>Demo - Product Counter</h2>
-                                                                                                <a href="/?target=day-1/demo/product-counter" target="_blank" style="color:var(--accent); font-size:1.1em;">Demo</a>
-                                                                                                <p class="small-text">In React DevTools, select ProductCard and watch its state change when you click.</p>
+                                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; text-align:center;">
+                                                <h2>Inspecting State in React DevTools</h2>
+                                                <a href="/?target=day-1/demo/changing-values" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:32px;">Open Counter Demo</a>
+                                                <p style="margin:0; font-size:28px; color:var(--text-soft);">Select <code>Counter</code> in the Components panel.<br>Watch its state change as you click.</p>
                                         </div>
-                                                                                <aside class="notes">
-                                                                                                State has now been explained. Select ProductCard in the Components panel, inspect its State hook, and click Add to Cart. Connect the new hook value with the updated button text. Each mounted card owns its state independently.
-                                                                                </aside>
+                                        <aside class="notes">
+                                                Use the same fixed counter, not a second demo. In React DevTools, select Counter in the Components panel and inspect its State hook. Click the count button and connect the changed state value with the displayed number. The hook must have been added in the preceding live fix for this inspection.
+                                        </aside>
                                 </section>
 
                                 <section>
                                         <h2 class="slide-title">State Is a Snapshot</h2>
                                         <pre style="font-size:26px;"><code class="ts">// In this render, count is 0
-function handleAddToCart() {
-  setCount(count + 1);
+function increaseCount() {
+  setCount(count + 1); // Queues an update to 1
   console.log(count); // Logs 0, not 1
 }</code></pre>
                                         <ul style="font-size:28px; line-height:1.6;">
-                                                <li><strong class="highlight">Inside this handler:</strong> <code>count</code> stays <code>0</code>.</li>
-                                                <li><strong class="highlight">On the next render:</strong> <code>count</code> is <code>1</code>, so the UI displays <code>1</code>.</li>
-                                                <li>The setter requests a new render; it does not change the state snapshot that this handler reads.</li>
+                                                <li><strong class="highlight">Queue the update:</strong> <code>setCount(1)</code> requests the next state.</li>
+                                                <li><strong class="highlight">Finish the handler:</strong> the log prints this render's <code>count</code>, which is still <code>0</code>.</li>
+                                                <li><strong class="highlight">Render again:</strong> React supplies <code>count = 1</code> and updates the displayed number.</li>
                                         </ul>
+                                        <p style="margin:16px 0 0; font-size:26px; color:var(--text-soft);">The setter queues an update. React finishes the handler, then renders with the updated state. <strong class="highlight">The current handler still reads the current render's value.</strong></p>
                                         <aside class="notes">
-                                                Starting at zero, click once: the log is zero but the new UI shows one. This is not a failed update: the handler reads the state snapshot from the render that created it. A functional updater would also leave this console.log(count) printing zero. Awaiting the setter does not change the current render's variable. Keep the explanation practical; Day 2 covers multiple queued updates and batching in detail.
+                                                Starting at zero, click once: the log is zero but the new UI shows one. A new render is a separate call to the component with its own state snapshot; it does not change values captured by the already-running handler. A functional updater would also leave this console.log(count) printing zero. Awaiting the setter does not change the current render's variable. The next slide explains how React groups updates before rendering. Keep flushSync and scheduling edge cases out of this introduction.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title" style="margin:0;">Batching State Updates</h2>
+                                                <p style="margin:0; font-size:28px; color:var(--text-soft);">React groups updates from the same event handler, instead of rendering after every setter call.</p>
+                                                <div class="two-col" style="gap:24px;">
+                                                        <div style="min-width:0;">
+                                                                <pre style="margin:0; width:100%;"><code class="tsx" style="max-height:none; font-size:13px; line-height:26px;">const [count, setCount] = useState&lt;number&gt;(0);
+const [message, setMessage] = useState&lt;string&gt;('Ready');
+
+function increaseCount() {
+  setCount(count + 1);
+  setMessage('Clicked');
+}</code></pre>
+                                                        </div>
+                                                        <div class="fragment card" style="min-width:0; text-align:left; font-size:26px;">
+                                                                <ol style="display:block; margin:0 0 0 28px; line-height:1.5;">
+                                                                        <li>Queue both updates.</li>
+                                                                        <li>Finish the synchronous handler code.</li>
+                                                                        <li>Render with both updated values: <code>1</code> and <code>'Clicked'</code>.</li>
+                                                                </ol>
+                                                        </div>
+                                                </div>
+                                                <p class="fragment" style="margin:0; font-size:26px; color:var(--text-soft);"><strong class="highlight">Why batch?</strong> Avoid unnecessary renders and a half-updated UI. Each separate click is handled separately.</p>
+                                                <p class="fragment" style="margin:0; font-size:26px; color:var(--text-soft);">What if we update the <strong class="highlight">same state value twice</strong> in one handler?</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Introduce batching separately from snapshots: snapshots explain which values the handler reads; batching explains why multiple setter calls are grouped before the UI updates. These two state declarations belong at the top level of the Counter component; increaseCount is its click handler. Imagine displaying message beside the count. Starting at zero and Ready, one click requests count one and message Clicked. React finishes the synchronous event-handler code, then processes the queued updates together, so the UI displays both updated values without an intermediate commit showing only one change. Do not promise an exact number of component function calls: development checks and React scheduling can run render code more than once.
+                                                This does not mean waiting for future timers, network requests, or all code after an await. Modern React also supports automatic batching outside event handlers, but those scheduling details are not needed here. Separate intentional clicks are handled separately. No manual render call is necessary. The next slide applies batching and snapshots to two updates of the same count, motivating functional updaters.
+                                                Reference: https://react.dev/learn/queueing-a-series-of-state-updates
                                         </aside>
                                 </section>
 
@@ -1325,18 +1415,20 @@ function handleAddToCart() {
                                 <section>
                                         <div style="display:flex; flex-direction:column; gap:12px;">
                                                 <h2 class="slide-title">Functional Updates</h2>
-                                                <p style="margin:0; font-size:26px; color:var(--text-soft);">Starting at <code>count = 0</code>, try incrementing twice in one handler:</p>
+                                                <p style="margin:0; font-size:26px; color:var(--text-soft);">One <code>setCount(count + 1)</code> worked in our counter. Starting at <code>0</code>, what if we call it twice in one handler?</p>
                                                 <div class="two-col" style="align-items:flex-start; gap:20px;">
                                                         <div class="card" style="min-width:0; text-align:left;">
-                                                                <strong style="font-size:26px; color:#f87171;">❌ Lost increment</strong>
+                                                                <strong style="font-size:26px; color:var(--accent);">Two updates in one handler</strong>
                                                                 <pre style="margin:12px 0; width:100%; font-size:20px;"><code class="ts" style="max-height:none;">function increaseCountByTwo() {
   setCount(count + 1);
   setCount(count + 1);
-}
-// Final count: 1</code></pre>
-                                                                <p style="margin:0; font-size:24px; color:var(--text-soft);">Both <code>count + 1</code> expressions still calculate <code>0 + 1</code>, so React gets “set to 1” twice, not “add 1” twice.</p>
+}</code></pre>
+                                                                <div class="fragment" data-fragment-index="0">
+                                                                        <strong style="display:block; font-size:26px; color:#f87171;">❌ Lost increment: final count is 1</strong>
+                                                                        <p style="margin:8px 0 0; font-size:24px; color:var(--text-soft);">Both <code>count + 1</code> expressions still calculate <code>0 + 1</code>, so React gets “set to 1” twice, not “add 1” twice.</p>
+                                                                </div>
                                                         </div>
-                                                        <div class="card" style="min-width:0; text-align:left;">
+                                                        <div class="fragment card" data-fragment-index="1" style="min-width:0; text-align:left;">
                                                                 <strong style="font-size:26px; color:#4ade80;">✅ Both increments apply</strong>
                                                                 <pre style="margin:12px 0; width:100%; font-size:20px;"><code class="ts" style="max-height:none;">function increaseCountByTwo() {
   setCount(previousCount =&gt;
@@ -1348,10 +1440,10 @@ function handleAddToCart() {
                                                                 <p style="margin:0; font-size:24px; color:var(--text-soft);">Functional updaters calculate from each previous pending result, so the second adds to <code>1</code> and produces <code>2</code>.</p>
                                                         </div>
                                                 </div>
-                                                <p style="margin:0; font-size:25px; color:var(--text-soft);">The setter queues an update; it does not change <code>count</code> directly inside this handler.</p>
+                                                <p class="fragment" data-fragment-index="1" style="margin:0; font-size:25px; color:var(--text-soft);">The setter queues an update; it does not change <code>count</code> directly inside this handler.</p>
                                         </div>
                                         <aside class="notes">
-                                                The X marks the two-increment example, not every direct setter: setCount(count + 1) is valid for a single increment, and setCount(0) is appropriate for a reset. In one handler, count stays at the value from that render. Two direct increments therefore queue the same replacement value, losing one increment. Functional updaters are processed in order, each receiving the previous pending state. A similar race-condition-like lost update can happen when delayed callbacks capture the same old count; functional updates avoid that stale-state problem for increments, but do not solve every async race, such as out-of-order network responses. Updaters must stay pure. Students will use this pattern in the counter exercise; Day 2 explores queues and batching in more detail.
+                                                Initially, only the question and direct-update example are visible. Ask students to predict the final count starting from zero. On the first advance, reveal the lost increment and its explanation. On the second advance, reveal the functional-update pane and the takeaway together. The X marks the two-increment example, not every direct setter: setCount(count + 1) is valid for a single increment, and setCount(0) is appropriate for a reset. In one handler, count stays at the value from that render. Two direct increments therefore queue the same replacement value, losing one increment. Functional updaters are processed in order, each receiving the previous pending state. A similar race-condition-like lost update can happen when delayed callbacks capture the same old count; functional updates avoid that stale-state problem for increments, but do not solve every async race, such as out-of-order network responses. Updaters must stay pure. Students will use this pattern in the counter exercise; Day 2 explores queues and batching in more detail.
                                         </aside>
                                 </section>
 
@@ -1512,6 +1604,25 @@ function NoteInput() {
                                         </div>
                                 </section>
 
+                                <section id="state-extension">
+                                        <div style="display:flex; flex-direction:column; gap:24px;">
+                                                <h2 class="slide-title">Time Permitting: More About State</h2>
+                                                <div class="card" style="text-align:left;">
+                                                        <strong class="highlight" style="display:block; font-size:30px;">A preview of Day 2</strong>
+                                                        <ul style="display:block; margin:12px 0 0 28px; font-size:28px; line-height:1.5;">
+                                                                <li>Updating objects and arrays without mutation.</li>
+                                                                <li>Sharing state between sibling components.</li>
+                                                                <li>Calculating derived values instead of storing them.</li>
+                                                        </ul>
+                                                </div>
+                                                <a href="/presentation/Day%202/index.html#/managing-state" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:30px;">Open Day 2: Managing State Correctly</a>
+                                                <p style="margin:0; font-size:26px; color:var(--text-soft);">Instructor demo and slides, followed by a short batching recap. No extra exercise.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Optional extension, about 20-25 minutes. If time is short, skip to the Day 1 recap; the material remains part of Day 2. The link opens directly at Day 2's named managing-state section, beginning with the wrong-first cart demo. Present through Recap: Snapshots and Batching, then use its return link or switch back to this tab. Do not continue into effects during Day 1. After returning, advance once to the Day 1 recap. The cart demo uses the same course server and does not require a second process. Do not repeat the full section on Day 2 if already covered; recap it briefly instead.
+                                        </aside>
+                                </section>
+
                                 <!-- CONCLUSION SLIDE -->
                                 <section>
                                         <div style="display:flex; flex-direction:column; align-items:center; gap:1.2rem; text-align:center;">
@@ -1543,16 +1654,17 @@ function NoteInput() {
                                                                 <p style="margin:0.3rem 0 0; color:var(--text-soft);">Primitive state, snapshots, functional setters, hook rules</p>
                                                         </div>
                                                         <div class="card" style="font-size:0.76em; text-align:center;">
+                                                                <div style="font-size:1.4em; margin-bottom:0.2rem;">🖱️</div>
                                                                 <strong class="highlight">Events &amp; Inputs</strong>
                                                                 <p style="margin:0.3rem 0 0; color:var(--text-soft);">Click handlers, onChange, controlled inputs</p>
                                                         </div>
                                                 </div>
 
                                                 <div style="width:40px; height:2px; background:var(--accent); border-radius:2px; opacity:0.6; margin-top:0.4rem;"></div>
-                                                <p style="margin:0; font-size:0.72em; color:var(--text-soft);">Tomorrow: <strong style="color:#fff;">Lists &amp; Keys, Conditional Rendering, Object/Array State, Batching, and useEffect</strong></p>
+                                                <p style="margin:0; font-size:0.72em; color:var(--text-soft);">Tomorrow: <strong style="color:#fff;">Lists &amp; Keys, Conditional Rendering, More State Patterns, and useEffect</strong></p>
                                         </div>
                                         <aside class="notes">
-                                                Recap components, typed props, primitive state, snapshots, functional setters, hook rules, and controlled inputs. Students can inspect props and state in DevTools. Ask them to explain a click or keystroke through to the next render. Day 2 builds on these foundations with lists, conditional rendering, immutable object/array state, batching, and effects; no new Day 2 topics are promised here.
+                                                Recap components, typed props, primitive state, snapshots, functional setters, hook rules, and controlled inputs. Students can inspect props and state in DevTools. Ask them to explain a click or keystroke through to the next render. Day 2 builds on these foundations with lists, conditional rendering, immutable object/array state, lifting state, derived values, and effects. If the optional extension was presented today, briefly acknowledge those additional state patterns instead of treating them as required Day 1 practice.
                                         </aside>
                                 </section>
             </section>
