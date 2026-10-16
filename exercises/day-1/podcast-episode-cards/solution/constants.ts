@@ -13,8 +13,8 @@ export const meta: CourseTargetMeta = {
 
 export const solutionTasks = [
   'Pass title and host props from the parent to each EpisodeCard.',
-  'Add useState with an object { likeCount, note } inside EpisodeCard.',
-  'Wire onClick on the Like button to increment likeCount using spread.',
-  'Wire onChange on the input to update note using spread.',
+  'Add separate useState variables for likeCount and note inside EpisodeCard.',
+  'Wire onClick on the Like button to increment likeCount with a functional setter.',
+  'Control the input with value={note} and update note in onChange.',
   'Display likeCount and note as text.',
 ]

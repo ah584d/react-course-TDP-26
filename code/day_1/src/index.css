@@ -1,0 +1,86 @@
+.changing-values-demo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  font-family: system-ui, sans-serif;
+  font-size: 16px;
+  color: #e2e8f0;
+  background: #10131a;
+  font-synthesis: none;
+}
+
+.changing-values-demo,
+.changing-values-demo * {
+  box-sizing: border-box;
+}
+
+.changing-values-demo button {
+  padding: 12px 20px;
+  border: 1px solid #61dafb;
+  border-radius: 8px;
+  font: inherit;
+  color: inherit;
+  background: #1e293b;
+  cursor: pointer;
+}
+
+.changing-values-demo button:hover {
+  background: #334155;
+}
+
+.changing-values-demo button:focus-visible,
+.changing-values-demo pre:focus-visible {
+  outline: 3px solid #61dafb;
+  outline-offset: 4px;
+}
+
+.changing-values-demo h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.changing-values-demo p {
+  line-height: 1.6;
+}
+
+.changing-values-demo .demo-preview,
+.changing-values-demo .source-panel {
+  min-width: 0;
+  padding: 32px;
+}
+
+.changing-values-demo .counter {
+  margin-top: 24px;
+  font-size: 28px;
+}
+
+.changing-values-demo .source-panel {
+  background: #172030;
+  border-left: 1px solid #475569;
+}
+
+.changing-values-demo .source-panel p {
+  overflow-wrap: anywhere;
+}
+
+.changing-values-demo .source-panel pre {
+  margin: 24px 0 0;
+  padding: 20px;
+  overflow: auto;
+  border: 1px solid #475569;
+  border-radius: 12px;
+  background: #0b1018;
+  font-size: 13.5px;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+@media (max-width: 900px) {
+  .changing-values-demo {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .changing-values-demo .source-panel {
+    border-top: 1px solid #475569;
+    border-left: 0;
+  }
+}

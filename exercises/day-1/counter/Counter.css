@@ -1,0 +1,37 @@
+.viewer-shell:has(.counter-exercise) .viewer-header > div {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.viewer-shell:has(.counter-exercise) .viewer-header h1 {
+  white-space: normal;
+}
+
+.counter-exercise {
+  display: grid;
+  justify-items: center;
+  gap: 20px;
+  padding: 24px;
+}
+
+.counter-exercise output {
+  display: grid;
+  place-items: center;
+  min-width: 140px;
+  min-height: 80px;
+  font-size: 40px;
+  font-variant-numeric: tabular-nums;
+}
+
+.counter-exercise-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.counter-exercise-controls button {
+  min-width: 120px;
+  min-height: 44px;
+  border-radius: 8px;
+}

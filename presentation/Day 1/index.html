@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -27,8 +27,44 @@
         .reveal code { font-size: 0.9em; }
         .reveal pre {
             border-radius: 12px;
+            overflow: hidden;
             border: 1px solid var(--surface-border);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+        }
+        .reveal pre code {
+            border-radius: inherit;
+        }
+        .reveal .project-structure {
+            table-layout: fixed;
+        }
+        .reveal .project-structure pre {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .reveal pre[data-id="s16-code"] {
+            min-width: 0;
+            width: auto;
+        }
+        .reveal pre[data-id="s16-code"] code {
+            max-height: none;
+            font-size: 18px;
+            line-height: 24px;
+        }
+        .reveal .input-topic h2,
+        .reveal .rendering-topic h2 {
+            font-size: 48px;
+            line-height: 58px;
+        }
+        .reveal .input-topic pre,
+        .reveal .rendering-topic pre {
+            margin: 0;
+            width: 100%;
+        }
+        .reveal .input-topic pre code,
+        .reveal .rendering-topic pre code {
+            max-height: none;
+            font-size: 18px;
+            line-height: 24px;
         }
         .reveal table {
             font-size: 0.75em;
@@ -228,7 +264,7 @@
                         <div class="card" style="font-size:0.78em; text-align:center;">
                             <div style="font-size:1.8em; margin-bottom:0.3rem; color:var(--accent);">02</div>
                             <p style="margin:0 0 0.2rem; color:var(--accent); font-weight:600;">Setup</p>
-                            <p style="margin:0; color:var(--text-soft);">Vite + TypeScript project in minutes</p>
+                            <p style="margin:0; color:var(--text-soft);">Node, VS Code, Vite + TypeScript</p>
                         </div>
                         <div class="card" style="font-size:0.78em; text-align:center;">
                             <div style="font-size:1.8em; margin-bottom:0.3rem; color:var(--accent);">03</div>
@@ -248,11 +284,26 @@
                         <div class="card" style="font-size:0.78em; text-align:center;">
                             <div style="font-size:1.8em; margin-bottom:0.3rem; color:var(--accent);">06</div>
                             <p style="margin:0 0 0.2rem; color:var(--accent); font-weight:600;">State</p>
-                            <p style="margin:0; color:var(--text-soft);">Make the UI react to change</p>
+                            <p style="margin:0; color:var(--text-soft);">Counters, controlled inputs, hook rules</p>
                         </div>
                     </div>
                     <aside class="notes">
-                        Overview of today's 6 pillars. Emphasize that by end of day they'll be able to build a small interactive app. Each topic builds on the previous.
+                        Overview of today's 6 pillars. By the end, students can build components with typed props, click handlers, primitive state, and controlled inputs. Install DevTools during setup but demonstrate it only after components and props, then again after state. Introduce snapshots and batching with the counter. Object/array immutability, lifting state, and derived values are in Day 2, accessible through the optional time-permitting link near the end of today's deck.
+                    </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">How We’ll Work</h2>
+                    <div class="card" style="max-width:780px; margin:0.8rem auto; text-align:left;">
+                        <ul>
+                            <li>Work in small chunks and check in frequently</li>
+                            <li>Ask questions whenever something is unclear or if you get stuck</li>
+                            <li>Write your own code; don’t use AI tools - the point is to make mistakes and learn</li>
+                            <li>Help each other</li>
+                        </ul>
+                    </div>
+                    <aside class="notes">
+                        Set these as shared expectations for the full course. Make it clear that questions and asking for help are encouraged.
                     </aside>
                 </section>
 
@@ -277,7 +328,7 @@
                         <div class="card" style="text-align:center; font-size:0.78em;">
                             <div style="font-size:1.6em; margin-bottom:0.4rem;">⚡</div>
                             <p style="margin:0 0 0.3rem; color:var(--accent); font-weight:700;">Smart Updates</p>
-                            <p style="margin:0; color:var(--text-soft);">Only re-renders what changed</p>
+                            <p style="margin:0; color:var(--text-soft);">Updates the DOM to match your UI</p>
                         </div>
                     </div>
                     <p class="small-text" style="margin-top:0.75rem; text-align:center;">
@@ -288,24 +339,219 @@
                     </aside>
                 </section>
 
+                                <section class="rendering-topic">
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title" style="margin:0;">Reminder: What Is the DOM?</h2>
+                                                <p style="margin:0; font-size:27px; color:var(--text-soft);">When the browser reads your HTML, it creates a tree of objects representing the page's elements. This is the <strong class="highlight">DOM — Document Object Model</strong>.</p>
+                                                <div class="two-col" style="gap:20px; text-align:left;">
+                                                        <div style="min-width:0;">
+                                                                <strong class="highlight" style="font-size:27px;">The HTML you write</strong>
+                                                                <pre style="margin:12px 0 0;"><code class="html">&lt;body&gt;
+  &lt;div id="root"&gt;
+    &lt;h1&gt;Hello, React!&lt;/h1&gt;
+    &lt;p&gt;Welcome to the course.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/body&gt;</code></pre>
+                                                        </div>
+                                                        <div class="fragment card" style="min-width:0;">
+                                                                <strong class="highlight" style="font-size:27px;">The browser's element tree</strong>
+                                                                <pre style="margin:12px 0 0; background:none; box-shadow:none; border:none; font-size:24px; line-height:32px; color:var(--text-soft);">body
+└── div#root
+    ├── h1
+    └── p</pre>
+                                                        </div>
+                                                </div>
+                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);">The HTML is what you write. The DOM is the browser's representation of it, which <strong class="highlight">JavaScript can read and change</strong>.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                This is an HTML body excerpt; a complete document also has the html and head elements. Each nested element corresponds to a branch in the browser's DOM tree. The simplified diagram shows elements and omits their text nodes; the h1 and p also contain text. The root label is just the div's id, not a special HTML element. Establish this browser concept before showing how JavaScript selects a node. Do not introduce React's virtual DOM on this slide.
+                                        </aside>
+                                </section>
 
+                                <section class="rendering-topic">
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title" style="margin:0;">Changing the Page with JavaScript</h2>
+                                                <p style="margin:0; font-size:27px; color:var(--text-soft);">To change what the user sees, JavaScript can find an element in that tree and change its content.</p>
+                                                <pre><code class="js">const heading = document.querySelector('#root h1');
+heading.textContent = 'Hello, Dan!';</code></pre>
+                                                <div class="fragment card" style="font-size:32px;">Hello, React! → <span class="highlight">Hello, Dan!</span></div>
+                                                <ul class="fragment" style="margin:0; font-size:27px; line-height:1.5; text-align:left;">
+                                                        <li><code>querySelector</code> finds the heading.</li>
+                                                        <li><code>textContent</code> replaces its text.</li>
+                                                        <li>The browser displays the change; the original HTML file is unchanged.</li>
+                                                </ul>
+                                                <p class="fragment" style="margin:0; font-size:26px; color:var(--text-soft);">JavaScript can also create elements, add them to the tree, or remove them.</p>
+                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);"><strong class="highlight">You write the steps that change the page's elements.</strong></p>
+                                        </div>
+                                        <aside class="notes">
+                                                Use the HTML from the DOM reminder and run this script after those elements exist. Trace the selector from div#root to its h1 and show the visible text changing. textContent changes the browser's live DOM, not the source file on disk. This example assumes the selector matches; in production code handle missing elements appropriately. Mention createElement, append, and remove as other ways to change the tree without introducing more code. Next contrast these manual steps with React, still without JSX syntax.
+                                        </aside>
+                                </section>
+
+                                <section class="rendering-topic">
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title" style="margin:0;">Changing a Heading: JavaScript vs. React</h2>
+                                                <div class="card" style="text-align:left;">
+                                                        <strong class="highlight" style="font-size:28px;">In an HTML + JavaScript website</strong>
+                                                        <p style="margin:12px 0 0; font-size:26px; color:var(--text-soft);">To change what the user sees, you use JavaScript to find or create an element, then rewrite its content.</p>
+                                                </div>
+                                                <div class="fragment card" style="text-align:left;">
+                                                        <strong class="highlight" style="font-size:28px;">In React</strong>
+                                                        <p style="margin:12px 0 0; font-size:26px; color:var(--text-soft);">You write code that says what the page should show based on your data. When you update that data through React, React changes the elements on the page for you—you don't need to find, create, or rewrite them yourself.</p>
+                                                </div>
+                                                <p class="fragment" style="margin:0; font-size:26px; color:var(--text-soft);">Both approaches can update individual elements. React saves you from writing the element-update steps yourself.</p>
+                                                <p class="fragment" style="margin:0; font-size:27px; color:var(--text-soft);"><strong class="highlight">React handles changing the page.</strong><br>We will learn how to write the page and update its data shortly.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Build directly on the DOM reminder and JavaScript example rather than repeating their code. Learners have just seen manual element updates; now explain what React takes over. React does not replace JavaScript: we still write JavaScript, but React handles the browser element updates. The React heading will be written in JSX later, and updating the name will use props or a state setter; assigning an ordinary variable alone does not notify React. Do not introduce those APIs here. This concrete contrast explains the Declarative card from What is React? without requiring the term. The next slides explain how React updates browser elements.
+                                        </aside>
+                                </section>
+
+                                <section class="rendering-topic">
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title" style="margin:0;">How React Updates the Page</h2>
+                                                <div style="padding:16px; border-radius:10px; background:var(--accent-soft); font-size:28px; color:var(--accent);">Calculate the UI → Compare with the previous result → Apply necessary DOM changes</div>
+                                                <div class="two-col" style="gap:20px; text-align:left;">
+                                                        <div class="card">
+                                                                <strong class="highlight" style="font-size:28px;">Virtual DOM</strong>
+                                                                <p style="margin:12px 0 0; font-size:25px; color:var(--text-soft);">A common name for React's in-memory representation of the UI. Not another visible page.</p>
+                                                        </div>
+                                                        <div class="fragment card">
+                                                                <strong class="highlight" style="font-size:28px;">Real DOM</strong>
+                                                                <p style="margin:12px 0 0; font-size:25px; color:var(--text-soft);">The browser's elements, text, and attributes.</p>
+                                                        </div>
+                                                </div>
+                                                <p class="fragment" style="margin:0; font-size:27px; color:var(--text-soft);">Comparing the next UI description with the previous one is called <strong class="highlight">reconciliation</strong>. React works out which browser elements need updating.</p>
+                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);">React figures out and applies the element updates. With plain JavaScript, you write those update steps yourself.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Unpack Smart Updates from What is React? without assuming familiarity with JSX or component functions. Explain DOM as the browser's representation of the page. Virtual DOM is useful informal vocabulary for React's in-memory UI representation, not an exact duplicate of the browser DOM or a hidden page. Reconciliation determines how the new result relates to the previous UI; commit applies changes to the real DOM. On initial display there is no previous mounted UI, so React creates the initial DOM. Avoid Fiber internals, tree-diff algorithms, and claims that the virtual DOM is automatically faster than direct DOM code. JSX syntax comes after setup.
+                                        </aside>
+                                </section>
+
+                                <section class="rendering-topic">
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title" style="margin:0;">Does React Replace Everything?</h2>
+                                                <div class="two-col" style="gap:20px; text-align:left;">
+                                                        <div class="card" style="min-width:0;">
+                                                                <strong class="highlight" style="font-size:26px;">Previous result</strong>
+                                                                <p style="margin:16px 0 0; font-size:36px; color:var(--text-soft);">Hello, React!</p>
+                                                        </div>
+                                                        <div class="fragment card" style="min-width:0;">
+                                                                <strong class="highlight" style="font-size:26px;">Next result</strong>
+                                                                <p style="margin:16px 0 0; font-size:36px; color:var(--text-soft);">Hello, Dan!</p>
+                                                        </div>
+                                                </div>
+                                                <div class="fragment card" style="text-align:left;">
+                                                        <ol style="margin:0; font-size:27px; line-height:1.5;">
+                                                                <li><strong class="highlight">Render:</strong> calculate the next UI.</li>
+                                                                <li><strong class="highlight">Commit:</strong> apply necessary changes to the real DOM.</li>
+                                                                <li><strong class="highlight">Browser paint:</strong> display the updated page.</li>
+                                                        </ol>
+                                                </div>
+                                                <p class="fragment" style="margin:0; font-size:26px; color:var(--text-soft);">No. Here, React can keep the same heading element and change its text—just as our plain JavaScript example did. If the result is unchanged, no DOM change may be needed.</p>
+                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);">Calculating the UI again does not necessarily mean replacing—or even changing—the DOM.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                This answers a question about React's behavior, not a claim that plain JavaScript rebuilds the page. querySelector finds an existing element; assigning textContent retains that element while replacing its text content. Both approaches can make targeted updates. React's distinction is managing those update steps for us. These are two alternative results at the same position, not two headings displayed together. Because the heading type and position remain the same, React can retain the h1 element and update its text during commit. Rendering calculates what is wanted; it is distinct from mutating DOM nodes. The browser then paints the page. A new render can produce the same result and require no DOM changes. Later, state setters will provide a reason to calculate the UI again. Reference for the teacher: https://react.dev/learn/render-and-commit. Avoid promising that React always retains every node: changes in element type or identity can replace nodes.
+                                        </aside>
+                                </section>
+
+                                <section class="rendering-topic">
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title" style="margin:0;">Example: Adding a Product to the Cart</h2>
+                                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; text-align:left;">
+                                                        <div style="min-width:0;">
+                                                                <strong class="highlight" style="display:block; margin-bottom:12px; font-size:25px;">Before clicking</strong>
+                                                                <div class="card">
+                                                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-bottom:12px; border-bottom:1px solid var(--surface-border); font-size:27px;">
+                                                                        <strong>Mug Store</strong>
+                                                                        <span>🛒 <span style="display:inline-block; min-width:32px; text-align:center;">0</span></span>
+                                                                </div>
+                                                                <p style="margin:12px 0; font-size:27px;">Coffee Mug — $12</p>
+                                                                <span style="display:inline-block; border:1px solid var(--surface-border); border-radius:8px; padding:8px 16px; font-size:24px;">Add to cart</span>
+                                                                </div>
+                                                        </div>
+                                                        <div class="fragment" data-fragment-index="0" style="min-width:0;">
+                                                                <strong class="highlight" style="display:block; margin-bottom:12px; font-size:25px;">After clicking</strong>
+                                                                <div class="card">
+                                                                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-bottom:12px; border-bottom:1px solid var(--surface-border); font-size:27px;">
+                                                                        <strong>Mug Store</strong>
+                                                                        <span>🛒 <span style="display:inline-block; min-width:32px; text-align:center; background:var(--accent-soft); outline:2px solid var(--accent); border-radius:6px; color:var(--accent);">1</span></span>
+                                                                </div>
+                                                                <p style="margin:12px 0; font-size:27px;">Coffee Mug — $12</p>
+                                                                <span style="display:inline-block; border:1px solid var(--surface-border); border-radius:8px; padding:8px 16px; font-size:24px;">Add to cart</span>
+                                                                </div>
+                                                        </div>
+                                                        <div class="fragment" data-fragment-index="4" style="min-width:0;">
+                                                                <strong class="highlight" style="display:block; margin-bottom:12px; font-size:25px;">Compare the results</strong>
+                                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                                                                        <div style="min-width:0;">
+                                                                                <strong style="font-size:18px;">Before</strong>
+                                                                                <pre style="margin:8px 0 0; background:none; border:none; box-shadow:none; font-size:14px; line-height:24px; color:var(--text-soft);">Store
+├─ Cart: 0
+└─ Product
+   ├─ Coffee Mug
+   ├─ $12
+   └─ Add to cart</pre>
+                                                                        </div>
+                                                                        <div style="min-width:0;">
+                                                                                <strong style="font-size:18px;">After</strong>
+                                                                                <pre style="margin:8px 0 0; background:none; border:none; box-shadow:none; font-size:14px; line-height:24px; color:var(--text-soft);">Store
+<span style="color:var(--accent); background:var(--accent-soft);">├─ Cart: 1</span>
+└─ Product
+   ├─ Coffee Mug
+   ├─ $12
+   └─ Add to cart</pre>
+                                                                        </div>
+                                                                </div>
+                                                                <p style="margin:8px 0 0; font-size:19px; color:var(--text-soft);">Only the cart number changed.</p>
+                                                        </div>
+                                                </div>
+                                                <ol style="margin:0; font-size:25px; line-height:1.4; text-align:left;">
+                                                        <li class="fragment" data-fragment-index="1"><strong class="highlight">You click “Add to cart”.</strong> The application updates its cart data from zero items to one.</li>
+                                                        <li class="fragment" data-fragment-index="2"><strong class="highlight">React calculates what the page should show now.</strong> It compares the new result with the previous one: the cart number changed; the product details did not.</li>
+                                                        <li class="fragment" data-fragment-index="3"><strong class="highlight">React changes the cart number on the page.</strong> The existing elements stay in place; only the number's text needs updating in this example.</li>
+                                                </ol>
+                                                <p class="fragment" data-fragment-index="5" style="margin:0; font-size:27px; color:var(--text-soft);">React may calculate the UI again, but it only needs to change the cart number in the browser—not rebuild the store page.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                These are illustrative before-and-after store previews, not interactive buttons. Trace the click, updated cart data, comparison of the previous and next UI descriptions, and commit of the changed count text. The highlight marks only the cart number, not a replacement of the store header or product card. This example always shows a count, so updating zero to one only requires changing existing text; a badge that appears for the first time would also require adding an element. Unchanged DOM elements do not mean their component functions never ran again: this illustrates DOM changes, not which components execute. Plain JavaScript can also update this number directly; React manages determining and applying the update steps. Do not introduce state syntax yet: the later state examples explain how the application updates the count.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <h2 class="slide-title">Prepare Your Environment</h2>
+                                        <ul style="font-size:28px; line-height:1.6;">
+                                                <li>Install a current <a href="https://nodejs.org/en/download" target="_blank">Node.js LTS</a>; Vite 8 requires Node 20.19+ or 22.12+.</li>
+                                                <li>Check your terminal: <code>node --version</code> and <code>npm --version</code>.</li>
+                                                <li>Install <a href="https://code.visualstudio.com/" target="_blank">VS Code</a> and open the project folder.</li>
+                                                <li>Use VS Code's integrated terminal; check TypeScript errors in the Problems panel.</li>
+                                                <li>Install <a href="https://react.dev/learn/react-developer-tools" target="_blank">React DevTools</a> for Chrome or Firefox.</li>
+                                        </ul>
+                                        <aside class="notes">
+                                                Confirm everyone's Node and npm versions before scaffolding. Use a current Node LTS rather than installing the minimum version. VS Code includes TypeScript support; extensions are optional. Install React DevTools now, but do not tour its panels: students have not learned components yet. On corporate machines, follow the organization's registry and certificate setup; never disable TLS verification to fix an install.
+                                        </aside>
+                                </section>
 
                 <section>
-                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; text-align:center;">
-                        <h2 style="margin:0; font-weight:800; color:var(--accent);">Let's see some code. 🚀</h2>
-                        <img src="https://media.giphy.com/media/13HgwGsXF0aiGY/giphy.gif"
-                             alt="fast typing"
-                             style="width:520px; border-radius:12px; border:2px solid rgba(97,218,251,0.3); margin-top:0.5rem;">
+                    <h2 class="slide-title">What is Vite?</h2>
+                    <div style="display:flex; gap:1.5rem; align-items:center; margin-top:0.8rem; overflow:visible;">
+                        <img src="https://vitejs.dev/logo.svg" style="width:72px; flex-shrink:0; padding:12px; box-sizing:content-box; overflow:visible; filter:drop-shadow(0 0 16px rgba(255,180,50,0.5));" alt="Vite logo">
+                        <div style="border-left:3px solid rgba(97,218,251,0.3); padding-left:1rem;">
+                            <p style="margin:0; font-size:0.82em; color:#e2e8f0;">A <strong style="color:var(--accent);">fast build tool</strong> for React apps. Starts instantly, updates without reload.</p>
+                            <p style="margin:0.4rem 0 0; font-size:0.7em; color:var(--text-soft);">Replaces the old Create React App — much faster.</p>
+                        </div>
                     </div>
                     <aside class="notes">
-                        Transition slide — pause here. Ask if there are questions about the theory before we move to hands-on. From here on it's code-focused.
+                        Vite (French for "fast") uses native ES modules in dev — no bundling needed. Only the file you changed gets sent to the browser. CRA is deprecated since 2023 — Vite is the recommended replacement. Students will see HMR in the demo.
                     </aside>
                 </section>
 
-                <section>
-                    <h2 class="slide-title">Setting Up React with Vite + TypeScript</h2>
+                                <section>
+                                        <h2 class="slide-title">Setting Up React with Vite + TypeScript</h2>
                     <div style="margin-top:0.8rem;">
-                        <pre style="font-size:0.75em;"><code class="bash">npm create vite@latest my-app -- --template react-ts
+                        <pre style="font-size:0.70em;"><code class="bash">npm create vite@latest my-app -- --template react-ts
 cd my-app
 npm install
 npm run dev</code></pre>
@@ -329,21 +575,7 @@ npm run dev</code></pre>
                         </div>
                     </div>
                     <aside class="notes">
-                        Walk through each command live in the terminal. Explain that `--template react-ts` gives us TypeScript out of the box. After `npm run dev`, show the browser at localhost:5173. Point out the instant startup — no webpack bundling wait. If students have issues, common fix: make sure Node >= 18.
-                    </aside>
-                </section>
-
-                <section>
-                    <h2 class="slide-title">What is Vite?</h2>
-                    <div style="display:flex; gap:1.5rem; align-items:center; margin-top:0.8rem; overflow:visible;">
-                        <img src="https://vitejs.dev/logo.svg" style="width:72px; flex-shrink:0; padding:12px; box-sizing:content-box; overflow:visible; filter:drop-shadow(0 0 16px rgba(255,180,50,0.5));" alt="Vite logo">
-                        <div style="border-left:3px solid rgba(97,218,251,0.3); padding-left:1rem;">
-                            <p style="margin:0; font-size:0.82em; color:#e2e8f0;">A <strong style="color:var(--accent);">fast build tool</strong> for React apps. Starts instantly, updates without reload.</p>
-                            <p style="margin:0.4rem 0 0; font-size:0.7em; color:var(--text-soft);">Replaces the old Create React App — much faster.</p>
-                        </div>
-                    </div>
-                    <aside class="notes">
-                        Vite (French for "fast") uses native ES modules in dev — no bundling needed. Only the file you changed gets sent to the browser. CRA is deprecated since 2023 — Vite is the recommended replacement. Students will see HMR in the demo.
+                        Explain what each command does; execute these instructions in the following live demo rather than scaffolding twice. `--template react-ts` gives us TypeScript out of the box. Open the URL printed by Vite: the default is localhost:5173, but the port may differ. Check a supported Node version if scaffolding fails. For this course repository, dependencies are installed at the root and `npm run course` opens the launcher; its exercise entries are not the generated app's App.tsx.
                     </aside>
                 </section>
 
@@ -356,67 +588,78 @@ npm run dev</code></pre>
                              style="max-width:820px; max-height:420px; border-radius:12px; border:2px solid rgba(97,218,251,0.25);">
                     </div>
                     <aside class="notes">
-                        DEMO: Run `npm create vite@latest demo-app -- --template react-ts` live. Show the generated folder structure: src/App.tsx, main.tsx, vite.config.ts. Edit App.tsx to show HMR in action — change the text and watch the browser update without reload. ~5 minutes.
+                        DEMO: Execute the commands from the preceding setup slide once, using my-app. Open the running app and edit its displayed text to demonstrate hot updates. The next slide tours the generated files; keep component syntax for the first-component lesson. ~5 minutes.
                     </aside>
                 </section>
 
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:1rem;">
-                                                <h2 class="slide-title">App Component (Concept)</h2>
-                                                <div class="two-col">
-                                                        <ul style="margin:0;">
-                                                                <li><code>App.tsx</code> is the <span class="highlight">root component</span></li>
-                                                                <li>Child components nest inside parents</li>
-                                                                <li>Builds UIs from small, reusable pieces</li>
-                                                                <li>Every React app has exactly one root</li>
-                                                        </ul>
-                                                        <div class="card" style="font-size:0.82em;">
-                                                                <strong class="highlight">Component Tree</strong>
-                                                                <pre style="background:none; box-shadow:none; margin:0.6rem 0 0; font-size:0.95em; text-align:left; color:var(--text-soft);">App
-├── Header
-├── Greeting
-│   └── Avatar
-└── Footer</pre>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                        <aside class="notes">
-                                                Think of it like a family tree. App is the grandparent. Each component can have children. This tree structure is how React knows what to render and in what order. Draw parallel to HTML DOM tree — same concept, but with your custom components. Ask: "If Greeting re-renders, does Header also re-render?" Answer: by default no, only the subtree.
-                                        </aside>
-                                </section>
+                <section>
+                    <h2 class="slide-title">Project Structure</h2>
+                    <table class="project-structure" style="font-size:21px; width:100%;">
+                        <colgroup>
+                            <col style="width:18%;">
+                            <col style="width:30%;">
+                            <col style="width:52%;">
+                        </colgroup>
+                        <thead>
+                            <tr><th>File</th><th>Role</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>package.json</code></td>
+                                <td>Dependencies and commands</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>"dev": "vite"</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code>index.html</code></td>
+                                <td>HTML page with the root DOM element</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>&lt;div id="root"&gt;&lt;/div&gt;
+&lt;script type="module" src="/src/main.tsx"&gt;&lt;/script&gt;</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code>src/main.tsx</code></td>
+                                <td>Connects React to that DOM element</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>createRoot(document.getElementById('root')!).render(&lt;App /&gt;)</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code>src/App.tsx</code></td>
+                                <td>Starting component in the generated app</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>function App() { return &lt;h1&gt;Hello!&lt;/h1&gt; }</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code>src/App.css</code></td>
+                                <td>Styles imported by the component</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>.app { color: steelblue; }</code></pre></td>
+                            </tr>
+                            <tr>
+                                <td><code>vite.config.ts</code></td>
+                                <td>Vite configuration and the React plugin</td>
+                                <td><pre style="margin:0; font-size:0.62em;"><code>plugins: [react()]</code></pre></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <aside class="notes">
+                        Tour the scaffolded project in VS Code. Trace index.html to main.tsx to App.tsx without diving into rendering internals. Edit App.tsx to demonstrate hot updates. Then show the course launcher and explain that its preview tells students which exercises/day-1/.../entry.tsx file to edit; reusable child components live beside that entry.
+                    </aside>
+                </section>
 
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:0.8rem;">
-                                                <h2 class="slide-title">App Component (Code)</h2>
-                                                <pre><code class="ts">
-// App.tsx
-import Header from './Header';
-import Greeting from './Greeting';
-import Footer from './Footer';
 
-function App() {
-  return (
-    &lt;div&gt;
-      &lt;Header /&gt;
-      &lt;Greeting /&gt;
-      &lt;Footer /&gt;
-    &lt;/div&gt;
-  );
-}
 
-export default App;
-                                                </code></pre>
-                                                <p class="small-text"><a href="https://www.att.com" target="_blank" style="color:var(--accent);">att.com</a> </p>
-                                        </div>
-                                        <aside class="notes">
-                                                Show this in the actual demo project. Open App.tsx and point out: imports at top, function body returns JSX, self-closing tags for components. The wrapping div is needed because JSX must return one root. Mention Fragment shorthand as alternative. Use att.com as a real-world example — point out how the navbar, hero banner, plan cards, and footer could each be their own component file.
-                                        </aside>
-                                </section>
+                <section>
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; text-align:center;">
+                        <h2 style="margin:0; font-weight:800; color:var(--accent);">Let's see some code. 🚀</h2>
+                        <img src="https://media.giphy.com/media/13HgwGsXF0aiGY/giphy.gif"
+                             alt="fast typing"
+                             style="width:520px; border-radius:12px; border:2px solid rgba(97,218,251,0.3); margin-top:0.5rem;">
+                    </div>
+                    <aside class="notes">
+                        Transition from the setup tour to writing a small component. Ask if everyone can find the file they will edit before introducing Greeting.
+                    </aside>
+                </section>
 
                 <section>
                     <h2 class="slide-title">Your First Function Component</h2>
                     <div class="two-col" style="margin-top:0.8rem; align-items:center;">
-                        <div style="flex:1;">
+                        <div style="flex:1; font-size: 0.75em">
                             <ul>
                                 <li>A function that <span class="highlight">returns JSX</span></li>
                                 <li>Name must start with a <span class="highlight">capital letter</span></li>
@@ -425,50 +668,76 @@ export default App;
                             </ul>
                         </div>
                         <div style="flex:0.85;">
-                            <pre><code class="tsx" data-line-numbers>
-// Greeting.tsx
-import React from 'react';
-
+                            <pre style="margin:0; width:100%;"><code class="tsx" style="max-height:none; font-size:18px; line-height:24px;">// Greeting.tsx
 function Greeting() {
   return (
     &lt;h1&gt;Hello, React! 👋&lt;/h1&gt;
   );
 }
 
-export default Greeting;
-                            </code></pre>
+export default Greeting;</code></pre>
                         </div>
                     </div>
                     <aside class="notes">
-                        Stress the naming convention: PascalCase = component (Greeting), camelCase = regular function. React distinguishes components from HTML elements by the capital letter. The `import React` line is no longer needed in React 17+ with the new JSX transform, but shown here for clarity. Ask: "What happens if we name it `greeting` lowercase?" — React treats it as an HTML tag.
+                        Start with this one small component, not an entire component tree. A component is a function that returns UI; the markup-like expression is JSX, which the next slide explains. Stress PascalCase names: Greeting is a component, while a lowercase JSX tag is treated as an HTML element. Explain export default as making Greeting available for another file to import; composition comes shortly. The project's automatic JSX transform does not require importing React here.
                     </aside>
                 </section>
 
                 <section>
                     <h2 class="slide-title">JSX</h2>
                     <div style="display:flex; flex-direction:column; gap:0.7rem; margin-top:0.8rem;">
-                        <p style="margin:0; font-size:0.82em; color:var(--text-soft);">Looks like HTML, but it's <strong style="color:var(--accent);">JavaScript</strong> — gets compiled to function calls at build time.</p>
+                        <p style="margin:0; font-size:0.82em; color:var(--text-soft);">JSX is a <strong style="color:var(--accent);">JavaScript syntax extension</strong> for describing UI. Use <code>{}</code> to insert JavaScript expressions.</p>
                         <div>
                             <p style="font-size:0.78em; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; margin:0 0 0.3rem;">✍️ You write</p>
-                            <pre style="margin:0;"><code class="tsx">
-// Greeting.tsx
+                            <pre style="margin:0;"><code class="tsx" style="max-height:none; font-size:24px; line-height:30px;">// Greeting.tsx
 function Greeting() {
   const name = 'React';
   return &lt;h1&gt;Hello, {name}!&lt;/h1&gt;;
-}
-                            </code></pre>
+}</code></pre>
                         </div>
-                        <div>
-                            <p style="font-size:0.78em; color:var(--text-soft); text-transform:uppercase; letter-spacing:0.1em; margin:0 0 0.3rem;">⚙️ Under the hood — React 19 JSX transform</p>
-                            <pre style="margin:0;"><code class="tsx">
-import { jsx as _jsx } from 'react/jsx-runtime';
-const name = 'React';
-_jsx("h1", { children: ["Hello, ", name, "!"] });
-                            </code></pre>
-                        </div>
+                        <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);"><code>{name}</code> reads the variable, so this renders <strong class="highlight">Hello, React!</strong></p>
                     </div>
                     <aside class="notes">
-                        JSX is NOT HTML — it's syntactic sugar that compiles to function calls. This transformation is done by Babel (or SWC in Vite) at build time — it converts JSX into regular JavaScript function calls. The new JSX transform (React 17+) means you don't need `import React` at the top anymore. We'll cover the key JSX syntax rules on the next slide.
+                        Build on Greeting: the new idea is inserting a JavaScript expression into JSX, not redefining what a component is. Explain that braces evaluate name rather than displaying the literal word name. JSX is not an HTML string. Optional background if asked: build tooling compiles JSX into JavaScript calls. With the automatic JSX transform, this multi-child heading can use jsxs from react/jsx-runtime with children ["Hello, ", name, "!"]. Compiler output is not needed for the exercise. The next slide connects JSX to familiar browser elements, followed by practical syntax rules.
+                    </aside>
+                </section>
+
+                <section class="rendering-topic">
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <h2 class="slide-title" style="margin:0;">From JSX to Page Elements</h2>
+                        <p style="margin:0; font-size:25px; color:var(--text-soft);">Follow the JSX from a component to the browser's elements and the visible page.</p>
+                        <div class="two-col" style="gap:20px; text-align:left;">
+                            <div style="min-width:0; font-size:24px;">
+                                <strong class="highlight" style="display:block; margin-bottom:12px;">React code</strong>
+                                <pre><code class="tsx">function ProductCard() {
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;Coffee Mug&lt;/h2&gt;
+      &lt;p&gt;Price: $12&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+                            </div>
+                            <div class="fragment" style="min-width:0; font-size:24px;">
+                                <strong class="highlight" style="display:block; margin-bottom:12px;">The browser's element tree</strong>
+                                <div class="card">
+                                <pre style="background:none; box-shadow:none; border:none; font-size:22px; line-height:26px; color:var(--text-soft);">div
+├── h2  (Coffee Mug)
+└── p   (Price: $12)</pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fragment" style="text-align:left; font-size:24px;">
+                            <strong class="highlight" style="display:block; margin-bottom:12px;">What the user sees</strong>
+                            <div class="card">
+                            <h3 style="margin:0; font-size:30px;">Coffee Mug</h3>
+                            <p style="margin:8px 0 0;">Price: $12</p>
+                            </div>
+                        </div>
+                        <p class="fragment" style="margin:0; font-size:25px; color:var(--text-soft);">JSX describes the elements and how they nest. React creates the corresponding browser elements.</p>
+                    </div>
+                    <aside class="notes">
+                        Connect the JSX students just learned to its browser result, without repeating the earlier JavaScript comparison or DOM definition. Trace the div containing an h2 and a p from JSX to the simplified element tree, then reveal the illustrative page preview. The preview's styling is illustrative; the snippet does not include CSS. ProductCard must be included in the mounted app, for example with a ProductCard tag, for React to create its browser elements. The function definition alone does not display anything. Keep this focused on readable nesting, not cart logic, the virtual DOM, or re-renders.
                     </aside>
                 </section>
 
@@ -484,10 +753,18 @@ _jsx("h1", { children: ["Hello, ", name, "!"] });
                                 <p style="margin:0.15rem 0 0; font-size:0.62em; color:var(--text-soft);">Wrap siblings in a <code>&lt;div&gt;</code> or Fragment</p>
                             </div>
                             <pre style="margin:0 auto; flex:1; font-size:0.52em; display:flex; align-items:center; justify-content:center;"><code class="tsx">// ❌ Two roots
-return &lt;h1&gt;Hi&lt;/h1&gt; &lt;p&gt;Bye&lt;/p&gt;;
+return (
+    &lt;h1&gt;Hi&lt;/h1&gt;
+    &lt;p&gt;Bye&lt;/p&gt;
+);
 
 // ✅ Fragment wrapper
-return &lt;&gt;&lt;h1&gt;Hi&lt;/h1&gt;&lt;p&gt;Bye&lt;/p&gt;&lt;/&gt;;</code></pre>
+return (
+    &lt;&gt;
+        &lt;h1&gt;Hi&lt;/h1&gt;
+        &lt;p&gt;Bye&lt;/p&gt;
+    &lt;/&gt;
+);</code></pre>
                         </div>
 
                         <!-- Rule 2: Curly braces -->
@@ -506,17 +783,91 @@ return &lt;&gt;&lt;h1&gt;Hi&lt;/h1&gt;&lt;p&gt;Bye&lt;/p&gt;&lt;/&gt;;</code></p
                     </aside>
                 </section>
 
+                                                                <section>
+                                                                                <div style="display:flex; flex-direction:column; gap:1rem;">
+                                                                                                <h2 class="slide-title">App Component (Concept)</h2>
+                                                <div class="two-col">
+                                                        <ul style="margin:0; flex:1; min-width:0;">
+                                                                <li><code>App.tsx</code> is the <span class="highlight">root component</span></li>
+                                                                <li>Child components nest inside parents</li>
+                                                                <li>Builds UIs from small, reusable pieces</li>
+                                                                <li>In this app, React mounts the tree starting with <code>App</code></li>
+                                                        </ul>
+                                                        <div class="card" style="flex:0 0 300px; min-width:0; box-sizing:border-box; font-size:28px;">
+                                                                <strong class="highlight">Component Tree</strong>
+                                                                <pre style="background:none; box-shadow:none; margin:12px 0 0; width:100%; font-size:24px; line-height:32px; text-align:left; color:var(--text-soft);">App
+├── Header
+├── Greeting
+└── Footer</pre>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <aside class="notes">
+                                                Students now know how to define a component and write JSX. Introduce composition: App is the parent of Header, Greeting, and Footer. The next slide assembles this exact tree in code. In this example main.tsx mounts App into the page; do not imply that React forbids multiple roots. Keep rendering behavior for the state lesson.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <div style="display:flex; flex-direction:column; gap:0.8rem;">
+                                                <h2 class="slide-title">App Component (Code)</h2>
+                                                <pre style="margin:0; width:100%;"><code class="tsx" style="max-height:none; font-size:22px; line-height:28px;">// App.tsx
+import Header from './Header';
+import Greeting from './Greeting';
+import Footer from './Footer';
+
+function App() {
+  return (
+    &lt;div&gt;
+      &lt;Header /&gt;
+      &lt;Greeting /&gt;
+      &lt;Footer /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre>
+                                        </div>
+                                        <aside class="notes">
+                                                Assemble the component tree from the previous slide. Students have already seen functions, exports, and JSX; focus on importing components and composing them with Header, Greeting, and Footer tags. The div groups siblings, applying the single-root JSX rule they already know. A Fragment is another option. Header and Footer are separate function components, just like Greeting.
+                                        </aside>
+                                </section>
+
+                                <section class="rendering-topic">
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title" style="margin:0;">Rendering Means Calling Your Components</h2>
+                                                <pre><code class="tsx">function Greeting() {
+  return &lt;h1&gt;Hello, React!&lt;/h1&gt;;
+}</code></pre>
+                                                <div class="fragment card" style="text-align:left;">
+                                                        <ol style="margin:0; font-size:28px; line-height:1.5;">
+                                                                <li>React calls <code>Greeting</code>.</li>
+                                                                <li>The function returns a description of the heading.</li>
+                                                                <li>If React needs to render it again, it runs the function again to get the next result.</li>
+                                                        </ol>
+                                                </div>
+                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);"><strong class="highlight">A component function doesn't run only once.</strong> React can call it again to calculate what to show.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Bridge from component syntax to execution: React manages when component functions run, and they can run more than once. Students use component tags rather than manually calling Greeting() to display it. Briefly recall that calculating a result does not necessarily change browser elements; do not repeat the virtual DOM, comparison, or commit explanation. Later, connect running the function again to local variables being initialized again and to state setters requesting a new render. Rendering must be a pure calculation, not a place for side effects.
+                                        </aside>
+                                </section>
+
+
+
+
+
                                 <!-- EXERCISE SLIDE -->
                                 <section>
                                         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; text-align:center;">
                                                 <h2>Exercise - Build a Product Card</h2>
-                                                <a href="http://localhost:5173/?target=day-1/exercises/build-product-card/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
+                                                <a href="/?target=day-1/exercises/build-product-card/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
                                         </div>
                                 </section>
 
                                 <section>
                                         <div style="display:flex; flex-direction:column; gap:1rem;">
                                                 <h2 class="slide-title">Props</h2>
+                                                <p style="margin:0; font-size:28px; color:var(--text-soft);">How can the same <code>Greeting</code> component greet different people?</p>
 
                                                 <!-- Flow diagram -->
                                                 <div style="display:flex; align-items:center; justify-content:center; margin:0.2rem 0;">
@@ -559,73 +910,141 @@ return &lt;&gt;&lt;h1&gt;Hi&lt;/h1&gt;&lt;p&gt;Bye&lt;/p&gt;&lt;/&gt;;</code></p
                                                 </div>
                                         </div>
                                         <aside class="notes">
-                                                Props are how parents talk to children. One-way data flow is a core React principle — makes debugging easy because data always flows downhill. If a child needs to communicate back, it calls a callback function passed as a prop (we'll see this later with lifting state up).
+                                                Motivate props with the Greeting students already know: replace a fixed name with an input supplied by the parent so the same component can greet different people. Props are named inputs that flow down and are not mutated by the child. The next slides explain how React collects these inputs into an object, then how destructuring shortens access. Save callbacks and lifting state for later.
                                         </aside>
                                 </section>
 
                                 <section>
                                         <div style="display:flex; flex-direction:column; gap:0.8rem;">
-                                                <h2 class="slide-title">Props Example</h2>
+                                                <h2 class="slide-title">Receiving Props</h2>
+                                                <p style="margin:0; font-size:27px; color:var(--text-soft);">React collects the named inputs into <strong class="highlight">one object</strong>, which we call <code>props</code>.</p>
                                                 <div class="two-col" style="align-items:flex-start; gap:1.2rem;">
                                                         <div style="display:flex; flex-direction:column; gap:0.4rem;">
                                                                 <span style="font-size:0.68em; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent);">Parent — App.tsx</span>
-                                                                <pre style="margin:0;"><code class="ts">
-// App.tsx
-import Greeting from './Greeting';
+                                                                <pre style="margin:0; width:100%; box-sizing:border-box; font-size:0.42em;"><code class="tsx">import Greeting from './Greeting';
 
-function App() {
+export default function App() {
   return &lt;Greeting name="Dan" /&gt;;
-}
-
-export default App;
-                                                                </code></pre>
+}</code></pre>
                                                         </div>
                                                         <div style="display:flex; flex-direction:column; gap:0.4rem;">
                                                                 <span style="font-size:0.68em; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent);">Child — Greeting.tsx</span>
-                                                                <pre style="margin:0;"><code class="ts" data-line-numbers>
-// Greeting.tsx
-type GreetingProps = { name: string };
+                                                                <pre style="margin:0; width:100%; box-sizing:border-box; font-size:0.42em;"><code class="tsx">type GreetingProps = { name: string };
 
-function Greeting({ name }: GreetingProps) {
-  return &lt;h1&gt;Hello, {name}!&lt;/h1&gt;;
-}
-
-export default Greeting;
-                                                                </code></pre>
+export default function Greeting(props: GreetingProps) {
+  return &lt;h1&gt;Hello, {props.name}!&lt;/h1&gt;;
+}</code></pre>
                                                         </div>
                                                 </div>
                                                 <p class="small-text">The type <code>GreetingProps</code> enforces the shape — TypeScript will error if <code>name</code> is missing or the wrong type.</p>
                                         </div>
                                         <aside class="notes">
-                                                Walk through both sides: child declares what it expects via a type, parent passes the actual value. Show what happens if you omit `name` or pass a number — TS red squiggles. Destructuring in the function signature is the idiomatic React pattern. Mention: you can also use `interface` instead of `type`.
+                                                Trace name="Dan" from the parent into a single props object with a name field. The child reads props.name. GreetingProps describes the required fields and their types; demonstrate a missing name or a number causing a TypeScript error. Keep object access explicit here. The next slide introduces destructuring as equivalent JavaScript shorthand, not a different React mechanism.
                                         </aside>
                                 </section>
 
-                                <!-- SLIDE 13 – Events: HTML vs React -->
                                 <section>
-                                        <div style="display:flex; flex-direction:column; gap:1rem;">
+                                        <h2 class="slide-title">Destructuring Props</h2>
+                                        <p style="font-size:28px; color:var(--text-soft);">Same props object, shorter access. This is JavaScript shorthand, not a new React feature.</p>
+                                        <pre style="font-size:24px;"><code class="tsx" style="max-height:none; line-height:28px;">type GreetingProps = { name: string };
+
+function Greeting(props: GreetingProps) {
+  return &lt;h1&gt;Hello, {props.name}!&lt;/h1&gt;;
+}</code></pre>
+                                        <div class="fragment">
+                                                <p style="margin:12px 0; font-size:27px; color:var(--text-soft);">Extract <code>name</code> directly in the parameter:</p>
+                                                <pre style="margin:0; font-size:24px;"><code class="tsx" style="max-height:none; line-height:28px;">function Greeting({ name }: GreetingProps) {
+  return &lt;h1&gt;Hello, {name}!&lt;/h1&gt;;
+}</code></pre>
+                                        </div>
+                                        <p class="fragment" style="font-size:27px; color:var(--text-soft);">The parent still writes <code>&lt;Greeting name="Dan" /&gt;</code>. Only the child's syntax changes.</p>
+                                        <aside class="notes">
+                                                Compare the two alternative definitions; they are not two functions to copy into one file. Destructuring pulls name out of the same props object received on the preceding slide. GreetingProps and the parent's usage do not change. It is equivalent to reading props.name, and students will see this shorter form in examples.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title" style="margin:0;">Passing Different Values</h2>
+                                                <p style="margin:0; font-size:28px; color:var(--text-soft);">A component can receive several named props, with different types.</p>
+                                                <div class="two-col" style="gap:20px; text-align:left;">
+                                                        <div class="card" style="min-width:0;">
+                                                                <strong class="highlight" style="font-size:27px;">Define the inputs</strong>
+                                                                <pre style="margin:12px 0 0; width:100%;"><code class="ts" style="max-height:none; font-size:22px; line-height:28px;">type ProductCardProps = {
+  title: string;
+  price: number;
+  inStock: boolean;
+};</code></pre>
+                                                        </div>
+                                                        <div class="fragment card" style="min-width:0;">
+                                                                <strong class="highlight" style="font-size:27px;">Pass the values</strong>
+                                                                <pre style="margin:12px 0 0; width:100%;"><code class="tsx" style="max-height:none; font-size:22px; line-height:28px;">&lt;ProductCard
+  title="Mug"
+  price={12}
+  inStock={true}
+/&gt;</code></pre>
+                                                        </div>
+                                                </div>
+                                                <p class="fragment" style="margin:0; font-size:27px; color:var(--text-soft);">Quotes pass a string. Braces pass JavaScript expressions, including numbers, booleans, and variables: <code>title={productTitle}</code>.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Extend the one-name Greeting example to a product component with multiple inputs. These are a props type and a usage snippet: ProductCard receives ProductCardProps, as Greeting received GreetingProps. Prop names are part of the component's chosen API, not special React keywords. Strings can use quotes; braces evaluate an expression rather than turning numbers and booleans into strings. The next exercise applies typed inputs to the product card's children.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.2rem; text-align:center;">
+                                                <h2>Exercise - Build a Product Card with Props</h2>
+                                                <p class="small-text">Pass the description prop, then define and pass a typed price prop.</p>
+                                                <a href="/?target=day-1/exercises/build-product-card-with-props/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
+                                        </div>
+                                        <aside class="notes">
+                                                This is a props-only practice before events. ProductTitle is already connected as an example; have learners add the description and price props, then check the data appears in the product card.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <h2 class="slide-title">DevTools: Components and Props</h2>
+                                        <ol style="font-size:28px; line-height:1.6;">
+                                                <li>Open the completed product card in the course launcher.</li>
+                                                <li>Open browser developer tools and select <strong class="highlight">Components</strong>.</li>
+                                                <li>Select <code>ProductCard</code>, then its title, description, and price children.</li>
+                                                <li>Inspect the props passed from parent to child.</li>
+                                        </ol>
+                                        <p class="small-text"><strong>Elements</strong> shows DOM tags; <strong>Components</strong> shows React components.</p>
+                                        <a href="/?target=day-1/exercises/build-product-card-with-props/solution" target="_blank" style="font-size:26px;">Open the props-only exercise solution</a>
+                                        <aside class="notes">
+                                                Students now know components and props, so inspect the completed props-only exercise. If the Components tab is missing, confirm the extension is enabled and reload the app. Show how a React component can render several DOM elements. Return to this panel for state later; do not introduce the Profiler yet.
+                                        </aside>
+                                </section>
+
+                                                                <!-- SLIDE 13 – Events: HTML vs React -->
+                                <section>
+                                        <div style="display:flex; flex-direction:column; gap:0.55rem;">
                                                 <h2 class="slide-title">Events in React</h2>
-                                                <div class="two-col" style="align-items:flex-start; gap:1.4rem;">
-                                                        <div style="display:flex; flex-direction:column; gap:0.5rem; flex:0.35;">
+                                                <div class="two-col" style="align-items:flex-start; gap:0.7rem;">
+                                                        <div style="display:flex; flex-direction:column; gap:0.35rem;">
                                                                 <span style="font-size:0.68em; text-transform:uppercase; letter-spacing:0.1em; color:#f87171;">HTML</span>
-                                                                <pre style="margin:0; font-size:0.6em;"><code class="html">&lt;button onclick="handleClick()"&gt;
+                                                                <pre style="margin:0; width:100%; box-sizing:border-box; font-size:0.5em;"><code class="html">&lt;button
+  onclick="handleClick()"
+&gt;
   Click me
 &lt;/button&gt;</code></pre>
                                                         </div>
-                                                        <div style="display:flex; flex-direction:column; gap:0.5rem; flex:1;">
+                                                        <div style="display:flex; flex-direction:column; gap:0.35rem;">
                                                                 <span style="font-size:0.68em; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent);">React</span>
-                                                                <pre style="margin:0;"><code class="ts" data-line-numbers>
+                                                                <pre style="margin:0; width:100%; box-sizing:border-box; max-height:none; overflow:visible; font-size:0.5em;"><code class="tsx" data-line-numbers>
 // MyButton.tsx
 function MyButton() {
   const handleClick = () =&gt; {
     alert('Clicked!');
   };
-
   return (
-    &lt;button onClick={handleClick}&gt;Click me&lt;/button&gt;
+    &lt;button onClick={handleClick}&gt;
+      Click me
+    &lt;/button&gt;
   );
 }
-
 export default MyButton;
                                                                 </code></pre>
                                                         </div>
@@ -633,52 +1052,6 @@ export default MyButton;
                                         </div>
                                         <aside class="notes">
                                                 Key differences from HTML: 1) camelCase (onClick not onclick), 2) Pass a function reference, don't call it, 3) No quotes around the handler. React uses synthetic events that wrap native browser events for cross-browser consistency. The event object is passed automatically as the first argument.
-                                        </aside>
-                                </section>
-
-                                <!-- SLIDE 13b – Events with Parameters -->
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:1rem;">
-                                                <h2 class="slide-title">Events with Parameters</h2>
-                                                <div class="two-col" style="align-items:flex-start; gap:1.4rem;">
-                                                        <div style="display:flex; flex-direction:column; gap:0.5rem; flex:1;">
-                                                                <span style="font-size:0.68em; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent);">Wrap in an arrow function</span>
-                                                                <pre style="margin:0;"><code class="ts" data-line-numbers>
-// ProductList.tsx
-function ProductList() {
-  function handleDelete(id: number) {
-    console.log('Delete product', id);
-  }
-
-  return (
-    &lt;ul&gt;
-      &lt;li&gt;
-        Headphones
-        &lt;button onClick={() =&gt; handleDelete(1)}&gt;
-          Delete
-        &lt;/button&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  );
-}
-                                                                </code></pre>
-                                                        </div>
-                                                        <div style="display:flex; flex-direction:column; gap:0.7rem; flex:0.7; justify-content:center;">
-                                                                <div class="card" style="font-size:0.78em; border:1.5px solid rgba(239,68,68,0.5);">
-                                                                        <strong style="color:#f87171;">❌ Won't work</strong>
-                                                                        <pre style="margin:0.3rem 0 0; background:none; box-shadow:none; font-size:0.85em;"><code class="ts">onClick={handleDelete(1)}</code></pre>
-                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft);">Calls it immediately on render</p>
-                                                                </div>
-                                                                <div class="card" style="font-size:0.78em; border:1.5px solid rgba(34,197,94,0.5);">
-                                                                        <strong style="color:#4ade80;">✅ Works</strong>
-                                                                        <pre style="margin:0.3rem 0 0; background:none; box-shadow:none; font-size:0.85em;"><code class="ts">onClick={() =&gt; handleDelete(1)}</code></pre>
-                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft);">Passes a new function that calls it on click</p>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                        <aside class="notes">
-                                                When you need to pass an argument, wrap the call in an arrow function. The arrow function is created fresh on each render — that's fine for most cases. Stress again: onClick={handleDelete(1)} is the classic beginner bug — it fires on render, not on click. The arrow function defers the call until the user actually clicks.
                                         </aside>
                                 </section>
 
@@ -716,55 +1089,159 @@ function ProductList() {
                                         </aside>
                                 </section>
 
+                                <!-- SLIDE 13b – Events with Parameters -->
+                                <section>
+                                        <div style="display:flex; flex-direction:column; gap:0.3rem;">
+                                                <h2 class="slide-title">Events with Parameters</h2>
+                                                <div class="two-col" style="align-items:flex-start; gap:0.7rem;">
+                                                        <div style="display:flex; flex-direction:column; gap:0.35rem; flex:1;">
+                                                                <span style="font-size:0.68em; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent);">Wrap in an arrow function</span>
+                                                                <pre style="margin:0; width:100%; box-sizing:border-box; max-height:none; overflow:visible; white-space:pre-wrap; overflow-wrap:anywhere; font-size:0.42em;"><code class="tsx" data-line-numbers>function ProductList() {
+  function handleDelete(id: number) {
+    console.log('Delete product', id);
+  }
+  return (
+    &lt;button onClick={() =&gt; handleDelete(1)}&gt;Delete&lt;/button&gt;
+  );
+}
+                                                                </code></pre>
+                                                        </div>
+                                                        <div style="display:flex; flex-direction:column; gap:0.45rem; flex:0.7; justify-content:center;">
+                                                                <div class="card" style="font-size:0.78em; border:1.5px solid rgba(239,68,68,0.5);">
+                                                                        <strong style="color:#f87171;">❌ Won't work</strong>
+                                                                        <pre style="margin:0.3rem 0 0; background:none; box-shadow:none; font-size:0.85em;"><code class="ts">onClick={handleDelete(1)}</code></pre>
+                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft);">Calls it immediately on render</p>
+                                                                </div>
+                                                                <div class="card" style="font-size:0.78em; border:1.5px solid rgba(34,197,94,0.5);">
+                                                                        <strong style="color:#4ade80;">✅ Works</strong>
+                                                                        <pre style="margin:0.3rem 0 0; background:none; box-shadow:none; font-size:0.85em;"><code class="ts">onClick={() =&gt; handleDelete(1)}</code></pre>
+                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft);">Passes a new function that calls it on click</p>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <aside class="notes">
+                                                Build on the handler rule students have just learned: we still pass a function instead of calling during render. The new idea is supplying an argument. The arrow function waits for the click and then calls handleDelete(1). Its being recreated on each render is fine here; keep performance details for later.
+                                        </aside>
+                                </section>
+
                                 <!-- EXERCISE SLIDE -->
                                 <section>
                                         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; text-align:center;">
-                                                <h2>Exercise - Build a Product Card with Props</h2>
-                                                <a href="http://localhost:5173/?target=day-1/exercises/build-product-card-with-prop/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
+                                                <h2>Exercise - Build a Product Card with Props and Events</h2>
+                                                <a href="/?target=day-1/exercises/build-product-card-with-props-and-events/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
                                         </div>
                                 </section>
 
-                                <!-- SLIDE 15 – State & useState -->
                                 <section>
-                                        <div style="display:flex; flex-direction:column; gap:0.9rem;">
-
-                                                <h2 class="slide-title">State &amp; useState Hook</h2>
-
-                                                <!-- Step 1: What is state? -->
-                                                <div class="card">
-                                                        <strong class="highlight">🗃️ What is state?</strong>
-                                                        <p style="margin:0.3rem 0 0; font-size:0.78em; color:var(--text-soft);">Data <em>owned</em> by a component that can change over time.</p>
+                                        <div style="display:flex; flex-direction:column; gap:24px;">
+                                                <h2 class="slide-title">Working with Changing Values</h2>
+                                                <div class="card" style="text-align:left;">
+                                                        <p style="margin:0; font-size:30px;">Let's build a counter that increases when we click.</p>
+                                                        <p style="margin:16px 0 0; font-size:28px; color:var(--text-soft);">We already know variables and click handlers. Is that enough?</p>
                                                 </div>
-
-                                                <!-- Step 2: anatomy bar + tuple -->
-                                                <div class="fragment" style="background:var(--accent-soft); border:1px solid rgba(97,218,251,0.3); border-radius:10px; padding:0.5rem 1rem; text-align:center;">
-                                                        <code style="font-size:0.82em; color:var(--accent);">const [<span style="color:#ffcc66;">value</span>, <span style="color:#b5f0a5;">setValue</span>] = useState(<span style="color:#c8d2de;">initialValue</span>)</code>
-                                                </div>
-
-                                                <div class="fragment" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.7rem; font-size:0.72em;">
-                                                        <div class="card" style="text-align:center;">
-                                                                <span style="color:#ffcc66; font-weight:700;">value</span>
-                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Current state value</p>
-                                                        </div>
-                                                        <div class="card" style="text-align:center;">
-                                                                <span style="color:#b5f0a5; font-weight:700;">setValue</span>
-                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Setter — triggers re-render</p>
-                                                        </div>
-                                                        <div class="card" style="text-align:center;">
-                                                                <span style="color:#c8d2de; font-weight:700;">initialValue</span>
-                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Used on first render only</p>
-                                                        </div>
-                                                </div>
-
-                                                <!-- Step 3: Re-renders on change -->
-                                                <div class="fragment card">
-                                                        <strong class="highlight">🔄 Re-renders on change</strong>
-                                                        <p style="margin:0.3rem 0 0; font-size:0.78em; color:var(--text-soft);">Calling the setter tells React to re-render with the new value.</p>
-                                                </div>
-
+                                                <a href="/?target=day-1/demo/changing-values" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:32px;">Open Counter Demo</a>
+                                                <p style="margin:0; font-size:22px; color:var(--text-soft);"><code>code/day_1/src/Counter.tsx</code></p>
+                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);">Predict first: what will change on the page, and what will appear in the console?</p>
                                         </div>
                                         <aside class="notes">
-                                                State is the BIG concept of the day. Props = data from outside, State = data owned internally. When state changes, React re-renders the component automatically. The useState hook returns a tuple: [currentValue, setterFunction]. The initial value is only used on the very first render.
+                                                Before presenting, start the main course server from the repository root with npm run course. The counter is registered in the Day 1 launcher and uses this same server; no second terminal or demo port is needed.
+                                                Open the demo and its browser console. Show the local let counter and the read-only source panel, then ask for predictions before clicking. The console count increases but the displayed count stays zero. Focus on this mismatch: changing a local variable does not request a render.
+                                                Do not fix the code yet. Explain the observed problem, introduce useState and its placement rules, then return at the Let's Fix the Counter slide to edit the same file live.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title">Why Didn't the Page Update?</h2>
+                                                <div class="card" style="text-align:left;">
+                                                        <strong class="highlight" style="font-size:30px;">The console count increased. The displayed count stayed at zero.</strong>
+                                                        <p style="margin:12px 0 0; font-size:28px; color:var(--text-soft);">Changing a local variable does not tell React to run the component again.</p>
+                                                </div>
+                                                <div class="fragment card" style="text-align:left;">
+                                                        <strong class="highlight" style="display:block; font-size:30px;">We need a way to:</strong>
+                                                        <ul style="display:block; margin:12px 0 0 28px; font-size:26px; line-height:1.5;">
+                                                                <li>Store the counter's current value.</li>
+                                                                <li>Update that value and tell React to calculate the UI again.</li>
+                                                                <li>Keep the updated value when React runs the component again.</li>
+                                                        </ul>
+                                                </div>
+                                                <p class="fragment" style="margin:0; font-size:24px; color:var(--text-soft);"><strong class="highlight">Rendering again means running the component function again.</strong><br>With <code>let count = 0</code>, that line would run again too, creating a new local <code>count</code> starting at zero.</p>
+                                                <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);">React calls this component-owned memory <strong class="highlight">state</strong>.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Start from the demo students just saw, rather than introducing another counter or repeating its code. Clicking changes the variable captured by the handler but does not notify React, so the log increases while the page stays at zero. React does not watch ordinary variable assignments: we update state through its setter to request a render. Reveal the local-variable explanation after the three requirements: asking for another render alone would not supply memory, because let count = 0 would run again. This is conditional, not something the broken demo did after each click. No manual render control is needed. State supplies component-owned memory, unlike props supplied from outside. Its setter provides the way to request a render.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title">State with <code>useState</code></h2>
+                                                <p style="margin:0; font-size:26px; color:var(--text-soft);"><code>useState</code> is a built-in React Hook that lets a component <strong class="highlight">remember a value between renders</strong>. Its setter requests an update, so React runs the component again to calculate what to show.</p>
+                                                <div style="background:var(--accent-soft); border:1px solid rgba(97,218,251,0.3); border-radius:10px; padding:12px 16px; text-align:center;">
+                                                        <code style="font-size:28px; color:var(--accent);">const [<span style="color:#ffcc66;">count</span>, <span style="color:#b5f0a5;">setCount</span>] = useState&lt;number&gt;(0)</code>
+                                                        <p style="margin:12px 0 0; font-size:22px; color:var(--text-soft);"><code>const [value, setValue] = useState&lt;T&gt;(initialValue)</code></p>
+                                                </div>
+                                                <p class="fragment" style="margin:0; font-size:24px; color:var(--text-soft);">With <code>useState</code>, React remembers the updated count and gives it back to the component on the next render. <strong class="highlight">The initial <code>0</code> does not reset it.</strong></p>
+
+                                                <div class="fragment" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; font-size:24px;">
+                                                        <div class="card" style="text-align:center;">
+                                                                <span style="color:#ffcc66; font-weight:700;">count</span>
+                                                                <p style="margin:8px 0 0; color:var(--text-soft);">State value for this render</p>
+                                                        </div>
+                                                        <div class="card" style="text-align:center;">
+                                                                <span style="color:#b5f0a5; font-weight:700;">setCount</span>
+                                                                <p style="margin:8px 0 0; color:var(--text-soft);">Queues an update and requests a new render</p>
+                                                        </div>
+                                                        <div class="card" style="text-align:center;">
+                                                                <span style="color:#c8d2de; font-weight:700;">0</span>
+                                                                <p style="margin:8px 0 0; color:var(--text-soft);">Initial value</p>
+                                                        </div>
+                                                        <div class="card" style="text-align:center;">
+                                                                <span class="highlight" style="font-weight:700;">number</span>
+                                                                <p style="margin:8px 0 0; color:var(--text-soft);">State type (<code>T</code>)</p>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <aside class="notes">
+                                                Connect this to the two problems with let: React remembers state between renders, and the setter requests a render when the state changes. The useState hook returns a tuple: [currentValue, setterFunction]. T is a placeholder for the state type, such as number: useState&lt;number&gt;(0). This makes count a number and setCount accept a number or an updater that returns a number. For simple initial values, TypeScript infers the type, so useState(0) is also typed as number. The initial value is only used on the very first render.
+                                        </aside>
+                                </section>
+
+                <section>
+                    <h2 class="slide-title">Rules of Hooks</h2>
+                    <ul style="font-size:28px; line-height:1.6;">
+                        <li>Call <code>useState</code> at the component's <strong class="highlight">top level</strong>, before early returns, not inside conditions, loops, or handlers.</li>
+                        <li>Call the setter, <code>setCount</code>, <strong class="highlight">inside the click handler</strong>.</li>
+                    </ul>
+                    <pre style="font-size:22px;"><code class="tsx" style="max-height:none; line-height:24px;">function Counter() {
+  const [count, setCount] = useState&lt;number&gt;(0);
+  function increaseCount() {
+    setCount(count + 1);
+  }
+  return &lt;button onClick={increaseCount}&gt;Count is {count}&lt;/button&gt;;
+}</code></pre>
+                    <p class="small-text">Declare the hook in the component; call its setter in the handler.</p>
+                    <aside class="notes">
+                        Establish placement before the live fix: useState is at the component's top level; its setter is not a hook and can be called in the click handler. Hooks may only be called in React function components or custom hooks, and React needs hook calls in the same order on every render. The setter can also be used in other appropriate callbacks, not only click handlers. This direct setter performs one increment. Keep functional updaters for after snapshots and custom hook implementation for later in the course.
+                    </aside>
+                </section>
+
+                                <section>
+                                        <div style="display:flex; flex-direction:column; gap:24px;">
+                                                <h2 class="slide-title">Let's Fix the Counter</h2>
+                                                <div class="card" style="text-align:left;">
+                                                        <strong class="highlight" style="font-size:30px;">Same counter. Two changes.</strong>
+                                                        <ol style="margin:16px 0 0; font-size:28px; line-height:1.6;">
+                                                                <li>Replace the local variable with <code>useState</code>.</li>
+                                                                <li>Replace the mutation with <code>setCount(count + 1)</code>.</li>
+                                                        </ol>
+                                                </div>
+                                                <a href="/?target=day-1/demo/changing-values" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:32px;">Return to Counter Demo</a>
+                                                <p style="margin:0; font-size:22px; color:var(--text-soft);"><code>code/day_1/src/Counter.tsx</code></p>
+                                        </div>
+                                        <aside class="notes">
+                                                Return to the same running demo and edit Counter.tsx live in VS Code. Add import { useState } from 'react'; replace let count = 0 with const [count, setCount] = useState&lt;number&gt;(0); replace the mutation and console log in increaseCount with setCount(count + 1). Keep the existing button and its className. Save so the component and read-only source panel update together. Adding a hook may reset state during Fast Refresh; demonstrate clicks after saving rather than promising persistence across source edits. Confirm the displayed number now increases. Return to the slides to trace why it works.
                                         </aside>
                                 </section>
 
@@ -774,34 +1251,32 @@ function ProductList() {
                                                 <h2 data-id="s16-title" style="margin:0; font-weight:800;">useState in Action</h2>
                                                 <div style="display:flex; gap:1.4rem; align-items:flex-start;">
                                                         <pre data-id="s16-code" style="margin:0; flex:1.4;"><code class="tsx">
-// ProductCard.tsx
 import { useState } from 'react';
 
-function ProductCard() {
-  const [count, setCount] = useState(0);
+export default function Counter() {
+  const [count, setCount] = useState&lt;number&gt;(0);
 
-  function handleAddToCart() {
+  function increaseCount() {
     setCount(count + 1);
   }
 
   return (
-    &lt;button onClick={handleAddToCart}&gt;
-      Add to Cart ({count})
+    &lt;button className="counter" onClick={increaseCount}&gt;
+      Count is {count}
     &lt;/button&gt;
   );
 }
-
-export default ProductCard;
-                                                        </code></pre>
+</code></pre>
                                                         <div style="flex:1; display:flex; flex-direction:column; gap:0.6rem; justify-content:center; font-size:0.86em;">
                                                                 <p style="margin:0;">🏁 <strong class="highlight">Initial Render</strong></p>
-                                                                <p style="margin:0; color:var(--text-soft);"><code>useState(0)</code> returns <code>[0, setCount]</code>.</p>
-                                                                <p style="margin:0; color:var(--text-soft);">UI: <em style="color:#fff;">"Add to Cart (0)"</em></p>
+                                                                <p style="margin:0; color:var(--text-soft);"><code>useState&lt;number&gt;(0)</code> returns <code>[0, setCount]</code>.</p>
+                                                                <p style="margin:0; font-size:26px; color:var(--text-soft);">React calculates the UI, commits the initial DOM, and the browser displays it.</p>
+                                                                <p style="margin:0; color:var(--text-soft);">UI: <em style="color:#fff;">"Count is 0"</em></p>
                                                         </div>
                                                 </div>
                                         </div>
                                         <aside class="notes">
-                                                Walk through the ProductCard step by step. useState(0) sets initial count to 0. The button's onClick calls handleAddToCart which fires setCount with count + 1. Show this live in the demo project — students should follow along.
+                                                Trace the Counter students have just fixed, rather than introducing a new example. On its first render, useState&lt;number&gt;(0) supplies zero, and the returned button shows Count is 0. The type argument makes count a number. This is the initial render, not what happens after every click.
                                         </aside>
                                 </section>
 
@@ -811,34 +1286,31 @@ export default ProductCard;
                                                 <h2 data-id="s16-title" style="margin:0; font-weight:800;">useState in Action</h2>
                                                 <div style="display:flex; gap:1.4rem; align-items:flex-start;">
                                                         <pre data-id="s16-code" style="margin:0; flex:1.4;"><code class="tsx">
-// ProductCard.tsx
 import { useState } from 'react';
 
-function ProductCard() {
-  const [count, setCount] = useState(0);
+export default function Counter() {
+  const [count, setCount] = useState&lt;number&gt;(0);
 
-  function handleAddToCart() {
+  function increaseCount() {
     setCount(count + 1);
   }
 
   return (
-    &lt;button onClick={handleAddToCart}&gt;
-      Add to Cart ({count})
+    &lt;button className="counter" onClick={increaseCount}&gt;
+      Count is {count}
     &lt;/button&gt;
   );
 }
-
-export default ProductCard;
-                                                        </code></pre>
+</code></pre>
                                                         <div style="flex:1; display:flex; flex-direction:column; gap:0.6rem; justify-content:center; font-size:0.86em;">
                                                                 <p style="margin:0;">🖱️ <strong style="color:#f59e0b;">Button Clicked</strong></p>
-                                                                <p style="margin:0; color:var(--text-soft);"><code>handleAddToCart()</code> → <code>setCount(count + 1)</code> fires.</p>
-                                                                <p style="margin:0; color:var(--text-soft);">React queues <strong style="color:#fff;">0 → 1</strong> &amp; re-renders.</p>
+                                                                <p style="margin:0; color:var(--text-soft);"><code>increaseCount()</code> → <code>setCount(count + 1)</code>.</p>
+                                                                <p style="margin:0; color:var(--text-soft);">The setter queues <strong style="color:#fff;">0 → 1</strong> and requests a new render.</p>
                                                         </div>
                                                 </div>
                                         </div>
                                         <aside class="notes">
-                                                When the button is clicked, setCount is called with count + 1. React doesn't update immediately — it queues the update and schedules a re-render. Note: this direct form works fine for simple cases. We'll see the functional updater form next, which is safer when updates depend on previous state.
+                                                Starting at zero, clicking calls increaseCount, which requests that the state become one. React queues this update; it does not mutate count inside the handler. The direct form is valid for this single increment. After tracing the next render, we will inspect state and explain snapshots before considering multiple updates in one handler.
                                         </aside>
                                 </section>
 
@@ -848,222 +1320,307 @@ export default ProductCard;
                                                 <h2 data-id="s16-title" style="margin:0; font-weight:800;">useState in Action</h2>
                                                 <div style="display:flex; gap:1.4rem; align-items:flex-start;">
                                                         <pre data-id="s16-code" style="margin:0; flex:1.4;"><code class="tsx">
-// ProductCard.tsx
 import { useState } from 'react';
 
-function ProductCard() {
-  const [count, setCount] = useState(0);
+export default function Counter() {
+  const [count, setCount] = useState&lt;number&gt;(0);
 
-  function handleAddToCart() {
+  function increaseCount() {
     setCount(count + 1);
   }
 
   return (
-    &lt;button onClick={handleAddToCart}&gt;
-      Add to Cart ({count})
+    &lt;button className="counter" onClick={increaseCount}&gt;
+      Count is {count}
     &lt;/button&gt;
   );
 }
-
-export default ProductCard;
-                                                        </code></pre>
+</code></pre>
                                                         <div style="flex:1; display:flex; flex-direction:column; gap:0.6rem; justify-content:center; font-size:0.86em;">
                                                                 <p style="margin:0;">🔄 <strong style="color:#4ade80;">Re-render</strong></p>
                                                                 <p style="margin:0; color:var(--text-soft);"><code>count</code> is now <strong style="color:#fff;">1</strong>.</p>
-                                                                <p style="margin:0; color:var(--text-soft);">UI: <em style="color:#4ade80;">"Add to Cart (1)"</em> ✓</p>
+                                                                <p style="margin:0; font-size:26px; color:var(--text-soft);">React remembers the updated state. The initial <code>0</code> does not reset it.</p>
+                                                                <p style="margin:0; font-size:26px; color:var(--text-soft);">React calls the component again, then commits the changed count text. The browser displays it.</p>
+                                                                <p style="margin:0; color:var(--text-soft);">UI: <em style="color:#4ade80;">"Count is 1"</em> ✓</p>
                                                         </div>
                                                 </div>
                                         </div>
                                         <aside class="notes">
-                                                On re-render, React calls ProductCard() again. This time useState returns [1, setCount]. The button text updates. This cycle repeats every click. Key insight: the component function runs again from top to bottom on every re-render.
+                                                Connect the working demo to render and commit: React calls Counter() again, and useState returns [1, setCount]. The initial zero is not reapplied: React remembers the updated state for this mounted component. React calculates the next UI, commits the changed count text while retaining the button element, and the browser displays the update. This cycle repeats every click. The function runs again from top to bottom; a re-render does not mean rebuilding all its DOM.
                                         </aside>
                                 </section>
 
-                                <!-- DEMO SLIDE – Product Counter -->
                                 <section>
-                                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; text-align:center;">
-                                                <h2>Demo - Product Counter</h2>
-                                                <a href="http://localhost:5173/?target=day-1/demo/product-counter" target="_blank" style="color:var(--accent); font-size:1.1em;">Demo</a>
+                                        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:24px; text-align:center;">
+                                                <h2>Inspecting State in React DevTools</h2>
+                                                <a href="/?target=day-1/demo/changing-values" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:32px;">Open Counter Demo</a>
+                                                <p style="margin:0; font-size:28px; color:var(--text-soft);">Select <code>Counter</code> in the Components panel.<br>Watch its state change as you click.</p>
                                         </div>
+                                        <aside class="notes">
+                                                Use the same fixed counter, not a second demo. In React DevTools, select Counter in the Components panel and inspect its State hook. Click the count button and connect the changed state value with the displayed number. The hook must have been added in the preceding live fix for this inspection.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <h2 class="slide-title">State Is a Snapshot</h2>
+                                        <pre style="font-size:26px;"><code class="ts">// In this render, count is 0
+function increaseCount() {
+  setCount(count + 1); // Queues an update to 1
+  console.log(count); // Logs 0, not 1
+}</code></pre>
+                                        <ul style="font-size:28px; line-height:1.6;">
+                                                <li><strong class="highlight">Queue the update:</strong> <code>setCount(1)</code> requests the next state.</li>
+                                                <li><strong class="highlight">Finish the handler:</strong> the log prints this render's <code>count</code>, which is still <code>0</code>.</li>
+                                                <li><strong class="highlight">Render again:</strong> React supplies <code>count = 1</code> and updates the displayed number.</li>
+                                        </ul>
+                                        <p style="margin:16px 0 0; font-size:26px; color:var(--text-soft);">The setter queues an update. React finishes the handler, then renders with the updated state. <strong class="highlight">The current handler still reads the current render's value.</strong></p>
+                                        <aside class="notes">
+                                                Starting at zero, click once: the log is zero but the new UI shows one. A new render is a separate call to the component with its own state snapshot; it does not change values captured by the already-running handler. A functional updater would also leave this console.log(count) printing zero. Awaiting the setter does not change the current render's variable. The next slide explains how React groups updates before rendering. Keep flushSync and scheduling edge cases out of this introduction.
+                                        </aside>
+                                </section>
+
+                                <section>
+                                        <div style="display:flex; flex-direction:column; gap:16px;">
+                                                <h2 class="slide-title" style="margin:0;">Batching State Updates</h2>
+                                                <p style="margin:0; font-size:28px; color:var(--text-soft);">React groups updates from the same event handler, instead of rendering after every setter call.</p>
+                                                <div class="two-col" style="gap:24px;">
+                                                        <div style="min-width:0;">
+                                                                <pre style="margin:0; width:100%;"><code class="tsx" style="max-height:none; font-size:13px; line-height:26px;">const [count, setCount] = useState&lt;number&gt;(0);
+const [message, setMessage] = useState&lt;string&gt;('Ready');
+
+function increaseCount() {
+  setCount(count + 1);
+  setMessage('Clicked');
+}</code></pre>
+                                                        </div>
+                                                        <div class="fragment card" style="min-width:0; text-align:left; font-size:26px;">
+                                                                <ol style="display:block; margin:0 0 0 28px; line-height:1.5;">
+                                                                        <li>Queue both updates.</li>
+                                                                        <li>Finish the synchronous handler code.</li>
+                                                                        <li>Render with both updated values: <code>1</code> and <code>'Clicked'</code>.</li>
+                                                                </ol>
+                                                        </div>
+                                                </div>
+                                                <p class="fragment" style="margin:0; font-size:26px; color:var(--text-soft);"><strong class="highlight">Why batch?</strong> Avoid unnecessary renders and a half-updated UI. Each separate click is handled separately.</p>
+                                                <p class="fragment" style="margin:0; font-size:26px; color:var(--text-soft);">What if we update the <strong class="highlight">same state value twice</strong> in one handler?</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Introduce batching separately from snapshots: snapshots explain which values the handler reads; batching explains why multiple setter calls are grouped before the UI updates. These two state declarations belong at the top level of the Counter component; increaseCount is its click handler. Imagine displaying message beside the count. Starting at zero and Ready, one click requests count one and message Clicked. React finishes the synchronous event-handler code, then processes the queued updates together, so the UI displays both updated values without an intermediate commit showing only one change. Do not promise an exact number of component function calls: development checks and React scheduling can run render code more than once.
+                                                This does not mean waiting for future timers, network requests, or all code after an await. Modern React also supports automatic batching outside event handlers, but those scheduling details are not needed here. Separate intentional clicks are handled separately. No manual render call is necessary. The next slide applies batching and snapshots to two updates of the same count, motivating functional updaters.
+                                                Reference: https://react.dev/learn/queueing-a-series-of-state-updates
+                                        </aside>
                                 </section>
 
                                 <!-- SLIDE 17 – Functional Updates -->
                                 <section>
-                                        <div style="display:flex; flex-direction:column; gap:0.8rem;">
+                                        <div style="display:flex; flex-direction:column; gap:12px;">
                                                 <h2 class="slide-title">Functional Updates</h2>
-                                                <div class="two-col" style="align-items:center; gap:1.4rem;">
-                                                        <div style="display:flex; flex-direction:column; gap:0.6rem;">
-                                                                <pre style="margin:0;"><code class="ts" data-line-numbers>
-// ❌ Direct — can read stale value
-setCount(count + 1);
-
-// ✅ Functional — always reads latest
-setCount(prev =&gt; prev + 1);
-                                                                </code></pre>
-                                                                <p class="small-text">Use the functional form whenever the next value depends on the previous one.</p>
-                                                        </div>
-
-                                                </div>
-                                        </div>
-                                        <aside class="notes">
-                                                This trips up many beginners. If you call setCount(count + 1) twice in the same event handler, you get count+1 both times (not count+2) because count is a stale closure. The functional form always receives the actual current value. Rule of thumb: if new state depends on old state, use the functional form.
-                                        </aside>
-                                </section>
-
-                                <!-- SLIDE 18a – Rule 1: Top Level Only -->
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                <h2 class="slide-title">Rules of Hooks <span style="font-size:0.6em; color:var(--text-soft);">(1/2)</span></h2>
-                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; align-items:start;">
-                                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                                <div class="card" style="border:1.5px solid rgba(239,68,68,0.5); padding:0.4rem 0.6rem;">
-                                                                        <strong style="color:#f87171; font-size:0.65em;">❌ Wrong</strong>
-                                                                        <pre style="margin:0.2rem 0 0; background:none; box-shadow:none; font-size:0.58em;"><code class="ts">if (isLoggedIn) {
-  const [x, setX] = useState(0);
-}
-for (const id of ids) {
-  useEffect(() =&gt; fetch(id));
+                                                <p style="margin:0; font-size:26px; color:var(--text-soft);">One <code>setCount(count + 1)</code> worked in our counter. Starting at <code>0</code>, what if we call it twice in one handler?</p>
+                                                <div class="two-col" style="align-items:flex-start; gap:20px;">
+                                                        <div class="card" style="min-width:0; text-align:left;">
+                                                                <strong style="font-size:26px; color:var(--accent);">Two updates in one handler</strong>
+                                                                <pre style="margin:12px 0; width:100%; font-size:20px;"><code class="ts" style="max-height:none;">function increaseCountByTwo() {
+  setCount(count + 1);
+  setCount(count + 1);
 }</code></pre>
-                                                                </div>
-                                                                <div class="card" style="border:1.5px solid rgba(34,197,94,0.5); padding:0.4rem 0.6rem;">
-                                                                        <strong style="color:#4ade80; font-size:0.65em;">✅ Correct</strong>
-                                                                        <pre style="margin:0.2rem 0 0; background:none; box-shadow:none; font-size:0.58em;"><code class="ts">const [x, setX] = useState(0);
-useEffect(() =&gt; { /* ... */ });
-if (isLoggedIn) { /* use x */ }</code></pre>
+                                                                <div class="fragment" data-fragment-index="0">
+                                                                        <strong style="display:block; font-size:26px; color:#f87171;">❌ Lost increment: final count is 1</strong>
+                                                                        <p style="margin:8px 0 0; font-size:24px; color:var(--text-soft);">Both <code>count + 1</code> expressions still calculate <code>0 + 1</code>, so React gets “set to 1” twice, not “add 1” twice.</p>
                                                                 </div>
                                                         </div>
-                                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                                <div class="card" style="font-size:0.72em; padding:0.5rem 0.7rem;">
-                                                                        <strong class="highlight">📏 Top level only</strong>
-                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft); line-height:1.45;">
-                                                                                Never call hooks inside <strong style="color:#fff;">loops</strong>, <strong style="color:#fff;">conditions</strong>, or <strong style="color:#fff;">nested functions</strong>.
-                                                                        </p>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                        <aside class="notes">
-                                                React relies on call ORDER to track which hook is which. If you wrap hook #2 in an if-statement that's false, hook #3 shifts to index #2 — state is corrupted.
-                                        </aside>
-                                </section>
-
-                                <!-- SLIDE 18b – Rule 2: React Functions Only -->
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                <h2 class="slide-title">Rules of Hooks <span style="font-size:0.6em; color:var(--text-soft);">(2/2)</span></h2>
-                                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; align-items:start;">
-                                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                                <div class="card" style="border:1.5px solid rgba(34,197,94,0.5); padding:0.4rem 0.6rem;">
-                                                                        <strong style="color:#4ade80; font-size:0.65em;">✅ Correct</strong>
-                                                                        <pre style="margin:0.2rem 0 0; background:none; box-shadow:none; font-size:0.58em;"><code class="ts">function Panel() {
-  const [open, setOpen] = useState(true);
-  return &lt;div&gt;{open &amp;&amp; '...'}&lt;/div&gt;;
+                                                        <div class="fragment card" data-fragment-index="1" style="min-width:0; text-align:left;">
+                                                                <strong style="font-size:26px; color:#4ade80;">✅ Both increments apply</strong>
+                                                                <pre style="margin:12px 0; width:100%; font-size:20px;"><code class="ts" style="max-height:none;">function increaseCountByTwo() {
+  setCount(previousCount =&gt;
+    previousCount + 1);
+  setCount(previousCount =&gt;
+    previousCount + 1);
 }
-function useToggle(init = false) {
-  const [on, setOn] = useState(init);
-  return [on, () =&gt; setOn(p =&gt; !p)];
+// Final count: 2</code></pre>
+                                                                <p style="margin:0; font-size:24px; color:var(--text-soft);">Functional updaters calculate from each previous pending result, so the second adds to <code>1</code> and produces <code>2</code>.</p>
+                                                        </div>
+                                                </div>
+                                                <p class="fragment" data-fragment-index="1" style="margin:0; font-size:25px; color:var(--text-soft);">The setter queues an update; it does not change <code>count</code> directly inside this handler.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Initially, only the question and direct-update example are visible. Ask students to predict the final count starting from zero. On the first advance, reveal the lost increment and its explanation. On the second advance, reveal the functional-update pane and the takeaway together. The X marks the two-increment example, not every direct setter: setCount(count + 1) is valid for a single increment, and setCount(0) is appropriate for a reset. In one handler, count stays at the value from that render. Two direct increments therefore queue the same replacement value, losing one increment. Functional updaters are processed in order, each receiving the previous pending state. A similar race-condition-like lost update can happen when delayed callbacks capture the same old count; functional updates avoid that stale-state problem for increments, but do not solve every async race, such as out-of-order network responses. Updaters must stay pure. Students will use this pattern in the counter exercise; Day 2 explores queues and batching in more detail.
+                                        </aside>
+                                </section>
+
+                <section>
+                    <h2 class="slide-title">Exercise - Increment and Decrement Counter</h2>
+                    <p style="font-size:28px;">Start at zero. Display the count. Add one or subtract one on each click.</p>
+                    <a href="/?target=day-1/exercises/counter/starter" target="_blank" style="font-size:30px;">Open Exercise</a>
+                    <p class="fragment" style="font-size:26px;"><a href="/?target=day-1/exercises/counter/solution" target="_blank">Open Solution</a></p>
+                    <aside class="notes">
+                        Students edit exercises/day-1/counter/starter/entry.tsx. Use one number state variable, two handlers, and functional setters. Negative counts are allowed. Ask students to predict the next displayed value before clicking. Review the solution only after practice; avoid array/object state and batching details.
+                    </aside>
+                </section>
+
+                <section class="input-topic">
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <h2 class="slide-title" style="margin:0;">onChange: Reading an Input</h2>
+                        <p style="margin:0; font-size:28px; color:var(--text-soft);">How do we find out what the user typed?</p>
+                        <pre><code class="tsx">import type { ChangeEvent } from 'react';
+
+function NoteInput() {
+  function handleChange(event: ChangeEvent&lt;HTMLInputElement&gt;) {
+    console.log(event.target.value);
+  }
+
+  return &lt;input type="text" onChange={handleChange} /&gt;;
 }</code></pre>
-                                                                </div>
-                                                        </div>
-                                                        <div style="display:flex; flex-direction:column; gap:0.4rem;">
-                                                                <div class="card" style="font-size:0.72em; padding:0.5rem 0.7rem;">
-                                                                        <strong class="highlight">⚛️ React functions only</strong>
-                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft); line-height:1.45;">
-                                                                                Only call hooks from <strong style="color:#fff;">function components</strong> or <strong style="color:#fff;">custom hooks</strong> (<code>use</code> prefix).
-                                                                        </p>
-                                                                </div>
-                                                                <div class="card" style="font-size:0.68em; padding:0.4rem 0.7rem; border-color:rgba(97,218,251,0.3);">
-                                                                        <strong class="highlight">🔌</strong> <code style="font-size:0.9em;">eslint-plugin-react-hooks</code> <span style="color:var(--text-soft);">catches both rules automatically.</span>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                        <aside class="notes">
-                                                Hooks are attached to React's internal fiber tree. A plain JS function has no fiber — useState has nowhere to store state. The `use` prefix is a convention AND enforced by the linter.
-                                        </aside>
-                                </section>
+                        <div class="fragment card" style="text-align:left; font-size:24px; color:var(--text-soft);">
+                            <ul style="margin:0; font-size:24px; line-height:1.4;">
+                                <li>As you edit, React calls <code>handleChange</code> with an event object describing the change.</li>
+                                <li><code>event.target</code> is the input you edited; <code>event.target.value</code> is its current text.</li>
+                                <li><code>ChangeEvent&lt;HTMLInputElement&gt;</code> tells TypeScript the event comes from an HTML input, so it knows <code>event.target.value</code> is a string.</li>
+                            </ul>
+                        </div>
+                        <p class="fragment" style="margin:0; font-size:26px; color:var(--text-soft);">As you type “Hello”, the handler logs each change:<br><code>"H", "He", "Hel", "Hell", "Hello"</code></p>
+                    </div>
+                    <aside class="notes">
+                        Compare onChange with onClick: both receive a function, and React supplies the event. ChangeEvent types the input event so TypeScript understands target.value. Typing Hello normally logs H, He, Hel, Hell, then Hello: the handler runs for each edit, not only when typing finishes. This input works without useState because the browser manages its value. Listening to changes does not make it controlled.
+                    </aside>
+                </section>
 
-                                <!-- SLIDE 19a – State with Objects -->
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:0.8rem;">
-                                                <h2 class="slide-title">State with Objects</h2>
-                                                <div class="two-col" style="align-items:flex-start; gap:1.4rem;">
-                                                        <div style="display:flex; flex-direction:column; gap:0.6rem;">
-                                                                <pre style="margin:0;"><code class="ts" data-line-numbers>
-const [user, setUser] = useState({ name: 'Dan', age: 30 });
+                <section class="input-topic">
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                        <h2 class="slide-title" style="margin:0;">Who Owns the Input's Value?</h2>
+                        <p style="margin:0; font-size:28px; color:var(--text-soft);">The input already displays what I type. Isn't it managing itself?</p>
+                        <div class="two-col" style="gap:20px; text-align:left;">
+                            <div class="card" style="min-width:0;">
+                                <strong class="highlight" style="font-size:28px;">Uncontrolled input</strong>
+                                <p style="margin:12px 0; font-size:25px; color:var(--text-soft);">The browser's input element holds the current value.</p>
+                                <pre><code class="tsx">&lt;input
+  onChange={handleChange}
+/&gt;</code></pre>
+                                <p style="margin:12px 0 0; font-size:25px; color:var(--text-soft);">React can listen to changes without supplying the value.</p>
+                            </div>
+                            <div class="fragment card" style="min-width:0;">
+                                <strong class="highlight" style="font-size:28px;">Controlled input</strong>
+                                <p style="margin:12px 0; font-size:25px; color:var(--text-soft);">React state is the source of truth for the value.</p>
+                                <pre><code class="tsx">&lt;input
+  value={note}
+  onChange={handleChange}
+/&gt;</code></pre>
+                                <p style="margin:12px 0 0; font-size:25px; color:var(--text-soft);">React supplies <code>value</code>; the handler updates that state.</p>
+                            </div>
+                        </div>
+                        <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);">Listening is not the same as controlling. <strong class="highlight">Both approaches are valid.</strong></p>
+                        <p class="fragment" style="margin:0; font-size:22px; color:var(--text-soft); text-align:left;"><strong style="color:#f87171;">❌ Controlled, but missing the update:</strong> <code>&lt;input value={note} /&gt;</code><br>For an editable controlled input, the handler must update <code>note</code>. Without that update, React keeps displaying the supplied value and the input is effectively read-only.</p>
+                    </div>
+                    <aside class="notes">
+                        In the uncontrolled snippet, handleChange can simply log the text as on the previous slide. In the controlled snippet, it must update note, which we will wire shortly. Controlled describes where the displayed value comes from, not whether an input accepts user interaction. Uncontrolled inputs are useful too; do not frame them as incorrect. Reveal the missing-update warning after establishing that both approaches are valid: the X marks an intended editable controlled input with an incomplete update loop, not an uncontrolled input. Intentionally read-only controlled inputs can use readOnly. Keep refs and defaultValue for a later discussion.
+                    </aside>
+                </section>
 
-// ✅ spread — creates a new object
-setUser(prev =&gt; ({ ...prev, age: 31 }));
+                <section class="input-topic">
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                        <h2 class="slide-title" style="margin:0;">Why Let React Control It?</h2>
+                        <div class="card" style="text-align:left;">
+                            <strong class="highlight" style="font-size:28px;">Just like our counter, the component still owns its state.</strong>
+                            <p style="margin:12px 0 0; font-size:27px; color:var(--text-soft);"><code>NoteInput</code> owns <code>note</code>. The browser's <code>&lt;input&gt;</code> displays the supplied value and reports edits through <code>onChange</code>.</p>
+                        </div>
+                        <div class="fragment card" style="text-align:left;">
+                            <strong class="highlight" style="font-size:28px;">One value can drive the rest of the UI</strong>
+                            <ul style="margin:12px 0 0; font-size:27px; line-height:1.4;">
+                                <li>Display the note elsewhere on the page.</li>
+                                <li>Validate it as the user types.</li>
+                                <li>Clear it with a button.</li>
+                                <li>Enable or disable submission based on its contents.</li>
+                            </ul>
+                        </div>
+                        <p class="fragment" style="margin:0; font-size:27px; color:var(--text-soft);">We are not removing component-owned state. We are making the input and the rest of the UI use <strong class="highlight">the same state</strong>.</p>
+                    </div>
+                    <aside class="notes">
+                        Distinguish the React component NoteInput from the HTML input element it renders. The counter used React state and passed count to a button's text; NoteInput can own React state and pass note to an input's value. Controlled does not require lifting state to a parent. An HTML input has built-in browser behavior that can manage text without React state, unlike an ordinary button that does not automatically count clicks. We choose React ownership when other UI or logic needs the same value.
+                    </aside>
+                </section>
 
-// ❌ mutate — React won't re-render
-user.age = 31;
-                                                                </code></pre>
-                                                        </div>
-                                                        <div class="card" style="font-size:0.82em;">
-                                                                <strong class="highlight">Why spread?</strong>
-                                                                <ul style="margin:0.5rem 0 0; color:var(--text-soft);">
-                                                                        <li>React uses <code>===</code> to detect changes</li>
-                                                                        <li>Mutating the same object keeps the same reference</li>
-                                                                        <li>Spread creates a <strong style="color:#fff;">new object</strong> — React sees the change</li>
-                                                                        <li>Only the updated property changes; the rest is copied</li>
-                                                                </ul>
-                                                        </div>
-                                                </div>
-                                                <p class="small-text">Never mutate state directly — always return a <span class="highlight">new reference</span> so React detects the change.</p>
-                                        </div>
-                                        <aside class="notes">
-                                                This is the #1 state bug beginners hit. React uses reference equality (===) to detect changes. If you mutate the same object, the reference doesn't change and React skips the re-render. Spread operator creates a shallow copy — that's a new reference. Show in the console: `const a = {x:1}; const b = a; a === b` is true, but `{...a} === a` is false. That's why spread works.
-                                        </aside>
-                                </section>
+                <section class="input-topic">
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <h2 class="slide-title" style="margin:0;">Controlled Inputs: Connecting the Pieces</h2>
+                        <pre><code class="tsx">import { useState } from 'react';
+import type { ChangeEvent } from 'react';
 
-                                <!-- SLIDE 19b – State with Arrays -->
-                                <section>
-                                        <div style="display:flex; flex-direction:column; gap:0.8rem;">
-                                                <h2 class="slide-title">State with Arrays</h2>
-                                                <div class="two-col" style="align-items:flex-start; gap:1.4rem;">
-                                                        <div style="display:flex; flex-direction:column; gap:0.6rem;">
-                                                                <pre style="margin:0;"><code class="ts" data-line-numbers>
-const [items, setItems] = useState(['a', 'b', 'c']);
+function NoteInput() {
+  const [note, setNote] = useState&lt;string&gt;('');
+  function handleChange(event: ChangeEvent&lt;HTMLInputElement&gt;) {
+    setNote(event.target.value);
+  }
+  return (
+    &lt;div&gt;
+      &lt;input value={note} onChange={handleChange} /&gt;
+      &lt;p&gt;Note: {note}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+                        <div class="fragment card" style="font-size:24px; color:var(--text-soft);">Earlier we logged the text; now <code>setNote</code> stores it in React state.<br>Input becomes “Hi” → <code>setNote("Hi")</code> queues an update → the next render supplies “Hi” to the input and the paragraph.</div>
+                    </div>
+                    <aside class="notes">
+                        Walk through the example in stages: declare string state, read the typed event in the handler, then connect value and onChange and display the same state in a paragraph. Highlight setNote: earlier handleChange only logged the text; now it stores the text in React state. Initialize note to an empty string and keep value a string throughout the input's lifetime. The empty string gives an empty input and an empty preview. On the edit that makes the input Hi, the handler reads Hi and requests a render with that state. A direct setter is appropriate because the new text comes from the event, not a calculation from previous state. If asked about a missing handler, explain that a value without onChange or readOnly produces React's warning about a read-only field; intentionally read-only inputs can use readOnly. An onChange that only logs does not complete the controlled loop: it must update note. An uncontrolled input is still valid, because React does not supply its value. The podcast exercise combines this with an independent numeric likeCount state variable.
+                    </aside>
+                </section>
 
-// ✅ add
-setItems(prev =&gt; [...prev, 'd']);
+                <section class="input-topic">
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <h2 class="slide-title" style="margin:0;">Controlled Inputs: Updating from Code</h2>
+                        <strong class="highlight" style="font-size:27px;">Now React can clear it too</strong>
+                        <pre><code class="tsx" data-line-numbers="13-15" style="line-height:22px;">import { useState } from 'react';
+import type { ChangeEvent } from 'react';
 
-// ✅ remove
-setItems(prev =&gt; prev.filter(i =&gt; i !== 'b'));
-
-// ❌ wrong — mutates in place!
-items.push('d');
-setItems(items);
-                                                                </code></pre>
-                                                        </div>
-                                                        <div style="display:flex; flex-direction:column; gap:0.7rem;">
-                                                                <div class="card" style="font-size:0.78em; border:1.5px solid rgba(34,197,94,0.5);">
-                                                                        <strong style="color:#4ade80;">✅ Immutable methods</strong>
-                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft);"><code>map</code>, <code>filter</code>, <code>spread</code>, <code>slice</code>, <code>concat</code></p>
-                                                                </div>
-                                                                <div class="card" style="font-size:0.78em; border:1.5px solid rgba(239,68,68,0.5);">
-                                                                        <strong style="color:#f87171;">❌ Mutating methods</strong>
-                                                                        <p style="margin:0.3rem 0 0; color:var(--text-soft);"><code>push</code>, <code>pop</code>, <code>splice</code>, <code>sort</code> (in-place), <code>reverse</code></p>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                                <p class="small-text">Same rule as objects — always return a <span class="highlight">new array</span> so React sees the update.</p>
-                                        </div>
-                                        <aside class="notes">
-                                                For arrays: use map/filter/spread, never push/splice directly. The immutable vs mutating table is a handy cheat sheet — the left column returns a new array, the right column modifies in place. If you need sort, do [...items].sort() to copy first. Ask class: "What does filter return?" — a new array with items that pass the test.
-                                        </aside>
-                                </section>
+function NoteInput() {
+  const [note, setNote] = useState&lt;string&gt;('');
+  function handleChange(event: ChangeEvent&lt;HTMLInputElement&gt;) {
+    setNote(event.target.value);
+  }
+  return (
+    &lt;div&gt;
+      &lt;input value={note} onChange={handleChange} /&gt;
+      &lt;p&gt;Note: {note}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setNote('')}&gt;
+        Clear note
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+                        <div class="fragment card" style="text-align:left; font-size:25px; color:var(--text-soft);">State can change through typing or through our code. Click “Clear note” → <code>setNote('')</code> queues an update → the next render clears the input and the preview text together.</div>
+                    </div>
+                    <aside class="notes">
+                        Point out the button inside the returned div, alongside the input and the paragraph. It uses the same setNote setter as the input handler. React supplies the empty string to the input's value and to the note inside the paragraph; the paragraph's static Note: label remains. This demonstrates why React ownership is useful: the same state drives multiple places, whether edited by the user or reset by our code. Setting an empty string directly is appropriate for a reset.
+                    </aside>
+                </section>
 
                                 <!-- EXERCISE SLIDE – Podcast Episode Cards -->
                                 <section>
                                         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5rem; text-align:center;">
                                                 <h2>Exercise - Podcast Episode Cards</h2>
-                                                <a href="http://localhost:5173/?target=day-1/exercises/podcast-episode-cards/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
+                                                <a href="/?target=day-1/exercises/podcast-episode-cards/starter" target="_blank" style="color:var(--accent); font-size:1.1em;">Open Exercise</a>
                                                 <div class="fragment" style="margin-top:1rem;">
                                                         <p style="font-size:0.85em; color:var(--text-soft);">File to review</p>
-                                                        <a href="http://localhost:5173/?target=day-1/exercises/podcast-episode-cards/solution" target="_blank" style="color:var(--accent); font-size:0.95em;">Open Solution</a>
+                                                        <a href="/?target=day-1/exercises/podcast-episode-cards/solution" target="_blank" style="color:var(--accent); font-size:0.95em;">Open Solution</a>
                                                 </div>
                                         </div>
+                                </section>
+
+                                <section id="state-extension">
+                                        <div style="display:flex; flex-direction:column; gap:24px;">
+                                                <h2 class="slide-title">Time Permitting: More About State</h2>
+                                                <div class="card" style="text-align:left;">
+                                                        <strong class="highlight" style="display:block; font-size:30px;">A preview of Day 2</strong>
+                                                        <ul style="display:block; margin:12px 0 0 28px; font-size:28px; line-height:1.5;">
+                                                                <li>Updating objects and arrays without mutation.</li>
+                                                                <li>Sharing state between sibling components.</li>
+                                                                <li>Calculating derived values instead of storing them.</li>
+                                                        </ul>
+                                                </div>
+                                                <a href="/presentation/Day%202/index.html#/managing-state" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:30px;">Open Day 2: Managing State Correctly</a>
+                                                <p style="margin:0; font-size:26px; color:var(--text-soft);">Instructor demo and slides, followed by a short batching recap. No extra exercise.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Optional extension, about 20-25 minutes. If time is short, skip to the Day 1 recap; the material remains part of Day 2. The link opens directly at Day 2's named managing-state section, beginning with the wrong-first cart demo. Present through Recap: Snapshots and Batching, then use its return link or switch back to this tab. Do not continue into effects during Day 1. After returning, advance once to the Day 1 recap. The cart demo uses the same course server and does not require a second process. Do not repeat the full section on Day 2 if already covered; recap it briefly instead.
+                                        </aside>
                                 </section>
 
                                 <!-- CONCLUSION SLIDE -->
@@ -1074,7 +1631,7 @@ setItems(items);
                                                         <div class="card" style="font-size:0.76em; text-align:center;">
                                                                 <div style="font-size:1.4em; margin-bottom:0.2rem;">⚛️</div>
                                                                 <strong class="highlight">React &amp; SPAs</strong>
-                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Declarative UI library, Virtual DOM, single-page architecture</p>
+                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Declarative UI library, reusable components</p>
                                                         </div>
                                                         <div class="card" style="font-size:0.76em; text-align:center;">
                                                                 <div style="font-size:1.4em; margin-bottom:0.2rem;">⚡</div>
@@ -1094,15 +1651,20 @@ setItems(items);
                                                         <div class="card" style="font-size:0.76em; text-align:center;">
                                                                 <div style="font-size:1.4em; margin-bottom:0.2rem;">🗃️</div>
                                                                 <strong class="highlight">State &amp; useState</strong>
-                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Component-owned data, immutable updates, functional setters</p>
+                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Primitive state, snapshots, functional setters, hook rules</p>
+                                                        </div>
+                                                        <div class="card" style="font-size:0.76em; text-align:center;">
+                                                                <div style="font-size:1.4em; margin-bottom:0.2rem;">🖱️</div>
+                                                                <strong class="highlight">Events &amp; Inputs</strong>
+                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Click handlers, onChange, controlled inputs</p>
                                                         </div>
                                                 </div>
 
                                                 <div style="width:40px; height:2px; background:var(--accent); border-radius:2px; opacity:0.6; margin-top:0.4rem;"></div>
-                                                <p style="margin:0; font-size:0.72em; color:var(--text-soft);">Tomorrow: <strong style="color:#fff;">Conditional Rendering, Lists &amp; Keys, Forms, and useEffect</strong></p>
+                                                <p style="margin:0; font-size:0.72em; color:var(--text-soft);">Tomorrow: <strong style="color:#fff;">Lists &amp; Keys, Conditional Rendering, More State Patterns, and useEffect</strong></p>
                                         </div>
                                         <aside class="notes">
-                                                Quick recap of all six topics. Ask if there are any lingering questions. Remind students to practise by building small components on their own tonight. Preview Day 2: conditional rendering, rendering lists with map/key, controlled forms, and the useEffect hook for side effects.
+                                                Recap components, typed props, primitive state, snapshots, functional setters, hook rules, and controlled inputs. Students can inspect props and state in DevTools. Ask them to explain a click or keystroke through to the next render. Day 2 builds on these foundations with lists, conditional rendering, immutable object/array state, lifting state, derived values, and effects. If the optional extension was presented today, briefly acknowledge those additional state patterns instead of treating them as required Day 1 practice.
                                         </aside>
                                 </section>
             </section>
