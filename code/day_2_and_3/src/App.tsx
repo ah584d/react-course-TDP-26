@@ -122,7 +122,7 @@ function App() {
         <nav>
           <Link to="/keys">Keys Example</Link>
           <Link to="/conditional">Conditional Rendering</Link>
-          <Link to="/useeffect1">useEffect - Date</Link>
+          <Link to="/useeffect1">useEffect - Clock</Link>
           <Link to="/useeffect2">useEffect - Fetch</Link>
           <Link to="/useeffect3">useEffect - Deps</Link>
           <Link to="/bug1">useEffect - Bug</Link>

@@ -10,7 +10,7 @@ function UseEffectBug() {
     const timer = setInterval(() => {
       setUpdateCount((prev) => prev + 1);
     }, 1000);
-
+    // comment out <StrictMode> to demonstrate the counter jumps by one
     // return () => {
     //   console.log("✅ Cleaning up timer...");
     //   clearInterval(timer);

@@ -9,7 +9,7 @@ export const meta: CourseTargetMeta = {
   dayLabel: "Day 2",
   kind: "exercise",
   variant: "starter",
-  order: 2,
+  order: 3,
 };
 
 export const starterTasks = [

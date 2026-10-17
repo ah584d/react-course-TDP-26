@@ -124,6 +124,8 @@ the Day 1 exercises.
 - `day-2/exercises/starwars-characters/solution`
 - `day-2/exercises/task-list/starter`
 - `day-2/exercises/task-list/solution`
+- `day-2/exercises/conditional-rendering/starter`
+- `day-2/exercises/conditional-rendering/solution`
 
 Before effects, the **Managing State Correctly** section covers object/array
 immutability, lifting state to a common parent, avoiding redundant derived
