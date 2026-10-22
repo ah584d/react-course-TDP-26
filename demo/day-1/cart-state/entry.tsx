@@ -2,14 +2,14 @@ import type { CourseTargetMeta } from '../../../src/course'
 import CartStateDemo from './CartStateDemo'
 
 export const meta: CourseTargetMeta = {
-  id: 'day-2/demo/cart-state',
-  title: 'Why Did the Cart Not Update?',
+  id: 'day-1/demo/cart-state',
+  title: 'Cart: Updating an Array',
   description: 'An intentionally broken array-state update. Predict the result, then fix the mutation live. Includes the actual source code.',
-  dayOrder: 2,
-  dayLabel: 'Day 2',
+  dayOrder: 1,
+  dayLabel: 'Day 1',
   kind: 'demo',
   variant: 'demo',
-  order: 1,
+  order: 2,
 }
 
 export default CartStateDemo

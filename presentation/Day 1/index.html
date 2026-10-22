@@ -229,6 +229,65 @@
                 margin-top: 1rem;
             }
         }
+      .state-topic h3 {
+        margin: 0;
+        font-size: 44px;
+        line-height: 52px;
+      }
+      .state-content {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        text-align: left;
+        font-size: 26px;
+        line-height: 1.4;
+      }
+      .state-content p {
+        margin: 0;
+      }
+      .state-content ul {
+        display: block;
+        margin: 12px 0 0 28px;
+        font-size: 26px;
+      }
+      .state-columns {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 20px;
+      }
+      .state-card {
+        min-width: 0;
+        padding: 18px;
+        border: 1px solid var(--surface-border);
+        border-radius: 12px;
+        background: var(--surface);
+      }
+      .state-topic pre {
+        margin: 0;
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+      .state-topic pre code {
+        max-height: none;
+        border-radius: inherit;
+        font-size: 18px;
+        line-height: 23px;
+      }
+      .state-topic p code,
+      .state-topic li code,
+      .state-topic strong code {
+        font-size: inherit;
+      }
+      .state-topic .state-diagram {
+        display: block;
+        margin-top: 12px;
+        font-family: monospace;
+        font-size: 23px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+      }
     </style>
 </head>
 <body>
@@ -284,11 +343,11 @@
                         <div class="card" style="font-size:0.78em; text-align:center;">
                             <div style="font-size:1.8em; margin-bottom:0.3rem; color:var(--accent);">06</div>
                             <p style="margin:0 0 0.2rem; color:var(--accent); font-weight:600;">State</p>
-                            <p style="margin:0; color:var(--text-soft);">Counters, controlled inputs, hook rules</p>
+                            <p style="margin:0; color:var(--text-soft);">State updates, inputs, shared and derived state</p>
                         </div>
                     </div>
                     <aside class="notes">
-                        Overview of today's 6 pillars. By the end, students can build components with typed props, click handlers, primitive state, and controlled inputs. Install DevTools during setup but demonstrate it only after components and props, then again after state. Introduce snapshots and batching with the counter. Object/array immutability, lifting state, and derived values are in Day 2, accessible through the optional time-permitting link near the end of today's deck.
+                        Overview of today's 6 pillars. By the end, students can build components with typed props, click handlers, primitive state, and controlled inputs. Install DevTools during setup but demonstrate it only after components and props, then again after state. Introduce snapshots and batching with the counter. Finish with instructor-led demonstrations of object/array immutability, lifting state, and derived values; no extra student exercises are required.
                     </aside>
                 </section>
 
@@ -1107,12 +1166,12 @@ export default MyButton;
                                                                 </code></pre>
                                                         </div>
                                                         <div style="display:flex; flex-direction:column; gap:0.45rem; flex:0.7; justify-content:center;">
-                                                                <div class="card" style="font-size:0.78em; border:1.5px solid rgba(239,68,68,0.5);">
+                                                                <div class="card" style="font-size:0.50em; border:1.5px solid rgba(239,68,68,0.5);">
                                                                         <strong style="color:#f87171;">❌ Won't work</strong>
                                                                         <pre style="margin:0.3rem 0 0; background:none; box-shadow:none; font-size:0.85em;"><code class="ts">onClick={handleDelete(1)}</code></pre>
                                                                         <p style="margin:0.3rem 0 0; color:var(--text-soft);">Calls it immediately on render</p>
                                                                 </div>
-                                                                <div class="card" style="font-size:0.78em; border:1.5px solid rgba(34,197,94,0.5);">
+                                                                <div class="card" style="font-size:0.50em; border:1.5px solid rgba(34,197,94,0.5);">
                                                                         <strong style="color:#4ade80;">✅ Works</strong>
                                                                         <pre style="margin:0.3rem 0 0; background:none; box-shadow:none; font-size:0.85em;"><code class="ts">onClick={() =&gt; handleDelete(1)}</code></pre>
                                                                         <p style="margin:0.3rem 0 0; color:var(--text-soft);">Passes a new function that calls it on click</p>
@@ -1122,6 +1181,46 @@ export default MyButton;
                                         </div>
                                         <aside class="notes">
                                                 Build on the handler rule students have just learned: we still pass a function instead of calling during render. The new idea is supplying an argument. The arrow function waits for the click and then calls handleDelete(1). Its being recreated on each render is fine here; keep performance details for later.
+                                        </aside>
+                                </section>
+
+                                <section class="state-topic" id="handler-props">
+                                        <div class="state-content">
+                                                <h3>Passing Event Handlers Through Props</h3>
+                                                <div class="state-columns">
+                                                        <div>
+                                                                <strong>Parent: Store defines the action</strong>
+                                                                <pre style="margin-top:12px;"><code class="tsx">function Store() {
+  function handleAdd() {
+    console.log('Add a mug');
+  }
+
+  return (
+    &lt;ProductCard onAdd={handleAdd} /&gt;
+  );
+}</code></pre>
+                                                        </div>
+                                                        <div class="fragment" data-fragment-index="0">
+                                                                <strong>Child: connects it to the button</strong>
+                                                                <pre style="margin-top:12px;"><code class="tsx">type ProductCardProps = {
+  onAdd: () =&gt; void;
+};
+function ProductCard(
+  { onAdd }: ProductCardProps
+) {
+  return (
+    &lt;button onClick={onAdd}&gt;
+      Add mug
+    &lt;/button&gt;
+  );
+}</code></pre>
+                                                        </div>
+                                                </div>
+                                                <p class="fragment" data-fragment-index="1"><code>onClick</code> is React's built-in button event prop. <code>onAdd</code> is our own prop name for the product action.</p>
+                                                <p class="fragment" data-fragment-index="2"><strong class="highlight">Store supplies the function.</strong> ProductCard connects it to the button. Clicking runs Store's <code>handleAdd</code>.</p>
+                                        </div>
+                                        <aside class="notes">
+                                                Introduce callback props after Events with Parameters and before the props-and-events exercise. This is a small display-only example, not the later stateful demo source. Reveal the child first and trace the same function reference from handleAdd to onAdd to the button's onClick. The function is passed, not called during render. Explain the type () => void as a function with no required arguments and no returned result the child uses. The parent supplies behavior; the child decides where to attach it in its JSX. React recognizes onClick on the built-in button, while onAdd on our component is a prop we named; it is not a new browser event. The child is invoking the supplied function, not directly changing a parent's variables. Do not introduce state ownership or architectural terminology yet. The later basket lesson will explain why keeping a domain action with its state owner is useful.
                                         </aside>
                                 </section>
 
@@ -1141,7 +1240,7 @@ export default MyButton;
                                                         <p style="margin:16px 0 0; font-size:28px; color:var(--text-soft);">We already know variables and click handlers. Is that enough?</p>
                                                 </div>
                                                 <a href="/?target=day-1/demo/changing-values" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:32px;">Open Counter Demo</a>
-                                                <p style="margin:0; font-size:22px; color:var(--text-soft);"><code>code/day_1/src/Counter.tsx</code></p>
+                                                <p style="margin:0; font-size:22px; color:var(--text-soft);"><code>demo/day-1/changing-values/Counter.tsx</code></p>
                                                 <p class="fragment" style="margin:0; font-size:28px; color:var(--text-soft);">Predict first: what will change on the page, and what will appear in the console?</p>
                                         </div>
                                         <aside class="notes">
@@ -1238,7 +1337,7 @@ export default MyButton;
                                                         </ol>
                                                 </div>
                                                 <a href="/?target=day-1/demo/changing-values" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:32px;">Return to Counter Demo</a>
-                                                <p style="margin:0; font-size:22px; color:var(--text-soft);"><code>code/day_1/src/Counter.tsx</code></p>
+                                                <p style="margin:0; font-size:22px; color:var(--text-soft);"><code>demo/day-1/changing-values/Counter.tsx</code></p>
                                         </div>
                                         <aside class="notes">
                                                 Return to the same running demo and edit Counter.tsx live in VS Code. Add import { useState } from 'react'; replace let count = 0 with const [count, setCount] = useState&lt;number&gt;(0); replace the mutation and console log in increaseCount with setCount(count + 1). Keep the existing button and its className. Save so the component and read-only source panel update together. Adding a hook may reset state during Fast Refresh; demonstrate clicks after saving rather than promising persistence across source edits. Confirm the displayed number now increases. Return to the slides to trace why it works.
@@ -1443,7 +1542,7 @@ function increaseCount() {
                                                 <p class="fragment" data-fragment-index="1" style="margin:0; font-size:25px; color:var(--text-soft);">The setter queues an update; it does not change <code>count</code> directly inside this handler.</p>
                                         </div>
                                         <aside class="notes">
-                                                Initially, only the question and direct-update example are visible. Ask students to predict the final count starting from zero. On the first advance, reveal the lost increment and its explanation. On the second advance, reveal the functional-update pane and the takeaway together. The X marks the two-increment example, not every direct setter: setCount(count + 1) is valid for a single increment, and setCount(0) is appropriate for a reset. In one handler, count stays at the value from that render. Two direct increments therefore queue the same replacement value, losing one increment. Functional updaters are processed in order, each receiving the previous pending state. A similar race-condition-like lost update can happen when delayed callbacks capture the same old count; functional updates avoid that stale-state problem for increments, but do not solve every async race, such as out-of-order network responses. Updaters must stay pure. Students will use this pattern in the counter exercise; Day 2 explores queues and batching in more detail.
+                                                Initially, only the question and direct-update example are visible. Ask students to predict the final count starting from zero. On the first advance, reveal the lost increment and its explanation. On the second advance, reveal the functional-update pane and the takeaway together. The X marks the two-increment example, not every direct setter: setCount(count + 1) is valid for a single increment, and setCount(0) is appropriate for a reset. In one handler, count stays at the value from that render. Two direct increments therefore queue the same replacement value, losing one increment. Functional updaters are processed in order, each receiving the previous pending state. A similar race-condition-like lost update can happen when delayed callbacks capture the same old count; functional updates avoid that stale-state problem for increments, but do not solve every async race, such as out-of-order network responses. Updaters must stay pure. Students will use this pattern in the counter exercise; the final state recap reinforces snapshots and batching later today.
                                         </aside>
                                 </section>
 
@@ -1541,7 +1640,7 @@ function NoteInput() {
                 <section class="input-topic">
                     <div style="display:flex; flex-direction:column; gap:12px;">
                         <h2 class="slide-title" style="margin:0;">Controlled Inputs: Connecting the Pieces</h2>
-                        <pre><code class="tsx">import { useState } from 'react';
+                        <pre><code class="tsx">import { useState, ChangeEvent } from 'react';
 import type { ChangeEvent } from 'react';
 
 function NoteInput() {
@@ -1604,24 +1703,744 @@ function NoteInput() {
                                         </div>
                                 </section>
 
-                                <section id="state-extension">
-                                        <div style="display:flex; flex-direction:column; gap:24px;">
-                                                <h2 class="slide-title">Time Permitting: More About State</h2>
-                                                <div class="card" style="text-align:left;">
-                                                        <strong class="highlight" style="display:block; font-size:30px;">A preview of Day 2</strong>
-                                                        <ul style="display:block; margin:12px 0 0 28px; font-size:28px; line-height:1.5;">
-                                                                <li>Updating objects and arrays without mutation.</li>
-                                                                <li>Sharing state between sibling components.</li>
-                                                                <li>Calculating derived values instead of storing them.</li>
-                                                        </ul>
-                                                </div>
-                                                <a href="/presentation/Day%202/index.html#/managing-state" target="_blank" rel="noopener noreferrer" style="color:var(--accent); font-size:30px;">Open Day 2: Managing State Correctly</a>
-                                                <p style="margin:0; font-size:26px; color:var(--text-soft);">Instructor demo and slides, followed by a short batching recap. No extra exercise.</p>
-                                        </div>
-                                        <aside class="notes">
-                                                Optional extension, about 20-25 minutes. If time is short, skip to the Day 1 recap; the material remains part of Day 2. The link opens directly at Day 2's named managing-state section, beginning with the wrong-first cart demo. Present through Recap: Snapshots and Batching, then use its return link or switch back to this tab. Do not continue into effects during Day 1. After returning, advance once to the Day 1 recap. The cart demo uses the same course server and does not require a second process. Do not repeat the full section on Day 2 if already covered; recap it briefly instead.
-                                        </aside>
-                                </section>
+          <section id="managing-state" class="state-topic">
+            <div class="state-content">
+              <h3>Managing State Correctly</h3>
+              <p>Imagine a shop selling coffee mugs. Clicking <strong class="highlight">Add to Cart</strong> should add a mug, and a cart badge should show how many items are in the cart.</p>
+              <p>We'll use three versions of this shop to explore common state problems:</p>
+              <div class="state-card">
+                <p><strong class="highlight">1. Update it correctly.</strong> An Add button does not update the display.</p>
+                <p style="margin-top:16px;"><strong class="highlight">2. Store only what you need.</strong> Calculate a count instead of storing it twice.</p>
+                <p style="margin-top:16px;"><strong class="highlight">3. Put it in the right place.</strong> Coordinate mug and notebook quantities in one basket.</p>
+              </div>
+              <p>For each: <strong>predict → click → explain → fix → click again.</strong></p>
+            </div>
+            <aside class="notes">
+              Instructor-led section, not a student exercise. First fix array mutation and explain array/object/nested-object updates. Second remove a stale stored count and derive it from the cart. Third show two working product quantities plus a separately maintained Store total, then ask why Store cannot calculate that total or reset both child quantities yet. Lift the quantities into one Basket, derive the total, and add Empty basket to demonstrate parent coordination. The starting sharing demo works; it is duplicated bookkeeping, not a fabricated synchronization failure. Each demo uses the existing server and displays its actual source.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-array-demo">
+            <div class="state-content">
+              <h3>1. A Cart That Doesn't Update</h3>
+              <p>Expected: every click adds one mug and increases <strong class="highlight">Cart items</strong>.</p>
+              <div class="state-card">
+                <p>Cart items: <strong>0</strong></p>
+                <p>Coffee Mug · $12</p>
+                <p><strong>Add to Cart</strong></p>
+              </div>
+              <a href="/?target=day-1/demo/cart-state" target="_blank" rel="noopener noreferrer" class="highlight">Open Cart: Updating an Array</a>
+              <p style="font-size:22px;"><code>demo/day-1/cart-state/Cart.tsx</code></p>
+              <p>Read the handler. Predict the display after one click, then try it.</p>
+              <p class="fragment"><strong style="color:#f87171;">❌ Cart items stays at 0.</strong> We called the setter. What did we pass it?</p>
+            </div>
+            <aside class="notes">
+              Open the live demo before revealing the result. Show cart.push(product) and setCart(cart) in the source. Ask for a prediction, click once, then return to reveal the observed zero. Each click represents another unit of the same mug, not a unique product line. Do not fix it until the next slide explains the cause.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-array-fix">
+            <div class="state-content">
+              <h3>Same Array vs New Array</h3>
+              <div class="state-columns">
+                <div class="state-card">
+                  <strong style="color:#f87171;">❌ Changes the existing array</strong>
+                  <pre style="margin-top:12px;"><code class="ts">cart.push(product);
+setCart(cart);</code></pre>
+                  <code class="state-diagram">previous state ─┐
+                ├─ same array
+next state ─────┘</code>
+                </div>
+                <div class="fragment state-card" data-fragment-index="0">
+                  <strong class="highlight">React compares with Object.is</strong>
+                  <p style="margin-top:12px;">The same array reference compares equal, so React can skip the update.</p>
+                  <p style="margin-top:12px;">Changing its contents does not make it a new array.</p>
+                </div>
+              </div>
+              <div class="fragment" data-fragment-index="1">
+                <strong style="color:#4ade80;">✅ Replace both lines with:</strong>
+                <pre style="margin-top:12px;"><code class="ts">setCart(previousCart =&gt; [...previousCart, product]);</code></pre>
+                <p style="margin-top:12px;">Spread copies the existing products into a <strong>new array</strong>, then we add the product.</p>
+                <code class="state-diagram">previous state → original array
+next state     → new array with the added product</code>
+              </div>
+              <p class="fragment" data-fragment-index="2">Fix live → save → reload → click again. <strong class="highlight">Cart items: 1, 2, 3…</strong></p>
+            </div>
+            <aside class="notes">
+              Reveal the equality explanation, then the fix and new-reference diagram. This is not the earlier local-variable bug: the setter is called, but receives the same array. React can skip committing an update; do not claim the component can never be called again. Replace both handler statements in Cart.tsx with the displayed setter. Save, then reload because Fast Refresh may preserve the already-mutated array. Verify counts 1, 2, 3 before advancing. The following two slides unpack array spread and show the corresponding object-update pattern. Keep nested-copy details for a later worked example.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="updating-arrays">
+            <div class="state-content">
+              <h3>Updating Arrays Without Mutation</h3>
+              <p>Our cart is an array of products. Add a mug without changing the existing array.</p>
+              <div class="state-columns">
+                <div class="state-card">
+                  <strong style="color:#f87171;">❌ Mutates the existing array</strong>
+                  <pre style="margin-top:12px;"><code class="ts">cart.push(product);
+setCart(cart);</code></pre>
+                </div>
+                <div class="fragment state-card" data-fragment-index="0">
+                  <strong style="color:#4ade80;">✅ Creates a new array</strong>
+                  <pre style="margin-top:12px;"><code class="ts">setCart(previousCart =&gt; [
+  ...previousCart,
+  product
+]);</code></pre>
+                </div>
+              </div>
+              <div class="fragment state-card" data-fragment-index="0">
+                <p><code>...previousCart</code> copies the existing products into the new array. <code>product</code> adds one more at the end.</p>
+              </div>
+              <div class="fragment" data-fragment-index="1">
+                <code class="state-diagram">Original array: [Mug]       → stays unchanged
+New array:      [Mug, Mug]  → becomes the next state</code>
+                <p style="margin-top:12px;">A new array, not a new version of the same mutated array.</p>
+              </div>
+            </div>
+            <aside class="notes">
+              This is the same operation just fixed live in Cart.tsx, expanded across lines to explain spread. Assume useState is imported, cart is Product[] state, and product is the existing mug object from the demo. The diagram shows product names, not JavaScript string-array literals. Start with one mug and add another unit. Reveal the new-array code and spread explanation together, then the concrete before/after. The updater receives the previous pending array. Array spread copies elements into a fresh array; it does not clone the product objects. That is sufficient here because we do not edit those objects. Existing state is read-only; new-array construction leaves previous snapshots intact. Save filter, map, and nested updates for later examples.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="updating-objects">
+            <div class="state-content">
+              <h3>Updating Objects Without Mutation</h3>
+              <p>A basket object can hold the quantities of two products:</p>
+              <pre><code class="ts">type Basket = { mugs: number; notebooks: number };
+const [basket, setBasket] = useState&lt;Basket&gt;({
+  mugs: 1, notebooks: 2
+});</code></pre>
+              <div class="state-columns">
+                <div class="state-card">
+                  <strong style="color:#f87171;">❌ Mutates the existing object</strong>
+                  <pre style="margin-top:12px;"><code class="ts">basket.mugs = basket.mugs + 1;
+setBasket(basket);</code></pre>
+                </div>
+                <div class="fragment state-card" data-fragment-index="0">
+                  <strong style="color:#4ade80;">✅ Creates an updated copy</strong>
+                  <pre style="margin-top:12px;"><code class="ts">setBasket(previousBasket =&gt; ({
+  ...previousBasket,
+  mugs: previousBasket.mugs + 1,
+}));</code></pre>
+                </div>
+              </div>
+              <p class="fragment" data-fragment-index="0"><code>...previousBasket</code> copies the properties. The later <code>mugs</code> value replaces the copied one; <code>notebooks</code> is kept.</p>
+              <code class="fragment state-diagram" data-fragment-index="1">Original: { mugs: 1, notebooks: 2 } → unchanged
+Next:     { mugs: 2, notebooks: 2 } → new object</code>
+            </div>
+            <aside class="notes">
+              This is a focused component-body example, not code already present in the array demo. Assume useState is imported and the hook belongs inside a component. Basket describes product quantities; it is an object, unlike the preceding array of product entries. Treat the wrong and correct handlers as alternatives, not sequential operations. Reveal the correct update and explanation together, then the before/after. Object spread copies existing properties, and the later mugs property overrides the copied mugs value while preserving notebooks. Reversing those two entries would overwrite the increment with the old value. The parentheses around the object let the arrow function return that object directly. Both array and object spread are shallow; nested objects would remain shared. This basket contains only numbers, so no nested copying is needed. Never mutate the previousBasket parameter.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="updating-nested-objects">
+            <div class="state-content">
+              <h3>Updating Nested Properties</h3>
+              <p><strong class="highlight">Spread is shallow:</strong> nested objects are still shared.</p>
+              <pre><code class="ts">type Basket = {
+  quantities: { mugs: number; notebooks: number };
+};
+const [basket, setBasket] = useState&lt;Basket&gt;({
+  quantities: { mugs: 1, notebooks: 2 }
+});</code></pre>
+              <div class="state-columns">
+                <div class="state-card">
+                  <strong style="color:#f87171;">❌ Only copies the outer object</strong>
+                  <pre style="margin-top:12px;"><code class="ts">const nextBasket = { ...basket };
+nextBasket.quantities.mugs = 2;
+setBasket(nextBasket);</code></pre>
+                  <p style="margin-top:12px;">Both baskets still reference the <strong>same quantities object</strong>. This also changes the original.</p>
+                </div>
+                <div class="fragment state-card" data-fragment-index="0">
+                  <strong style="color:#4ade80;">✅ Copies both levels</strong>
+                  <pre style="margin-top:12px;"><code class="ts">setBasket(previousBasket =&gt; ({
+  ...previousBasket,
+  quantities: {
+    ...previousBasket.quantities,
+    mugs: 2,
+  },
+}));</code></pre>
+                  <p style="margin-top:12px;">The original stays unchanged. The new quantities keep <strong>notebooks: 2</strong>.</p>
+                </div>
+              </div>
+              <p class="fragment" data-fragment-index="1"><strong class="highlight">Copy every object on the changed path:</strong> basket → quantities.</p>
+            </div>
+            <aside class="notes">
+              Follow the preceding flat basket example by grouping quantities inside a nested object. This is a separate component-body example; assume useState is imported. Ask whether copying only basket is enough before revealing the solution. nextBasket is a new outer object, but nextBasket.quantities and basket.quantities are the same object. Setting its mugs property mutates the old state even though setBasket receives a new outer reference and React may render. Do not describe this as merely a missed render. The correct updater creates a new basket and a new quantities object, then overrides mugs while retaining notebooks. Treat the wrong and correct versions as alternatives, each starting from mugs 1 and notebooks 2. The original remains at mugs 1; the correct next state has mugs 2 and notebooks 2. The outer spread preserves any other basket properties, and the inner spread preserves the other quantities. Copy only objects along the changed path, not every unrelated object in the state tree. Arrays containing objects require the same care when editing an object inside them.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-derived-demo">
+            <div class="state-content">
+              <h3>2. Does the Total Match the Cart?</h3>
+              <p>The cart lists its products and displays a separately stored total.</p>
+              <div class="state-columns">
+                <div class="state-card">
+                  <strong>Products in your cart</strong>
+                  <ul><li>Mug</li><li>Notebook</li></ul>
+                  <p style="margin-top:12px;">Total items: <strong>2</strong></p>
+                  <p><strong>Empty cart</strong></p>
+                </div>
+                <pre><code class="ts">const [cart, setCart] =
+  useState&lt;string[]&gt;(['Mug', 'Notebook']);
+const [cartCount] = useState&lt;number&gt;(2);
+
+function emptyCart() {
+  setCart([]);
+}</code></pre>
+              </div>
+              <a href="/?target=day-1/demo/cart-derived" target="_blank" rel="noopener noreferrer" class="highlight">Open Cart: Calculating a Count</a>
+              <p style="font-size:22px;"><code>demo/day-1/cart-derived/CartSummary.tsx</code></p>
+              <p>After Empty cart, which products remain? What total will be displayed?</p>
+              <p class="fragment"><strong style="color:#f87171;">❌ The list is empty, but Total items still says 2.</strong></p>
+            </div>
+            <aside class="notes">
+              Open the second demo. The list shows Mug and Notebook; Total items shows 2. Point to the source: map renders one list item per product, while the paragraph reads cartCount. Treat list rendering as supplied display code; lists and keys receive their full explanation on Day 2. Product names are unique in this fixed example. Ask for the list and total after Empty cart, click, then reveal. The list empties but the stored total stays 2. Do not add a conditional empty message or fallback expression. This prepares students to question Store's separately stored total in the next lesson.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-derived-fix">
+            <div class="state-content">
+              <h3>Keep the Cart; Calculate the Count</h3>
+              <div class="state-columns">
+                <div class="state-card">
+                  <strong style="color:#f87171;">❌ Remove the redundant state</strong>
+                  <pre style="margin-top:12px;"><code class="ts">const [cartCount] =
+  useState&lt;number&gt;(2);</code></pre>
+                  <p style="margin-top:12px;">Every cart change would need to keep this separate value in sync.</p>
+                </div>
+                <div class="fragment state-card" data-fragment-index="0">
+                  <strong style="color:#4ade80;">✅ Calculate during rendering</strong>
+                  <pre style="margin-top:12px;"><code class="ts">const cartCount = cart.length;</code></pre>
+                  <p style="margin-top:12px;">Each render uses the current array. There is no second state to forget.</p>
+                </div>
+              </div>
+              <div class="fragment" data-fragment-index="1">
+                <p>Keep the product list and total display unchanged:</p>
+                <pre style="margin-top:12px;"><code class="tsx">&lt;p&gt;Total items: {cartCount}&lt;/p&gt;</code></pre>
+              </div>
+              <p class="fragment" data-fragment-index="2">Fix live → save → reload → Empty cart. <strong class="highlight">Empty list, total 0.</strong></p>
+            </div>
+            <aside class="notes">
+              Replace only the cartCount hook with the calculation; leave the product list and Total items label unchanged. Save and reload: Mug and Notebook are listed, total 2. Click Empty cart: no products are listed and the total is 0. No second setter, synchronization logic, or memoization is needed. Continue to the sharing demo: what prevents its parent from deriving a total in the same way?
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-sharing-demo">
+            <div class="state-content">
+              <h3>3. One Cart, Two Products</h3>
+              <p>Each product owns its quantity. Store also keeps a total count.</p>
+              <div class="state-card">
+                <p><strong class="highlight">Your cart: 3 items</strong></p>
+                <p style="margin-top:16px;">Coffee Mug — Quantity: 2 — <strong>Add</strong></p>
+                <p style="margin-top:12px;">Notebook — Quantity: 1 — <strong>Add</strong></p>
+              </div>
+              <a href="/?target=day-1/demo/cart-sharing" target="_blank" rel="noopener noreferrer" class="highlight">Open Cart: Sharing State</a>
+              <p style="font-size:22px;"><code>demo/day-1/cart-sharing/</code> — Store.tsx and ProductCard.tsx</p>
+              <p>Add two mugs and one notebook. All three numbers are correct.</p>
+              <p class="fragment"><strong class="highlight">But why are we storing the total instead of calculating it?</strong></p>
+            </div>
+            <aside class="notes">
+              Open the third demo. It starts with working bookkeeping, not a broken badge. Use the product regions to add two mugs and one notebook. Each ProductCard instance has independent number state, while Store increments a separate total through onAdded. Show the Parent and Product card source tabs. The screen is intentionally plain: no illustrations, prices, duplicate badge, or teaching diagram. Ask the derived-state question before advancing. Do not claim the initial design cannot work or must lose updates.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-separate-states">
+            <div class="state-content">
+              <h3>One Click, Two State Updates</h3>
+              <p>The product updates its quantity, then asks Store to increment a separate total.</p>
+              <div class="state-columns">
+                <div class="state-card">
+                  <strong>Inside ProductCard</strong>
+                  <pre style="margin-top:12px;"><code class="ts">const [quantity, setQuantity] =
+  useState&lt;number&gt;(0);
+
+function addProduct() {
+  setQuantity(previousQuantity =&gt;
+    previousQuantity + 1);
+  onAdded();
+}</code></pre>
+                </div>
+                <div class="state-card">
+                  <strong>Inside Store</strong>
+                  <pre style="margin-top:12px;"><code class="ts">const [count, setCount] =
+  useState&lt;number&gt;(0);
+
+function handleAdded() {
+  setCount(previousCount =&gt;
+    previousCount + 1);
+}</code></pre>
+                  <p style="margin-top:12px;">Both cards receive <code>onAdded={handleAdded}</code>.</p>
+                </div>
+              </div>
+              <div class="fragment state-card">
+                <strong class="highlight">This works, but duplicates bookkeeping.</strong>
+                <p>Every quantity change would also need to maintain the stored total.</p>
+              </div>
+            </div>
+            <aside class="notes">
+              These are excerpts from the starting version; restore it before class if the files already contain live edits. ProductCard's props are productName: string and onAdded: () => void. The same component renders twice, with independent local quantities. Functional updates make both counters correct; batching is not the problem. The total is aggregate information already represented by the quantities. The next slide introduces a genuine new requirement: resetting both products from Store.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-empty-challenge">
+            <div class="state-content">
+              <h3>New Requirement: Empty the Basket</h3>
+              <p>One button in Store should reset <strong>both product quantities</strong> and the total.</p>
+              <div class="state-columns">
+                <div class="state-card">
+                  <strong>Can we just reset the total?</strong>
+                  <pre style="margin-top:12px;"><code class="tsx">function emptyBasket() {
+  setCount(0);
+}
+
+&lt;button onClick={emptyBasket}&gt;
+  Empty basket
+&lt;/button&gt;</code></pre>
+                </div>
+                <div class="fragment state-card" data-fragment-index="0">
+                  <strong class="highlight">Start: 2 mugs + 1 notebook</strong>
+                  <p style="margin-top:16px;">After clicking: total 0, but the cards still show quantities 2 and 1.</p>
+                  <p style="margin-top:16px;">Store has not changed their local state.</p>
+                </div>
+              </div>
+              <p class="fragment" data-fragment-index="1">The parent needs to coordinate the <strong>source quantities</strong>, not just the total.</p>
+            </div>
+            <aside class="notes">
+              Introduce this as a new requirement, not evidence that the original Add behavior was broken. The snippet is a proposed addition to the starting Store, not the corrected handler. setCount(0) changes only Store's count; it does not reset either child's independent quantity. Store cannot directly read or set state owned inside ProductCard. Lift the quantities to their closest common parent instead of adding reset effects, imperative refs, or remount keys. The next slides perform that refactor, then implement this action.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-lift-state">
+            <div class="state-content">
+              <h3>Why Can't Store Derive the Total Yet?</h3>
+              <div class="state-columns">
+                <div class="state-card">
+                  <strong>Before: quantities are hidden</strong>
+                  <code class="state-diagram">Store: stored count
+  |-- Mug: local quantity
+  |-- Notebook: local quantity</code>
+                </div>
+                <div class="fragment state-card" data-fragment-index="0">
+                  <strong style="color:#4ade80;">After: one basket owner</strong>
+                  <code class="state-diagram">Store: basket
+  |-- Mug: props
+  |-- Notebook: props</code>
+                </div>
+              </div>
+              <p>Store cannot read state owned inside its children.</p>
+              <p class="fragment" data-fragment-index="0"><strong class="highlight">Lift the quantities into Store.</strong> Now it can calculate the total.</p>
+              <p class="fragment" data-fragment-index="1">One owner coordinates the products. They do not directly update each other.</p>
+            </div>
+            <aside class="notes">
+              Connect to the preceding derived-state lesson: Store needs access to the source quantities before it can derive a total. It is already the closest common parent of both product instances. Move those quantities there and remove the stored total, rather than lifting everything in the application. Values flow down; callbacks request updates. Independent state is still appropriate for unrelated child-only concerns.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-parent-code">
+            <div class="state-content">
+              <h3>One Basket, a Calculated Total</h3>
+              <div class="state-columns">
+                <pre><code class="ts">type Basket = {
+  mugs: number;
+  notebooks: number;
+};
+
+const [basket, setBasket] =
+  useState&lt;Basket&gt;({
+    mugs: 0, notebooks: 0
+  });
+
+const totalCount =
+  basket.mugs + basket.notebooks;</code></pre>
+                <div class="state-card">
+                  <strong class="highlight">Store owns the source values.</strong>
+                  <p style="margin-top:16px;">Remove Store's <code>count</code> state and <code>handleAdded</code>.</p>
+                  <p style="margin-top:16px;">Remove each ProductCard's local quantity state.</p>
+                  <p class="fragment" style="margin-top:16px;">The total is calculated each render. There is no second counter to synchronize.</p>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              This is component-body code inside Store, with Basket declared above it. Use the same flat Basket shape as the object-update lesson, not the nested variation. Store stores two quantities in one object; totalCount is derived. Stage the parent and child edits together because the props contract changes. The next slides show both handlers and the complete child contract.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-basket-updates">
+            <div class="state-content">
+              <h3>The Parent Owns Both Add Operations</h3>
+              <p>Use the object-update pattern: copy the basket, then change one quantity.</p>
+              <div class="state-columns">
+                <pre><code class="ts">function addMug() {
+  setBasket(previousBasket =&gt; ({
+    ...previousBasket,
+    mugs: previousBasket.mugs + 1,
+  }));
+}</code></pre>
+                <pre><code class="ts">function addNotebook() {
+  setBasket(previousBasket =&gt; ({
+    ...previousBasket,
+    notebooks:
+      previousBasket.notebooks + 1,
+  }));
+}</code></pre>
+              </div>
+              <p class="fragment">Each click changes one basket. The next render calculates the new total automatically.</p>
+            </div>
+            <aside class="notes">
+              Both functions belong in Store. Each functional updater receives the previous pending basket; object spread retains the other quantity. Do not also call setCount or onAdded. The total follows from the new basket.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-child-code">
+            <div class="state-content">
+              <h3>Product Cards Receive Values and Callbacks</h3>
+              <div class="state-columns">
+                <pre><code class="tsx">type ProductCardProps = {
+  productName: string;
+  quantity: number;
+  onAdd: () =&gt; void;
+};
+
+function ProductCard({
+  productName, quantity, onAdd,
+}: ProductCardProps) {
+  return (
+    &lt;section&gt;
+      &lt;h3&gt;{productName}&lt;/h3&gt;
+      &lt;p&gt;Quantity: {quantity}&lt;/p&gt;
+      &lt;button onClick={onAdd}&gt;
+        Add
+      &lt;/button&gt;
+    &lt;/section&gt;
+  );
+}</code></pre>
+                <div>
+                  <pre><code class="tsx">&lt;p&gt;Your basket: {totalCount} items&lt;/p&gt;
+&lt;ProductCard
+  productName="Coffee Mug"
+  quantity={basket.mugs}
+  onAdd={addMug}
+/&gt;
+&lt;ProductCard
+  productName="Notebook"
+  quantity={basket.notebooks}
+  onAdd={addNotebook}
+/&gt;</code></pre>
+                  <div class="fragment state-card" style="margin-top:16px;">
+                    <strong class="highlight">No child quantity state.</strong>
+                    <p style="margin-top:12px;">Click → parent callback → basket update → new props and total.</p>
+                  </div>
+                </div>
+              </div>
+              <p class="fragment">Save both files → reload → add 2 mugs and 1 notebook. <strong class="highlight">Total: 3, without a total setter.</strong></p>
+            </div>
+            <aside class="notes">
+              The left shows the new child type and component; the right is Store's return content. Keep existing layout classes, aria-label, live-region attributes, and default exports in the files. ProductCard no longer imports useState or calls onAdded. Store's JSX displays totalCount and supplies each product's quantity and callback. Save both files and reload. Verify mugs 2, notebooks 1, total 3 before introducing the limit. The full final versions are in the instructor guide.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-callback-flow">
+            <div class="state-content">
+              <h3>Values Down, Action Requests Back</h3>
+              <p>This is the callback-prop pattern from Events, now connected to state.</p>
+              <div class="state-columns">
+                <div class="state-card">
+                  <strong>Store supplies a value and action</strong>
+                  <pre style="margin-top:12px;"><code class="tsx">&lt;ProductCard
+  productName="Coffee Mug"
+  quantity={basket.mugs}
+  onAdd={addMug}
+/&gt;</code></pre>
+                </div>
+                <div class="state-card">
+                  <strong>ProductCard connects the action</strong>
+                  <pre style="margin-top:12px;"><code class="tsx">&lt;button onClick={onAdd}&gt;
+  Add
+&lt;/button&gt;</code></pre>
+                </div>
+              </div>
+              <code class="fragment state-diagram" data-fragment-index="0">Click Add → onAdd() → Store's addMug()
+          → basket update → new quantity prop</code>
+              <p class="fragment" data-fragment-index="1"><strong class="highlight">The child requests an addition.</strong> The parent's handler decides how the basket changes.</p>
+              <p class="fragment" data-fragment-index="1">Pass the meaningful action <code>onAdd</code>, so the card does not need the basket's setter or object structure.</p>
+            </div>
+            <aside class="notes">
+              Refer back to Passing Event Handlers Through Props. The built-in button invokes the function supplied through props; Store's handler calls its own state setter. Action requests back is shorthand for calling that function, not an event bubbling between React components or a child directly modifying parent state. The diagram shows the addition path. Passing a setter is valid React, but this domain callback gives ProductCard only the operation it needs. Do not suggest callback props require useCallback. The next slide names the separation of responsibilities already visible in the code.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-responsibilities">
+            <div class="state-content">
+              <h3>Separate Basket Rules from Presentation</h3>
+              <div class="state-columns">
+                <div class="state-card">
+                  <strong class="highlight">Store: basket state and rules</strong>
+                  <ul>
+                    <li>Owns the product quantities.</li>
+                    <li>Calculates the total.</li>
+                    <li>Defines and enforces add operations.</li>
+                    <li>Coordinates both products.</li>
+                  </ul>
+                </div>
+                <div class="state-card">
+                  <strong class="highlight">ProductCard: product presentation</strong>
+                  <ul>
+                    <li>Displays its name and quantity.</li>
+                    <li>Displays the Add button.</li>
+                    <li>Calls <code>onAdd</code> when clicked.</li>
+                    <li>Does not need the other product's state.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="fragment" data-fragment-index="0">The same ProductCard presents either product. Store supplies the values and product-specific behavior.</p>
+              <p class="fragment" data-fragment-index="1"><strong class="highlight">A useful separation, not a rigid rule.</strong> Presentational components can have display logic or local UI state; Store still renders the page composition.</p>
+            </div>
+            <aside class="notes">
+              Introduce presentational component as a useful description, not a requirement that a component contain no logic or never use state. A card could own unrelated local UI state such as whether its details are expanded. Store renders the composition as well as owning basket rules; do not label it logic-only. Separate responsibilities when this makes behavior clearer, not by adding a container around every small component. Empty basket next demonstrates parent coordination: Store resets its source quantities, and both cards receive the result.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-empty-basket">
+            <div class="state-content">
+              <h3>One Action Resets Both Products</h3>
+              <p>Store now owns both quantities. Empty the basket with one state update.</p>
+              <div class="state-columns">
+                <pre><code class="tsx">function emptyBasket() {
+  setBasket({
+    mugs: 0,
+    notebooks: 0,
+  });
+}
+
+&lt;button onClick={emptyBasket}&gt;
+  Empty basket
+&lt;/button&gt;</code></pre>
+                <div class="fragment state-card" data-fragment-index="0">
+                  <strong class="highlight">After emptying:</strong>
+                  <p style="margin-top:16px;">Coffee Mug quantity: 0</p>
+                  <p>Notebook quantity: 0</p>
+                  <p>Total: 0, calculated from the basket.</p>
+                </div>
+              </div>
+              <p class="fragment" data-fragment-index="1">No child reset callbacks. No <code>setCount(0)</code>. Both cards receive new quantity props.</p>
+              <p class="fragment" data-fragment-index="2"><strong class="highlight">Try it:</strong> add 2 mugs and 1 notebook → empty → all zero → add a notebook → total 1.</p>
+            </div>
+            <aside class="notes">
+              Add the handler and button in Store, preserving existing names and layout. The live-edited demo uses counts with mug and notebook fields, so its equivalent is setCounts({mug: 0, notebook: 0}). The slide uses the Basket names established earlier. This is a complete replacement, so no spread or functional updater is needed. Keep each ProductCard controlled by its quantity prop; do not add local quantity state or a child reset signal. Verify both quantities and the derived total reset, repeated emptying is harmless, and adding afterward starts from zero. This demonstrates why the parent needs the source quantities.
+            </aside>
+          </section>
+
+          <section class="state-topic" id="cart-state-summary">
+            <div class="state-content">
+              <h3>Three Questions, Three Rules</h3>
+              <div class="state-card">
+                <strong class="highlight">How should state change?</strong>
+                <p>Create the next array or object. Do not mutate existing state.</p>
+              </div>
+              <div class="state-card">
+                <strong class="highlight">Does this value need its own state?</strong>
+                <p>If current props or state already determine it, calculate it.</p>
+              </div>
+              <div class="state-card">
+                <strong class="highlight">Where should shared state live?</strong>
+                <p>In the closest common parent that coordinates the components.</p>
+              </div>
+              <p>Update it correctly → derive what you can → lift state when coordination needs it.</p>
+            </div>
+            <aside class="notes">
+              Recap in teaching order: immutable updates; derived count instead of stale stored count; parent ownership of source quantities so Store can derive the total and reset both products with Empty basket. Sharing is about one authoritative owner coordinating related UI, not siblings directly modifying each other. The initial sharing version was working but redundant, unlike the deliberately broken mutation and derived-count examples. Capacity is optional and does not motivate lifting state; a parent with a stored total could already calculate remaining space. Continue with the code-based quizzes.
+            </aside>
+          </section>
+
+          <section class="state-topic quiz-topic" id="state-batching-recap">
+            <div class="state-content">
+              <h3>Quiz 1: One Click, Two Updates</h3>
+              <p>In this render, <code>count</code> is <code>0</code>. One click runs this handler:</p>
+              <div class="state-columns">
+                <pre><code class="ts">function increaseCount() {
+  setCount(count + 1);
+  setCount(count + 1);
+  console.log(count);
+}</code></pre>
+                <div style="font-size:24px;">
+                  <strong>1. What does the console print?</strong>
+                  <p class="fragment" data-fragment-index="0" style="margin:8px 0 16px;"><strong class="highlight">0.</strong> The handler reads its original snapshot.</p>
+                  <strong>2. What count appears next?</strong>
+                  <p class="fragment" data-fragment-index="1" style="margin:8px 0 16px;"><strong class="highlight">1.</strong> Both calls request <code>0 + 1</code>.</p>
+                  <strong>3. When are updates processed?</strong>
+                  <p class="fragment" data-fragment-index="2" style="margin:8px 0 16px;">After the synchronous handler finishes. React batches them.</p>
+                  <strong>4. How can both increments apply?</strong>
+                  <div class="fragment" data-fragment-index="3" style="margin-top:8px;">
+                    <pre><code class="ts">setCount(previous =&gt; previous + 1);
+setCount(previous =&gt; previous + 1);</code></pre>
+                    <p style="margin-top:8px;">Queued results: <strong class="highlight">1, then 2</strong>.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Allow roughly 5-8 minutes for the five-slide quiz, depending on discussion. All questions on this slide are visible initially; all answers are hidden. Ask each question before advancing once to reveal its answer. This handler belongs to a component with number state, initially zero, and is connected to the button's onClick. The log prints zero even after replacing both setter calls with functional updaters: they do not change this handler's snapshot. The fourth reveal replaces the two direct calls, not the console log. A single direct increment is valid. Keep snapshots distinct from batching, and do not imply React waits for an async handler's Promise to resolve.
+            </aside>
+          </section>
+
+          <section class="state-topic quiz-topic" id="quiz-click-handlers">
+            <div class="state-content">
+              <h3>Quiz 2: Which Button Works?</h3>
+              <p>Which button passes a handler to run on click? What is wrong with the other?</p>
+              <div class="state-columns">
+                <pre><code class="tsx">function ClickExample() {
+  function handleClick() {
+    console.log('Clicked');
+  }
+
+  return (
+    &lt;&gt;
+      &lt;button onClick={handleClick()}&gt;
+        A
+      &lt;/button&gt;
+      &lt;button onClick={handleClick}&gt;
+        B
+      &lt;/button&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+                <div>
+                  <div class="fragment state-card" data-fragment-index="0">
+                    <strong class="highlight">B passes the function.</strong>
+                    <p style="margin-top:12px;">React calls it when the user clicks.</p>
+                  </div>
+                  <div class="fragment state-card" data-fragment-index="1" style="margin-top:16px;">
+                    <strong>A calls it during rendering.</strong>
+                    <p style="margin-top:12px;">It passes the return value, not the handler. Here that value is <code>undefined</code>, which TypeScript flags.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Initially show only the code and question, without correct/incorrect markers. Ask the class to identify the button and explain why before revealing B on the first advance. Reveal A's explanation on the second advance. This is intentionally invalid TypeScript: handleClick returns void, which is not a valid onClick handler value. If run despite that error, A's expression logs during rendering, not on a later click. React development checks may run render code more than once; do not promise one log. The fix is to pass handleClick, as B already does.
+            </aside>
+          </section>
+
+          <section class="state-topic quiz-topic" id="quiz-immutability">
+            <div class="state-content">
+              <h3>Quiz 3: Will the Badge Update?</h3>
+              <p>Starting with an empty cart, what does the button show after the first click?</p>
+              <div class="state-columns">
+                <pre><code class="tsx">function CartButton() {
+  const [cart, setCart] =
+    useState&lt;string[]&gt;([]);
+
+  function addToCart() {
+    cart.push('Mug');
+    setCart(cart);
+  }
+
+  return (
+    &lt;button onClick={addToCart}&gt;
+      Cart: {cart.length}
+    &lt;/button&gt;
+  );
+}</code></pre>
+                <div>
+                  <div class="fragment state-card" data-fragment-index="0">
+                    <strong class="highlight">The badge stays at Cart: 0.</strong>
+                    <p style="margin-top:12px;">The array was mutated, but the setter received the same reference.</p>
+                  </div>
+                  <div class="fragment" data-fragment-index="1" style="margin-top:20px;">
+                    <strong>Replace the handler body:</strong>
+                    <pre style="margin-top:12px;"><code class="ts">setCart(previousCart =&gt;
+  [...previousCart, 'Mug']
+);</code></pre>
+                    <p style="margin-top:12px;">A new array preserves the old state and lets React update the badge.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Assume useState is imported from React. Ask for both the displayed result and its cause before the first reveal. The setter is called, unlike the earlier local-variable counter, but Object.is compares the same array reference as equal. In this isolated example with no other updates, the badge stays at zero. Do not imply the data was unchanged: push already modified the existing array. Reveal the immutable replacement on the second advance. This is a display-only quiz, not another live demo or student exercise.
+            </aside>
+          </section>
+
+          <section class="state-topic quiz-topic" id="quiz-derived-state">
+            <div class="state-content">
+              <h3>Quiz 4: Find the Mismatch</h3>
+              <p>After Empty cart, what happens to the product list and total? How would you fix the mismatch?</p>
+              <div class="state-columns">
+                <pre><code class="tsx">function CartSummary() {
+  const [cart, setCart] =
+    useState&lt;string[]&gt;([
+      'Mug', 'Notebook']);
+  const [cartCount] = useState&lt;number&gt;(2);
+  function emptyCart() {
+    setCart([]);
+  }
+  return (
+    &lt;&gt;
+      &lt;ul&gt;
+        {cart.map(product =&gt; (
+          &lt;li key={product}&gt;{product}&lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+      &lt;p&gt;Total items: {cartCount}&lt;/p&gt;
+      &lt;button onClick={emptyCart}&gt;
+        Empty cart
+      &lt;/button&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+                <div>
+                  <div class="fragment state-card" data-fragment-index="0">
+                    <strong class="highlight">Empty product list.<br>Total items: 2.</strong>
+                    <p style="margin-top:12px;">The cart changes, but the separate count state does not.</p>
+                  </div>
+                  <div class="fragment" data-fragment-index="1" style="margin-top:20px;">
+                    <strong>Replace the count state:</strong>
+                    <pre style="margin-top:12px;"><code class="ts">const cartCount = cart.length;</code></pre>
+                    <p style="margin-top:12px;">Derive the count during rendering. After emptying, it is <strong class="highlight">0</strong>, matching the cart.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Assume useState is imported. The supplied map displays one list item per product; list rendering is not the quiz topic. Ask for the list contents and total before revealing the mismatch, then ask for a fix. Replace the cartCount hook with the calculation; keep the JSX unchanged. No effect or additional setter is needed. Continue to the shared-basket quiz.
+            </aside>
+          </section>
+
+          <section class="state-topic quiz-topic" id="quiz-shared-state">
+            <div class="state-content">
+              <h3>Quiz 5: Empty the Basket</h3>
+              <p>Start with 2 mugs and 1 notebook. Click Empty basket. What do both cards and the total show?</p>
+              <div class="state-columns">
+                <pre><code class="ts">const [basket, setBasket] =
+  useState&lt;Basket&gt;({
+    mugs: 2, notebooks: 1
+  });
+const totalCount =
+  basket.mugs + basket.notebooks;
+function emptyBasket() {
+  setBasket({
+    mugs: 0,
+    notebooks: 0,
+  });
+}</code></pre>
+                <div>
+                  <div class="fragment state-card" data-fragment-index="0">
+                    <strong class="highlight">Both quantities: 0.<br>Total: 0.</strong>
+                    <p style="margin-top:12px;">The cards receive new props; the total is calculated from the same basket.</p>
+                  </div>
+                  <div class="fragment" data-fragment-index="1" style="margin-top:20px;">
+                    <strong>Then click Add on Notebook. What changes?</strong>
+                    <p class="fragment" data-fragment-index="2" style="margin-top:12px;">Mugs: 0. Notebooks: 1. Total: 1. No separate total setter is needed.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <aside class="notes">
+              Assume useState is imported and Basket has numeric mugs and notebooks fields as in the lesson. This is Store's state and reset handler excerpt. Both ProductCards receive quantities from this basket. Reveal the two zero quantities and derived zero total first. Then ask about adding a notebook with the earlier addNotebook handler before revealing the new quantities and total. Contrast with resetting only a stored count while quantities remain hidden in children. Finish the quiz and advance to the conclusion.
+            </aside>
+          </section>
 
                                 <!-- CONCLUSION SLIDE -->
                                 <section>
@@ -1651,7 +2470,7 @@ function NoteInput() {
                                                         <div class="card" style="font-size:0.76em; text-align:center;">
                                                                 <div style="font-size:1.4em; margin-bottom:0.2rem;">🗃️</div>
                                                                 <strong class="highlight">State &amp; useState</strong>
-                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Primitive state, snapshots, functional setters, hook rules</p>
+                                                                <p style="margin:0.3rem 0 0; color:var(--text-soft);">Snapshots, batching, immutable updates, shared and derived state</p>
                                                         </div>
                                                         <div class="card" style="font-size:0.76em; text-align:center;">
                                                                 <div style="font-size:1.4em; margin-bottom:0.2rem;">🖱️</div>
@@ -1661,10 +2480,10 @@ function NoteInput() {
                                                 </div>
 
                                                 <div style="width:40px; height:2px; background:var(--accent); border-radius:2px; opacity:0.6; margin-top:0.4rem;"></div>
-                                                <p style="margin:0; font-size:0.72em; color:var(--text-soft);">Tomorrow: <strong style="color:#fff;">Lists &amp; Keys, Conditional Rendering, More State Patterns, and useEffect</strong></p>
+                                                <p style="margin:0; font-size:0.72em; color:var(--text-soft);">Tomorrow: <strong style="color:#fff;">Lists &amp; Keys, Conditional Rendering, and useEffect</strong></p>
                                         </div>
                                         <aside class="notes">
-                                                Recap components, typed props, primitive state, snapshots, functional setters, hook rules, and controlled inputs. Students can inspect props and state in DevTools. Ask them to explain a click or keystroke through to the next render. Day 2 builds on these foundations with lists, conditional rendering, immutable object/array state, lifting state, derived values, and effects. If the optional extension was presented today, briefly acknowledge those additional state patterns instead of treating them as required Day 1 practice.
+                                                Recap components, typed props, snapshots, batching, functional setters, hook rules, and controlled inputs, plus immutable object/array updates, lifting state, and derived values. The advanced state topics were instructor-led displays, not extra student exercises. Students can inspect props and state in DevTools. Ask them to explain a click or keystroke through to the next render. Day 2 builds on these foundations with lists, conditional rendering, and effects.
                                         </aside>
                                 </section>
             </section>

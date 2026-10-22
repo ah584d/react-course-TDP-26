@@ -17,13 +17,13 @@ export default function Cart() {
   }
 
   return (
-    <section className="cart-state-preview" aria-label="Store preview">
+    <>
       <p className="cart-state-badge" aria-live="polite">
         Cart items: {cart.length}
       </p>
       <h3>{product.name}</h3>
       <p>Price: ${product.price}</p>
       <button onClick={addToCart}>Add to Cart</button>
-    </section>
+    </>
   )
 }

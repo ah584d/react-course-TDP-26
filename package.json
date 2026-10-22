@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "course": "node scripts/course.mjs",
+    "sandbox": "node scripts/course.mjs sandbox",
     "dev": "npm run course",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

@@ -17,5 +17,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "demo/**/*.tsx", "presentation/**/*.ts", "presentation/**/*.tsx", "exercises/**/*.tsx"]
+  "include": ["src", "sandbox", "demo/**/*.tsx", "presentation/**/*.ts", "presentation/**/*.tsx", "exercises/**/*.tsx"]
 }

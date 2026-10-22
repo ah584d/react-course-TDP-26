@@ -30,6 +30,29 @@ npm run course -- day-1/exercises/counter/starter
 npm run course -- day-2/exercises/fetch-and-render-a-list/solution
 ```
 
+### Live-coding sandbox
+
+```bash
+npm run sandbox
+```
+
+Open the URL printed by Vite. This starts the existing course app with the
+sandbox selected directly, without going through the launcher menu.
+If the course server is already running, you can instead use
+`/?target=sandbox` on that server; no second process is needed.
+
+Edit [sandbox/Playground.tsx](sandbox/Playground.tsx) in VS Code and save.
+The preview and read-only actual source appear side by side and update together.
+The workspace starts with a minimal component and stays separate from the
+prepared demos and exercise files. Edits persist on disk; there is no automatic
+reset or browser editor. React Fast Refresh may reset state when you change
+the component's Hooks. Syntax or import errors appear in Vite's error overlay.
+
+The presentation shell and scoped styles live in
+[sandbox/Sandbox.tsx](sandbox/Sandbox.tsx) and
+[sandbox/Sandbox.css](sandbox/Sandbox.css). No extra dependencies or standalone
+Vite setup are required.
+
 ## Folder convention
 
 Presentations stay under `presentation/`, but runnable targets now live in root-level `demo/` and `exercises/` folders:
@@ -90,6 +113,9 @@ export default function Example() {
 
 ### Day 1
 - `day-1/demo/changing-values`
+- `day-1/demo/cart-state`
+- `day-1/demo/cart-derived`
+- `day-1/demo/cart-sharing`
 - `day-1/exercises/build-product-card/starter`
 - `day-1/exercises/build-product-card/solution`
 - `day-1/exercises/build-product-card-with-props/starter`
@@ -101,23 +127,47 @@ export default function Example() {
 - `day-1/exercises/podcast-episode-cards/starter`
 - `day-1/exercises/podcast-episode-cards/solution`
 
-The changing-values demo reuses `code/day_1/src/Counter.tsx` and displays its
-actual source alongside the running counter. Edit that file to fix the
-intentionally broken increment live. The previous Product Counter example
+The changing-values demo lives in `demo/day-1/changing-values/` and displays
+its actual `Counter.tsx` source alongside the running counter. Edit that file
+to fix the intentionally broken increment live. It uses the root course server,
+not a standalone app or separate server. The previous Product Counter example
 is preserved under `demo/day-1/product-counter/`, but is no longer registered
 as a launcher target.
 
 Day 1 covers setup, components, JSX, typed props, events, primitive state,
-state snapshots, functional setters, introductory hook rules, and controlled inputs.
+state snapshots, batching, functional setters, introductory hook rules, controlled
+inputs, immutable array additions and object updates, derived values, and lifting state.
+The Events section introduces passing parent-defined handlers through typed
+callback props before the props-and-events exercise. The basket lesson revisits
+that mechanism to explain action requests and the separation between shared
+state/rules and product presentation, without requiring a rigid component pattern.
 Install React DevTools during setup, inspect components and props after those
 topics, and inspect state after introducing `useState`.
 The podcast exercise uses separate number and string state variables.
-The optional **Time Permitting: More About State** slide links directly to
-Day 2's instructor-led state section. It can be skipped without changing
-the Day 1 exercises.
+The **Managing State Correctly** section follows the podcast exercise and covers
+three state rules through separate instructor-led cart demos and staged slides,
+not extra student exercises:
+
+1. [Cart: Updating an Array](demo/day-1/cart-state/README.md) — fix a mutation
+   that leaves the display unchanged.
+2. [Cart: Calculating a Count](demo/day-1/cart-derived/README.md) — replace a stale
+   stored count with `cart.length`.
+3. [Cart: Sharing State](demo/day-1/cart-sharing/README.md) — start with local Mug
+   and Notebook quantities plus a separately stored parent total. Lift the
+   quantities into one Basket, derive the total, and add an Empty basket action
+   that resets both product quantities. A plain preview sits beside two actual-source tabs.
+
+Each guide includes a live fix, observable verification, and reset instructions.
+All three use the existing launcher and server. Focused slides after the
+mutation demo explain array spread for adding a product and object spread for
+updating a basket quantity. A follow-up demonstrates copying both the basket
+and its nested quantities object. Array remove/update operations are deferred
+to later worked examples. Day 1 owns the state lesson;
+Day 2 builds on it for lists and effects.
+The section has a stable slide link:
+`/presentation/Day%201/index.html#/managing-state`.
 
 ### Day 2
-- `day-2/demo/cart-state`
 - `day-2/exercises/fetch-and-render-a-list/starter`
 - `day-2/exercises/fetch-and-render-a-list/solution`
 - `day-2/exercises/starwars-characters/starter`
@@ -125,15 +175,11 @@ the Day 1 exercises.
 - `day-2/exercises/task-list/starter`
 - `day-2/exercises/task-list/solution`
 
-Before effects, the **Managing State Correctly** section covers object/array
-immutability, lifting state to a common parent, avoiding redundant derived
-state, and a snapshot/batching recap. It includes one intentionally broken
-cart demo and staged slide explanations, not additional student exercises.
-See [the instructor demo instructions](demo/day-2/cart-state/README.md)
-for the live fix and reset procedure.
-The section has a stable slide link:
-`/presentation/Day%202/index.html#/managing-state`.
-When visiting from Day 1, stop after the batching recap and use its return link.
+Day 2 builds on Day 1 state concepts with lists and keys, conditional rendering,
+reconciliation, and effects. The deeper Hooks background, including
+**Why Hooks Exist?**, stays in Day 2 before effects; Day 1 introduces `useState`
+as a Hook and covers its placement rules. Day 2 has no separate state-update
+instruction section.
 
 ### Day 3
 - `day-3/exercises/podcast-navigator/starter`
