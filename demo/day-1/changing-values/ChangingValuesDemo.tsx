@@ -1,8 +1,8 @@
 import Counter from './Counter'
 import counterSource from './Counter.tsx?raw'
-import './index.css'
+import './ChangingValuesDemo.css'
 
-export default function App() {
+export default function ChangingValuesDemo() {
   return (
     <div className="changing-values-demo">
       <section className="demo-preview" aria-label="Counter preview">
@@ -12,7 +12,7 @@ export default function App() {
       </section>
       <aside className="source-panel" aria-labelledby="source-title">
         <h2 id="source-title">Counter code</h2>
-        <p><code>code/day_1/src/Counter.tsx</code></p>
+        <p><code>demo/day-1/changing-values/Counter.tsx</code></p>
         <p>Edit in VS Code and save. This view updates automatically.</p>
         <pre tabIndex={0} aria-label="Counter component source">
           <code>{counterSource}</code>

@@ -1,0 +1,87 @@
+.live-sandbox {
+  min-height: 100vh;
+  padding: 32px;
+  color: #e2e8f0;
+  background: #10131a;
+  font-family: system-ui, sans-serif;
+  font-size: 18px;
+}
+
+.live-sandbox .live-sandbox-header {
+  margin-bottom: 28px;
+}
+
+.live-sandbox .live-sandbox-header h1 {
+  max-width: none;
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.2;
+}
+
+.live-sandbox .live-sandbox-header p {
+  line-height: 1.6;
+}
+
+.live-sandbox .live-sandbox-header a {
+  color: #61dafb;
+  text-decoration: underline;
+}
+
+.live-sandbox .live-sandbox-panels {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+}
+
+.live-sandbox .live-sandbox-panel {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #475569;
+  border-radius: 12px;
+  background: #172030;
+}
+
+.live-sandbox .live-sandbox-panel > h2 {
+  margin: 0 0 20px;
+  font-size: 22px;
+}
+
+.live-sandbox .live-sandbox-preview {
+  min-height: 280px;
+  padding: 24px;
+  border-radius: 8px;
+  background: #10131a;
+}
+
+.live-sandbox .live-sandbox-source {
+  margin: 20px 0 0;
+  padding: 20px;
+  overflow: auto;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  background: #080e18;
+  font-size: 18px;
+  line-height: 28px;
+  tab-size: 2;
+}
+
+.live-sandbox .live-sandbox-source:focus-visible,
+.live-sandbox .live-sandbox-header a:focus-visible {
+  outline: 3px solid #61dafb;
+  outline-offset: 4px;
+}
+
+.live-sandbox .live-sandbox-header code,
+.live-sandbox .live-sandbox-panel > p {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .live-sandbox .live-sandbox-panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .live-sandbox {
+    padding: 16px;
+  }
+}

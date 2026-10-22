@@ -1,5 +1,5 @@
 import type { CourseTargetMeta } from '../../../src/course'
-import App from '../../../code/day_1/src/App'
+import ChangingValuesDemo from './ChangingValuesDemo'
 
 export const meta: CourseTargetMeta = {
   id: 'day-1/demo/changing-values',
@@ -12,4 +12,4 @@ export const meta: CourseTargetMeta = {
   order: 1,
 }
 
-export default App
+export default ChangingValuesDemo

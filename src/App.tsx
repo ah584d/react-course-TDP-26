@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import Sandbox from '../sandbox/Sandbox'
 import {
   courseDays,
   courseTargets,
@@ -19,6 +20,11 @@ function App() {
   const selectedDay = requestedDay ? getCourseDay(requestedDay) : undefined
 
   useEffect(() => {
+    if (requestedTarget === 'sandbox') {
+      document.title = 'Live Coding Sandbox | React Course Material'
+      return
+    }
+
     if (selectedTarget) {
       document.title = `${selectedTarget.meta.title} | React Course Material`
       return
@@ -30,7 +36,11 @@ function App() {
     }
 
     document.title = 'React Course Material | Presentations, Demos, and Exercises'
-  }, [selectedDay, selectedTarget])
+  }, [requestedTarget, selectedDay, selectedTarget])
+
+  if (requestedTarget === 'sandbox') {
+    return <Sandbox />
+  }
 
   if (requestedTarget && selectedTarget) {
     const SelectedTarget = selectedTarget.component
