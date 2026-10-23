@@ -5,7 +5,7 @@ export default function Preview() {
     <section className="lesson-card exercise-header-card">
       <div className="exercise-header-copy">
         <p className="eyebrow">Starter</p>
-        <h2 className="exercise-title">Task List with Completion Status</h2>
+        <h2 className="exercise-title">Task List</h2>
       </div>
 
       <div className="exercise-task-block exercise-task-block-inline">
@@ -25,7 +25,6 @@ export default function Preview() {
             }}
           >
             <span>Learn React</span>
-            <span>✅</span>
           </div>
           <div
             style={{
@@ -36,7 +35,6 @@ export default function Preview() {
             }}
           >
             <span>Read Docs</span>
-            <span>⬜</span>
           </div>
           <div
             style={{
@@ -47,7 +45,6 @@ export default function Preview() {
             }}
           >
             <span>Build Project</span>
-            <span>⬜</span>
           </div>
         </div>
       </div>
