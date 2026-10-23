@@ -967,9 +967,9 @@ function ProductGallery() {
                   JavaScript/JSX
                 </div>
                 <pre><code class="language-jsx">const tasks = [
-  { id: 1, title: "Learn React", done: true },
-  { id: 2, title: "Read Docs", done: false },
-  { id: 3, title: "Build Project", done: false },
+  { id: 1, title: "Learn React" },
+  { id: 2, title: "Read Docs" },
+  { id: 3, title: "Build Project" },
 ];
 
 export default function TaskList() {
@@ -977,7 +977,7 @@ export default function TaskList() {
     &lt;ul className="task-list"&gt;
       {tasks.map((task) =&gt; (
         &lt;li key={task.id}&gt;
-          {task.title} {task.done}
+          {task.title}
         &lt;/li&gt;
       ))}
     &lt;/ul&gt;
@@ -1100,10 +1100,10 @@ export default function TaskList() {
           <section>
             <h3>Ternary Operator - Example</h3>
             <div style="margin-top: 1.5rem">
-              <pre><code class="language-jsx">function LoginButton({ isLoggedIn }) {
+              <pre><code class="language-jsx">function LoginButton(props: { isLoggedIn: boolean }) {
   return (
     &lt;button&gt;
-      {isLoggedIn ? 'Logout' : 'Login'}
+      {props.isLoggedIn ? 'Logout' : 'Login'}
     &lt;/button&gt;
   );
 }
@@ -1208,6 +1208,7 @@ export default function TaskList() {
                       style="
                         color: var(--accent);
                         font-weight: bold;
+                        font-size: 0.7em;
                         margin-bottom: 0.5rem;
                       "
                     >
@@ -1217,7 +1218,7 @@ export default function TaskList() {
                       style="
                         margin: 0;
                         padding-left: 1.2rem;
-                        font-size: 0.9em;
+                        font-size: 0.8em;
                         line-height: 1.6;
                       "
                     >
@@ -1238,6 +1239,7 @@ export default function TaskList() {
                       style="
                         color: var(--accent);
                         font-weight: bold;
+                        font-size: 0.7em;
                         margin-bottom: 0.5rem;
                       "
                     >
@@ -1247,7 +1249,7 @@ export default function TaskList() {
                       style="
                         margin: 0;
                         padding-left: 1.2rem;
-                        font-size: 0.9em;
+                        font-size: 0.7em;
                         line-height: 1.6;
                       "
                     >
