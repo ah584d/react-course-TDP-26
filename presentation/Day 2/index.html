@@ -2134,9 +2134,73 @@ export default function Clock() {
             </div>
           </section>
 
+          <!-- Slide 15b: useEffect with async/await - the problem -->
+          <section>
+            <h3>useEffect with async/await</h3>
+            <p class="small-text">
+              Fetching data is asynchronous — but the effect function cannot be
+              <code>async</code>
+            </p>
+            <div class="two-col" style="margin-top: 1rem">
+              <div>
+                <div
+                  class="small-text"
+                  style="margin-bottom: 0.5rem; color: var(--accent)"
+                >
+                  ❌ Wrong
+                </div>
+                <pre><code class="language-jsx" style="font-size: 14px">useEffect(async () => {
+  const response = await fetch(url);
+  const data = await response.json();
+  setCharacters(data.results);
+}, []);</code></pre>
+              </div>
+              <div>
+                <div
+                  class="small-text"
+                  style="margin-bottom: 0.5rem; color: var(--accent)"
+                >
+                  ✅ Right
+                </div>
+                <pre><code class="language-jsx" style="font-size: 14px">useEffect(() => {
+  async function fetchCharacters() {
+    const response = await fetch(url);
+    const data = await response.json();
+    setCharacters(data.results);
+  }
+
+  fetchCharacters();
+}, []);</code></pre>
+              </div>
+            </div>
+            <div class="card" style="margin-top: 1rem">
+              <p class="small-text" style="margin: 0">
+                An <code>async</code> function always returns a
+                <strong>Promise</strong>. React expects the effect to return
+                either nothing or a <strong>cleanup function</strong> — so
+                declare an async function <em>inside</em> the effect and call it.
+              </p>
+            </div>
+            <aside class="notes">
+              Common mistake: marking the effect callback itself as async. React
+              warns because the returned Promise is not a cleanup function. The
+              fix is to define an inner async function and call it immediately.
+            </aside>
+          </section>
+
+          <!-- Slide 15c: Exercise - Fetch data -->
+          <section>
+            <h3>🧪 Exercise 3 — Fetch data</h3>
+            <p class="small-text">→ live coding / hands-on</p>
+
+            <div class="card" style="margin-top: 1rem">
+              <p style="font-size: 0.7em">⏱️ Time: 15 minutes</p>
+            </div>
+          </section>
+
           <!-- Slide 20: Exercise - Fetch and Render -->
           <section>
-            <h3>🧪 Exercise 3 — Fetch and Render a List</h3>
+            <h3>🧪 Exercise 4 — Fetch and Render a List</h3>
             <p class="small-text">→ live coding / hands-on</p>
 
             <div class="card" style="margin-top: 1rem">

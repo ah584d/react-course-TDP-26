@@ -9,5 +9,5 @@ export const meta: CourseTargetMeta = {
   dayLabel: "Day 2",
   kind: "exercise",
   variant: "solution",
-  order: 3,
+  order: 4,
 };

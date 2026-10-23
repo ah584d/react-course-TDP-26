@@ -170,6 +170,8 @@ The section has a stable slide link:
 ### Day 2
 - `day-2/exercises/fetch-and-render-a-list/starter`
 - `day-2/exercises/fetch-and-render-a-list/solution`
+- `day-2/exercises/fetch-data/starter`
+- `day-2/exercises/fetch-data/solution`
 - `day-2/exercises/starwars-characters/starter`
 - `day-2/exercises/starwars-characters/solution`
 - `day-2/exercises/task-list/starter`
