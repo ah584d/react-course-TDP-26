@@ -598,6 +598,48 @@ export function useFetch(url) {
           </div>
         </section>
 
+        <!-- Slide 17a: Exercise - Extract fetch to a custom hook -->
+        <section class="carry-over-slide">
+          <h3>🧪 Exercise — Extract fetch into a custom hook</h3>
+          <p class="small-text">→ hands-on, refactoring</p>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 1.5rem">
+            <div class="card" style="padding: 1.5rem; background: var(--accent-soft)">
+              <p style="margin: 0 0 0.8rem; color: var(--accent); font-weight: bold; font-size: 1.6em">
+                Starting point
+              </p>
+              <p style="margin: 0; font-size: 1.6em">
+                <code>exercises/day-2/starwars-characters/solution/StarWarsCharacters.tsx</code>
+              </p>
+            </div>
+            <ol style="margin-top: 1.5rem; font-size: 1.3em; line-height: 1.7">
+              <li>
+                Create <code>useFetchCharacters(search)</code> in its own file
+              </li>
+              <li>
+                Move the <code>characters</code> and <code>loading</code> state
+                and the <code>useEffect</code> with the async fetch into the hook
+              </li>
+              <li>
+                Return <code>{ characters, loading }</code> from the hook
+              </li>
+              <li>
+                Keep only <code>search</code> state and the JSX in the component:
+                <code>const { characters, loading } = useFetchCharacters(search)</code>
+              </li>
+              <li>
+                BONUS: make the hook generic —
+                <code>useFetch&lt;T&gt;(url)</code> returning
+                <code>{ data, loading, error }</code>
+              </li>
+            </ol>
+          </div>
+          <aside class="notes">
+            Students refactor the Day 2 Star Wars solution. The component should look
+            the same and behave the same; only the location of the fetch logic changes.
+            Compare the result with the useFetch hook from the previous slide.
+          </aside>
+        </section>
+
         <!-- Slide 17b: useRef Resources -->
         <section class="carry-over-slide">
           <h3>useRef Resources</h3>
