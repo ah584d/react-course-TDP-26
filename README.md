@@ -170,10 +170,14 @@ The section has a stable slide link:
 ### Day 2
 - `day-2/exercises/fetch-and-render-a-list/starter`
 - `day-2/exercises/fetch-and-render-a-list/solution`
+- `day-2/exercises/fetch-data/starter`
+- `day-2/exercises/fetch-data/solution`
 - `day-2/exercises/starwars-characters/starter`
 - `day-2/exercises/starwars-characters/solution`
 - `day-2/exercises/task-list/starter`
 - `day-2/exercises/task-list/solution`
+- `day-2/exercises/conditional-rendering/starter`
+- `day-2/exercises/conditional-rendering/solution`
 
 Day 2 builds on Day 1 state concepts with lists and keys, conditional rendering,
 reconciliation, and effects. The deeper Hooks background, including

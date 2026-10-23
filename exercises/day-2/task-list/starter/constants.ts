@@ -2,8 +2,8 @@ import type { CourseTargetMeta } from "../../../../src/course.ts";
 
 export const meta: CourseTargetMeta = {
   id: "day-2/exercises/task-list/starter",
-  title: "Task List with Completion Status",
-  description: "Render a list of tasks with completion status.",
+  title: "Task List",
+  description: "Render a list of tasks.",
   dayOrder: 2,
   dayLabel: "Day 2",
   kind: "exercise",
@@ -12,10 +12,10 @@ export const meta: CourseTargetMeta = {
 };
 
 export const starterTasks = [
-  "Create an array of tasks with structure: { id, title, done }",
+  "Create an array of tasks with structure: { id, title }",
   "Use .map() to iterate over the tasks array",
   "Render each task in a <li> element with a key prop",
 ];
 
 export const starterHint =
-  "Remember: Each item in a list needs a unique key prop, and you can use a ternary operator to show different icons based on the done property.";
+  "Remember: Each item in a list needs a unique key prop.";

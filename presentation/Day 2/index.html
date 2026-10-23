@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Day 2 - Lists, Conditional Rendering, and Effects</title>
+    <title>Day 2 - State, Events, Lists, and Effects</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link
@@ -89,6 +89,17 @@
         border-radius: 12px;
         background: var(--surface);
         backdrop-filter: blur(4px);
+      }
+      .agenda-grid {
+        gap: 1.4rem !important;
+      }
+      .agenda-grid .card {
+        font-size: 0.65em !important;
+        padding: 1.4rem 1.2rem;
+        min-height: 130px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
       @media (max-width: 900px) {
         .two-col {
@@ -187,6 +198,7 @@
           <section>
             <h3>What We Cover Today</h3>
             <div
+              class="agenda-grid"
               style="
                 display: grid;
                 grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -295,12 +307,32 @@
                   Data Fetching
                 </p>
               </div>
+              <div class="card" style="font-size: 0.78em; text-align: center">
+                <div
+                  style="
+                    font-size: 1.8em;
+                    margin-bottom: 0.3rem;
+                    color: var(--accent);
+                  "
+                >
+                  06
+                </div>
+                <p
+                  style="
+                    margin: 0 0 0.2rem;
+                    color: var(--accent);
+                    font-weight: 600;
+                  "
+                >
+                  Custom Hooks
+                </p>
+              </div>
             </div>
           </section>
 
           <!-- Slide 3: Example - Product Gallery Wrong Way -->
           <section>
-            <h4>Example: Product Gallery</h4>
+            <h4>Rendering List</h4>
             <div class="two-col" style="margin-top: 1rem">
               <div>
                 <div
@@ -395,6 +427,45 @@ function ProductGallery() {
           &lt;p&gt;{product.price}&lt;/p&gt;
         &lt;/div&gt;
       ))}
+    &lt;/div&gt;
+  );
+}</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- Slide 3c2: Example - Product Gallery Right Way (External Function) -->
+          <section>
+            <h4>Example: Product Gallery - ✅ Right Way</h4>
+            <div class="two-col" style="margin-top: 1rem">
+              <div>
+                <div
+                  class="small-text"
+                  style="margin-bottom: 0.5rem; color: var(--accent)"
+                >
+                  JavaScript/JSX - external function
+                </div>
+                <pre><code class="language-jsx">const products = [
+  { id: 1, name: "iPhone", icon: "📱", price: 999 },
+  { id: 2, name: "MacBook", icon: "💻", price: 1499 },
+  { id: 3, name: "Apple Watch", icon: "⌚", price: 399 },
+  { id: 4, name: "AirPods", icon: "🎧", price: 249 }
+];
+
+function renderProduct(product) {
+  return (
+    &lt;div key={product.id} className="product"&gt;
+      &lt;span className="icon"&gt;{product.icon}&lt;/span&gt;
+      &lt;h3&gt;{product.name}&lt;/h3&gt;
+      &lt;p&gt;{product.price}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+function ProductGallery() {
+  return (
+    &lt;div className="gallery"&gt;
+      {products.map(renderProduct)}
     &lt;/div&gt;
   );
 }</code></pre>
@@ -896,9 +967,9 @@ function ProductGallery() {
                   JavaScript/JSX
                 </div>
                 <pre><code class="language-jsx">const tasks = [
-  { id: 1, title: "Learn React", done: true },
-  { id: 2, title: "Read Docs", done: false },
-  { id: 3, title: "Build Project", done: false },
+  { id: 1, title: "Learn React" },
+  { id: 2, title: "Read Docs" },
+  { id: 3, title: "Build Project" },
 ];
 
 export default function TaskList() {
@@ -906,7 +977,7 @@ export default function TaskList() {
     &lt;ul className="task-list"&gt;
       {tasks.map((task) =&gt; (
         &lt;li key={task.id}&gt;
-          {task.title} {task.done}
+          {task.title}
         &lt;/li&gt;
       ))}
     &lt;/ul&gt;
@@ -1029,10 +1100,10 @@ export default function TaskList() {
           <section>
             <h3>Ternary Operator - Example</h3>
             <div style="margin-top: 1.5rem">
-              <pre><code class="language-jsx">function LoginButton({ isLoggedIn }) {
+              <pre><code class="language-jsx">function LoginButton(props: { isLoggedIn: boolean }) {
   return (
     &lt;button&gt;
-      {isLoggedIn ? 'Logout' : 'Login'}
+      {props.isLoggedIn ? 'Logout' : 'Login'}
     &lt;/button&gt;
   );
 }
@@ -1137,6 +1208,7 @@ export default function TaskList() {
                       style="
                         color: var(--accent);
                         font-weight: bold;
+                        font-size: 0.7em;
                         margin-bottom: 0.5rem;
                       "
                     >
@@ -1146,7 +1218,7 @@ export default function TaskList() {
                       style="
                         margin: 0;
                         padding-left: 1.2rem;
-                        font-size: 0.9em;
+                        font-size: 0.8em;
                         line-height: 1.6;
                       "
                     >
@@ -1167,6 +1239,7 @@ export default function TaskList() {
                       style="
                         color: var(--accent);
                         font-weight: bold;
+                        font-size: 0.7em;
                         margin-bottom: 0.5rem;
                       "
                     >
@@ -1176,7 +1249,7 @@ export default function TaskList() {
                       style="
                         margin: 0;
                         padding-left: 1.2rem;
-                        font-size: 0.9em;
+                        font-size: 0.7em;
                         line-height: 1.6;
                       "
                     >
@@ -1262,7 +1335,7 @@ export default function TaskList() {
                   font-weight: bold;
                 "
               >
-                Open the live demo in the course app
+                Open the live conditional rendering demo in the course app
               </p>
               <p
                 style="
@@ -1274,6 +1347,19 @@ export default function TaskList() {
               >
                 Route: <code style="color: var(--accent)">/conditional</code>
               </p>
+            </div>
+          </section>
+
+          <!-- Slide 9b: Exercise - Conditional Rendering -->
+          <section>
+            <h3>🧪 Exercise 2 — Conditional Rendering</h3>
+            <p class="small-text">→ live coding / hands-on</p>
+
+            <div
+              class="card"
+              style="margin-top: 1rem; text-align: left; font-size: 0.6em"
+            >
+              <p style="margin: 0.5rem 0 0">⏱️ Time: 15 minutes</p>
             </div>
           </section>
 
@@ -1581,7 +1667,6 @@ function UserProfile() {
             </aside>
           </section>
 
-
           <section>
             <h3>Why Hooks Exist ?</h3>
             <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
@@ -1622,7 +1707,11 @@ function UserProfile() {
               </div>
             </div>
             <aside class="notes">
-              Day 1 introduced useState as a built-in Hook and covered the Rules of Hooks. Keep the historical background and deeper discussion here in Day 2, as a bridge into useEffect. The state-update patterns remain in Day 1; this slide explains why Hooks exist more generally.
+              Day 1 introduced useState as a built-in Hook and covered the Rules
+              of Hooks. Keep the historical background and deeper discussion
+              here in Day 2, as a bridge into useEffect. The state-update
+              patterns remain in Day 1; this slide explains why Hooks exist more
+              generally.
             </aside>
           </section>
 
@@ -2012,7 +2101,7 @@ function UserProfile() {
                 >
                   JavaScript/JSX
                 </div>
-                <pre><code class="language-jsx">import { useState, useEffect } from "react";
+                <pre><code class="language-jsx" style="font-size: 14px">import { useState, useEffect } from "react";
 
 export default function Clock() {
   const [time, setTime] = useState(new Date());
@@ -2037,7 +2126,7 @@ export default function Clock() {
                 >
                   CSS
                 </div>
-                <pre><code class="language-css">h1 {
+                <pre><code class="language-css" style="font-size: 12px">h1 {
   font-size: 1rem;
   color: #333;
 }</code></pre>
@@ -2045,9 +2134,73 @@ export default function Clock() {
             </div>
           </section>
 
+          <!-- Slide 15b: useEffect with async/await - the problem -->
+          <section>
+            <h3>useEffect with async/await</h3>
+            <p class="small-text">
+              Fetching data is asynchronous — but the effect function cannot be
+              <code>async</code>
+            </p>
+            <div class="two-col" style="margin-top: 1rem">
+              <div>
+                <div
+                  class="small-text"
+                  style="margin-bottom: 0.5rem; color: var(--accent)"
+                >
+                  ❌ Wrong
+                </div>
+                <pre><code class="language-jsx" style="font-size: 14px">useEffect(async () => {
+  const response = await fetch(url);
+  const data = await response.json();
+  setCharacters(data.results);
+}, []);</code></pre>
+              </div>
+              <div>
+                <div
+                  class="small-text"
+                  style="margin-bottom: 0.5rem; color: var(--accent)"
+                >
+                  ✅ Right
+                </div>
+                <pre><code class="language-jsx" style="font-size: 14px">useEffect(() => {
+  async function fetchCharacters() {
+    const response = await fetch(url);
+    const data = await response.json();
+    setCharacters(data.results);
+  }
+
+  fetchCharacters();
+}, []);</code></pre>
+              </div>
+            </div>
+            <div class="card" style="margin-top: 1rem">
+              <p class="small-text" style="margin: 0">
+                An <code>async</code> function always returns a
+                <strong>Promise</strong>. React expects the effect to return
+                either nothing or a <strong>cleanup function</strong> — so
+                declare an async function <em>inside</em> the effect and call it.
+              </p>
+            </div>
+            <aside class="notes">
+              Common mistake: marking the effect callback itself as async. React
+              warns because the returned Promise is not a cleanup function. The
+              fix is to define an inner async function and call it immediately.
+            </aside>
+          </section>
+
+          <!-- Slide 15c: Exercise - Fetch data -->
+          <section>
+            <h3>🧪 Exercise 3 — Fetch data</h3>
+            <p class="small-text">→ live coding / hands-on</p>
+
+            <div class="card" style="margin-top: 1rem">
+              <p style="font-size: 0.7em">⏱️ Time: 15 minutes</p>
+            </div>
+          </section>
+
           <!-- Slide 20: Exercise - Fetch and Render -->
           <section>
-            <h3>🧪 Exercise 2 — Fetch and Render a List</h3>
+            <h3>🧪 Exercise 4 — Fetch and Render a List</h3>
             <p class="small-text">→ live coding / hands-on</p>
 
             <div class="card" style="margin-top: 1rem">

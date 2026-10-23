@@ -87,6 +87,23 @@
   text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
 }
 
+.toggle-button {
+  background: #fbbf24;
+  color: #1f2937;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ticker-status {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  margin: 16px 0 0;
+}
+
 @media (max-width: 768px) {
   .bug-example {
     padding: 1rem;

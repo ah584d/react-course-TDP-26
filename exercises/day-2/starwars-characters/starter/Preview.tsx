@@ -1,4 +1,4 @@
-import { starterHint, starterTasks } from "./constants";
+import { starterHint, starterPhases } from "./constants";
 
 export default function Preview() {
   return (
@@ -105,11 +105,16 @@ export default function Preview() {
       <div className="exercise-task-block exercise-task-block-inline">
         <p className="eyebrow">Todo</p>
         <strong>StarWarsCharacters.tsx</strong>
-        <div className="task-list">
-          {starterTasks.map((task) => (
-            <p key={task}>{task}</p>
-          ))}
-        </div>
+        {starterPhases.map((phase) => (
+          <div key={phase.title}>
+            <p className="eyebrow">{phase.title}</p>
+            <div className="task-list">
+              {phase.tasks.map((task) => (
+                <p key={task}>{task}</p>
+              ))}
+            </div>
+          </div>
+        ))}
         <p className="product-meta">{starterHint}</p>
       </div>
     </section>

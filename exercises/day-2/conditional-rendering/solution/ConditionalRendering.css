@@ -1,0 +1,95 @@
+.conditional-rendering {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.conditional-rendering .user-selector {
+  margin-bottom: 24px;
+}
+
+.conditional-rendering .user-selector h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.conditional-rendering .user-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.conditional-rendering .user-buttons button {
+  background: #6b7280;
+  color: #fff;
+  border: 2px solid #4b5563;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.conditional-rendering .user-buttons button:hover {
+  background: #4b5563;
+  border-color: #374151;
+}
+
+.conditional-rendering .user-buttons button.active {
+  background: #61dafb;
+  color: #1a1a1a;
+  border-color: #61dafb;
+  font-weight: 600;
+}
+
+.conditional-rendering .user-profile-display {
+  display: flex;
+  justify-content: center;
+}
+
+.conditional-rendering .user-profile {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 24px 40px;
+  min-width: 320px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.conditional-rendering .user-profile h2 {
+  color: #333;
+  margin: 0 0 16px;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.conditional-rendering .badge {
+  background: gold;
+  color: #333;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+}
+
+.conditional-rendering .user-status {
+  padding-top: 16px;
+  border-top: 1px solid #ddd;
+}
+
+.conditional-rendering .user-status p {
+  color: #555;
+  margin: 0;
+  font-size: 16px;
+}
+
+.conditional-rendering .premium-yes {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.conditional-rendering .premium-no {
+  color: #888;
+}

@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Day 3 - Custom Hooks, useRef, and React Router Basics</title>
+  <title>Day 3 - Custom Hooks, useRef, Tanstack, and React Router Basics</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
@@ -277,6 +277,31 @@
       width: 100%;
       max-width: none;
     }
+
+    .reveal .no-hscroll pre code {
+      font-size: 0.55em;
+      white-space: pre-wrap;
+      overflow-x: hidden;
+    }
+
+    .reveal .tanstack-code pre code {
+      font-size: 0.7em;
+      max-height: none;
+      overflow: hidden;
+    }
+
+    .reveal .wide-code .two-col > div:first-child {
+      flex: 2.4;
+    }
+
+    .reveal .wide-code pre {
+      margin: 0;
+    }
+
+    .reveal .wide-code pre code {
+      max-height: none;
+      line-height: 1.25;
+    }
   </style>
 </head>
 
@@ -288,7 +313,7 @@
           <div class="hero">
             <div>
               <h1>Day 3</h1>
-              <h3>Custom Hooks, useRef & React Router Basics</h3>
+              <h3>Custom Hooks, useRef, Tanstack & React Router Basics</h3>
               <p>Client-side navigation, links, params, and nested routes</p>
               <span class="badge">Navigation without reloads</span>
             </div>
@@ -319,37 +344,41 @@
         <!-- Slide 2: Syllabus -->
         <section>
           <h3>What We Cover Today</h3>
-          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; gap: 1rem; margin-top: 0.7rem;">
-            <div class="card" style="font-size: 0.78em; text-align: center">
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; gap: 1rem; margin-top: 0.7rem;">
+            <div class="card" style="font-size: 0.65em; text-align: center">
               <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">01</div>
               <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">Custom Hooks</p>
             </div>
-            <div class="card" style="font-size: 0.78em; text-align: center">
+            <div class="card" style="font-size: 0.65em; text-align: center">
               <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">02</div>
               <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">useRef</p>
             </div>
-            <div class="card" style="font-size: 0.78em; text-align: center">
+            <div class="card" style="font-size: 0.65em; text-align: center">
               <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">03</div>
+              <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">TanStack Query: useQuery, Cache, useMutation</p>
+            </div>
+            <div class="card" style="font-size: 0.65em; text-align: center">
+              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">04</div>
               <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">React Router Setup & Path Matching</p>
             </div>
-            <div class="card" style="font-size: 0.78em; text-align: center">
-              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">04</div>
+            <div class="card" style="font-size: 0.65em; text-align: center">
+              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">05</div>
               <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">Navigation with Links</p>
             </div>
-            <div class="card" style="font-size: 0.78em; text-align: center">
-              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">05</div>
+            <div class="card" style="font-size: 0.65em; text-align: center">
+              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">06</div>
               <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">URL & Query Params</p>
             </div>
-            <div class="card" style="font-size: 0.78em; text-align: center">
-              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">06</div>
+            <div class="card" style="font-size: 0.65em; text-align: center">
+              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">07</div>
               <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">Nested Routes & Outlet</p>
             </div>
-            <div class="card" style="font-size: 0.78em; text-align: center">
-              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">07</div>
+            <div class="card" style="font-size: 0.65em; text-align: center">
+              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">08</div>
               <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">🧪 Exercise: Podcast Navigator</p>
             </div>
-            <div class="card" style="font-size: 0.78em; text-align: center">
-              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">08</div>
+            <div class="card" style="font-size: 0.65em; text-align: center">
+              <div style="font-size: 1.8em; margin-bottom: 0.3rem; color: var(--accent)">09</div>
               <p style="margin: 0 0 0.2rem; color: var(--accent); font-weight: 600">Q&A / Wrap-Up</p>
             </div>
           </div>
@@ -569,6 +598,48 @@ export function useFetch(url) {
           </div>
         </section>
 
+        <!-- Slide 17a: Exercise - Extract fetch to a custom hook -->
+        <section class="carry-over-slide">
+          <h3>🧪 Exercise — Extract fetch into a custom hook</h3>
+          <p class="small-text">→ hands-on, refactoring</p>
+          <div style="text-align: left; font-size: 0.45em; margin-top: 1.5rem">
+            <div class="card" style="padding: 1.5rem; background: var(--accent-soft)">
+              <p style="margin: 0 0 0.8rem; color: var(--accent); font-weight: bold; font-size: 1.6em">
+                Starting point
+              </p>
+              <p style="margin: 0; font-size: 1.6em">
+                <code>exercises/day-2/starwars-characters/solution/StarWarsCharacters.tsx</code>
+              </p>
+            </div>
+            <ol style="margin-top: 1.5rem; font-size: 1.3em; line-height: 1.7">
+              <li>
+                Create <code>useFetchCharacters(search)</code> in its own file
+              </li>
+              <li>
+                Move the <code>characters</code> and <code>loading</code> state
+                and the <code>useEffect</code> with the async fetch into the hook
+              </li>
+              <li>
+                Return <code>{ characters, loading }</code> from the hook
+              </li>
+              <li>
+                Keep only <code>search</code> state and the JSX in the component:
+                <code>const { characters, loading } = useFetchCharacters(search)</code>
+              </li>
+              <li>
+                BONUS: make the hook generic —
+                <code>useFetch&lt;T&gt;(url)</code> returning
+                <code>{ data, loading, error }</code>
+              </li>
+            </ol>
+          </div>
+          <aside class="notes">
+            Students refactor the Day 2 Star Wars solution. The component should look
+            the same and behave the same; only the location of the fetch logic changes.
+            Compare the result with the useFetch hook from the previous slide.
+          </aside>
+        </section>
+
         <!-- Slide 17b: useRef Resources -->
         <section class="carry-over-slide">
           <h3>useRef Resources</h3>
@@ -761,7 +832,7 @@ function FocusInput() {
         </section>
 
         <!-- Slide 19b: Example - useRef for Constant Reference -->
-        <section class="carry-over-slide">
+        <section class="carry-over-slide no-hscroll wide-code">
           <h3>Example: useRef - Constant Reference</h3>
           <div class="two-col" style="margin-top: 1rem">
             <div>
@@ -844,6 +915,286 @@ function ClickCounter() {
               </p>
             </div>
           </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- TanStack Query -->
+        <!-- ============================================================ -->
+
+        <section>
+          <h2 class="slide-title">What Is a Cache?</h2>
+          <div class="image-frame" style="padding: 0.55rem;">
+            <svg class="diagram-svg" viewBox="0 0 760 250" role="img" aria-label="Fetching without a cache versus with a cache">
+              <defs>
+                <marker id="arrowhead-cache" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                  <polygon points="0 0, 10 3.5, 0 7" fill="#61dafb" />
+                </marker>
+                <marker id="arrowhead-cache-bad" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                  <polygon points="0 0, 10 3.5, 0 7" fill="#f87171" />
+                </marker>
+              </defs>
+
+              <rect x="10" y="10" width="360" height="230" rx="16" fill="#0f172a" stroke="#f87171" />
+              <text x="190" y="38" fill="#fca5a5" text-anchor="middle" font-size="18">Without cache</text>
+              <rect x="28" y="70" width="100" height="40" rx="10" fill="#1e293b" stroke="#8fb5d8" />
+              <text x="78" y="95" fill="#dbeafe" text-anchor="middle" font-size="14">Header</text>
+              <rect x="28" y="150" width="100" height="40" rx="10" fill="#1e293b" stroke="#8fb5d8" />
+              <text x="78" y="175" fill="#dbeafe" text-anchor="middle" font-size="14">Profile</text>
+              <rect x="268" y="85" width="86" height="90" rx="12" fill="#3f1d1d" stroke="#f87171" />
+              <text x="311" y="135" fill="#fecaca" text-anchor="middle" font-size="16">Server</text>
+              <path d="M130 90 L266 112" stroke="#f87171" stroke-width="3" marker-end="url(#arrowhead-cache-bad)" />
+              <path d="M130 170 L266 148" stroke="#f87171" stroke-width="3" marker-end="url(#arrowhead-cache-bad)" />
+              <text x="196" y="88" fill="#fca5a5" text-anchor="middle" font-size="12">GET /user</text>
+              <text x="196" y="186" fill="#fca5a5" text-anchor="middle" font-size="12">GET /user</text>
+              <text x="190" y="224" fill="#fecaca" text-anchor="middle" font-size="14">2 components = 2 requests, 2 waits</text>
+
+              <rect x="390" y="10" width="360" height="230" rx="16" fill="#0f172a" stroke="#4ade80" />
+              <text x="570" y="38" fill="#86efac" text-anchor="middle" font-size="18">With cache</text>
+              <rect x="408" y="70" width="100" height="40" rx="10" fill="#1e293b" stroke="#8fb5d8" />
+              <text x="458" y="95" fill="#dbeafe" text-anchor="middle" font-size="14">Header</text>
+              <rect x="408" y="150" width="100" height="40" rx="10" fill="#1e293b" stroke="#8fb5d8" />
+              <text x="458" y="175" fill="#dbeafe" text-anchor="middle" font-size="14">Profile</text>
+              <rect x="560" y="85" width="80" height="90" rx="12" fill="#082f49" stroke="#61dafb" />
+              <text x="600" y="125" fill="#d5f6ff" text-anchor="middle" font-size="16">Cache</text>
+              <text x="600" y="147" fill="#7dd3fc" text-anchor="middle" font-size="12">user = {…}</text>
+              <rect x="668" y="85" width="72" height="90" rx="12" fill="#1f2937" stroke="#8fb5d8" />
+              <text x="704" y="135" fill="#dbeafe" text-anchor="middle" font-size="16">Server</text>
+              <path d="M510 90 L558 112" stroke="#61dafb" stroke-width="3" marker-end="url(#arrowhead-cache)" />
+              <path d="M510 170 L558 148" stroke="#61dafb" stroke-width="3" marker-end="url(#arrowhead-cache)" />
+              <path d="M642 130 L666 130" stroke="#61dafb" stroke-width="3" stroke-dasharray="5 3" marker-end="url(#arrowhead-cache)" />
+              <text x="654" y="118" fill="#7dd3fc" text-anchor="middle" font-size="11">1×</text>
+              <text x="570" y="224" fill="#bbf7d0" text-anchor="middle" font-size="14">1 request, then instant reads ⚡</text>
+            </svg>
+          </div>
+          <div class="small-text">
+            <p>A <strong>cache</strong> = a saved copy of data we already fetched, kept close to the UI.</p>
+          </div>
+          <aside class="notes">
+            Start with the picture before any words. Left side: two components both need the same user. Each one
+            calls the server, so we pay for two network trips and the user waits twice.
+            Right side: the first request fills the cache. Every other component that asks for the same data reads
+            the saved copy instantly. The dashed arrow shows the server is only contacted once.
+            Then read the definition: a cache is a saved copy of data we already fetched, kept close to the UI.
+          </aside>
+        </section>
+
+        <section>
+          <h2 class="slide-title">Why Client Apps Need a Cache</h2>
+          <ul>
+            <li><strong>Speed</strong> - show saved data instantly instead of a spinner</li>
+            <li><strong>Fewer requests</strong> - the same data is fetched once, not per component</li>
+            <li><strong>Less load</strong> - lighter on the server, the network, and mobile data</li>
+            <li><strong>Better UX</strong> - go back to a page and it is already there</li>
+          </ul>
+          <div class="card" style="margin-top: 1rem; text-align: left; font-size: 0.7em;">
+            <strong>The catch:</strong> cached data can become <span class="highlight">stale</span>.
+            A cache must know <em>when to refetch</em> and <em>when to throw data away</em>.
+          </div>
+          <aside class="notes">
+            Walk through the four benefits in one sentence each. Relate to the Yad2 or product list example:
+            navigating away and back should not show a spinner again.
+            Then name the hard part: cache invalidation. Cached data can be out of date, so someone must decide
+            when to refetch and when to discard it. Writing this by hand with useEffect and useState is error-prone,
+            which is exactly what TanStack Query solves on the next slide.
+          </aside>
+        </section>
+
+        <section>
+          <h2 class="slide-title">TanStack Query</h2>
+          <p>The industry standard for data fetching in React</p>
+          <ul>
+            <li><code>useQuery</code> - read data and track loading / error state</li>
+            <li>Cache - results are stored and shared by <code>queryKey</code></li>
+            <li><code>useMutation</code> - create, update, and delete data</li>
+          </ul>
+          <div class="small-text">
+            <p>Replaces hand-written <code>useEffect</code> + <code>useState</code> fetching code.</p>
+          </div>
+          <aside class="notes">
+            Connect this to the useFetch custom hook from earlier: TanStack Query is the production-grade version of
+            that idea.
+            Explain that it manages loading, error, caching, and refetching so we do not write that logic by hand.
+            Introduce the three pieces for this chapter: useQuery, the cache, and useMutation.
+          </aside>
+        </section>
+
+        <section class="no-hscroll tanstack-code">
+          <h2 class="slide-title">The Old Way</h2>
+          <pre><code class="tsx">
+function Products() {
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() =&gt; {
+    fetch("/api/products")
+      .then((res) =&gt; res.json())
+      .then((data) =&gt; setProducts(data))
+      .catch((err) =&gt; setError(err))
+      .finally(() =&gt; setIsLoading(false));
+  }, []);
+  if (isLoading) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (error) return &lt;p&gt;Error: {error.message}&lt;/p&gt;;
+  return &lt;ProductList products={products} /&gt;;
+}
+                    </code></pre>
+          <div class="small-text">
+            <ul>
+              <li><code>useEffect</code> + <code>useState</code>: 3 states and 1 effect just to read data.</li>
+              <li>No cache, no retries, no refetching, no request de-duplication.</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            Show the code students already know from Day 2 and the useFetch hook.
+            Count the pieces: three useState calls, one useEffect, manual loading and error handling.
+            Point out what is still missing: if two components render this, two requests are sent; if we leave the
+            page and come back, we fetch again and show the spinner again; and there is no protection against stale
+            responses arriving out of order.
+            This is the pain TanStack Query removes. Keep this slide in mind when we see useQuery in a few slides.
+          </aside>
+        </section>
+
+        <section class="no-hscroll tanstack-code">
+          <h2 class="slide-title">The New Way</h2>
+          <pre><code class="tsx">
+function Products() {
+  const { data, isPending, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: () =&gt; fetch("/api/products").then((res) =&gt; res.json()),
+  });
+  if (isPending) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (error) return &lt;p&gt;Error: {error.message}&lt;/p&gt;;
+  return &lt;ProductList products={data} /&gt;;
+}
+                    </code></pre>
+          <div class="small-text">
+            <ul>
+              <li>Same task: <strong>1 hook</strong> instead of 3 states and 1 effect.</li>
+              <li>Cache, retries, refetching, and de-duplication come built in.</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            Put this next to the previous slide: same component, same loading and error handling, same output.
+            The three useState calls and the useEffect are replaced by one useQuery call.
+            queryKey is the cache address, queryFn is how to fetch when the data is not cached.
+            Because of the cache, a second component using the same key does not trigger a second request, and
+            coming back to this page shows the saved data immediately.
+            Next we set up the QueryClientProvider that makes this work, then look at useQuery in detail.
+          </aside>
+        </section>
+
+        <section class="no-hscroll tanstack-code">
+          <h2 class="slide-title">Setting Up TanStack Query</h2>
+          <pre><code class="tsx">
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
+function App() {
+  return (
+    &lt;QueryClientProvider client={queryClient}&gt;
+      &lt;Products /&gt;
+    &lt;/QueryClientProvider&gt;
+  );
+}
+                    </code></pre>
+          <div class="small-text">
+            <p>Install with <code>pnpm add @tanstack/react-query</code></p>
+            <p><code>QueryClient</code> owns the cache</p>
+            <p><code>QueryClientProvider</code> makes it available to every component</p>
+          </div>
+          <aside class="notes">
+            Show the one-time setup: create a single QueryClient and wrap the app with QueryClientProvider.
+            Stress that there should be one client for the whole app, created outside the component so it is not
+            recreated on every render.
+          </aside>
+        </section>
+
+        <section class="no-hscroll tanstack-code">
+          <h2 class="slide-title">useQuery</h2>
+          <pre><code class="tsx">
+import { useQuery } from "@tanstack/react-query";
+
+function Products() {
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: () =&gt; fetch("/api/products").then((res) =&gt; res.json()),
+  });
+
+  if (isPending) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (isError) return &lt;p&gt;Error: {error.message}&lt;/p&gt;;
+
+  return &lt;ProductList products={data} /&gt;;
+}
+                    </code></pre>
+          <div class="small-text">
+            <ul>
+              <li><code>queryKey</code> uniquely identifies the data in the cache.</li>
+              <li><code>queryFn</code> returns a promise that resolves with the data.</li>
+              <li>The hook returns <code>data</code>, <code>isPending</code>, <code>isError</code>, and more.</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            Compare with the useFetch hook: no useEffect, no manual loading flag, no manual error state.
+            Explain queryKey as the cache address and queryFn as how to get the data when it is not cached.
+            Mention that a key with variables, such as ["product", id], gives each product its own cache entry.
+          </aside>
+        </section>
+
+        <section>
+          <h2 class="slide-title">The Query Cache</h2>
+          <pre><code class="tsx">
+useQuery({
+  queryKey: ["product", id],
+  queryFn: () =&gt; fetchProduct(id),
+  staleTime: 60_000, // fresh for 1 minute
+  gcTime: 5 * 60_000, // kept in cache for 5 minutes after unused
+});
+                    </code></pre>
+          <div class="small-text">
+            <ul>
+              <li>Same <code>queryKey</code> in two components = one request, shared result.</li>
+              <li><strong>Fresh</strong> data is served from cache without refetching.</li>
+              <li><strong>Stale</strong> data is shown instantly, then refetched in the background.</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            Explain the cache lifecycle: fresh, stale, and garbage collected.
+            By default data is stale immediately, so TanStack Query refetches on mount, window focus, and reconnect.
+            staleTime controls how long data counts as fresh; gcTime controls how long unused data stays in memory.
+            Demo idea: navigate away and back to show the cached data appearing instantly.
+          </aside>
+        </section>
+
+        <section class="no-hscroll tanstack-code">
+          <h2 class="slide-title">useMutation</h2>
+          <pre><code class="tsx">
+const queryClient = useQueryClient();
+
+const addProduct = useMutation({
+  mutationFn: (newProduct) =&gt;
+    fetch("/api/products", {
+      method: "POST",
+      body: JSON.stringify(newProduct),
+    }),
+  onSuccess: () =&gt; {
+    queryClient.invalidateQueries({ queryKey: ["products"] });
+  },
+});
+
+&lt;button onClick={() =&gt; addProduct.mutate({ name: "Mug" })}&gt;Add&lt;/button&gt;
+                    </code></pre>
+          <div class="small-text">
+            <ul>
+              <li><code>useMutation</code> is for writes: POST, PUT, PATCH, DELETE.</li>
+              <li><code>mutate()</code> triggers it; <code>isPending</code> tracks progress.</li>
+              <li><code>invalidateQueries</code> marks cached data stale so the list refetches.</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            Contrast with useQuery: queries read and run automatically, mutations write and run on demand.
+            The key pattern is invalidateQueries in onSuccess, which keeps the cached list in sync after a change.
+            Mention optimistic updates as a next step but do not go deep.
+          </aside>
         </section>
 
         <!-- ============================================================ -->
