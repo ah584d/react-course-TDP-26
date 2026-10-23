@@ -30,6 +30,35 @@
   overflow-wrap: anywhere;
 }
 
+.cart-state-demo .cart-state-source h2 {
+  margin-top: 24px;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+
+.cart-state-demo .cart-state-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.cart-state-demo .cart-state-tabs button {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.cart-state-demo .cart-state-tabs button[aria-selected="true"] {
+  color: #101826;
+  background: #61dafb;
+}
+
+.cart-state-demo .cart-state-preview > section + section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #475569;
+}
+
 .cart-state-demo button {
   padding: 12px 20px;
   border: 1px solid #61dafb;

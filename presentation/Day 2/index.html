@@ -101,62 +101,6 @@
         flex-direction: column;
         justify-content: center;
       }
-      .state-topic h3 {
-        margin: 0;
-        font-size: 44px;
-        line-height: 52px;
-      }
-      .state-content {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        text-align: left;
-        font-size: 26px;
-        line-height: 1.4;
-      }
-      .state-content p {
-        margin: 0;
-      }
-      .state-content ul {
-        display: block;
-        margin: 12px 0 0 28px;
-        font-size: 26px;
-      }
-      .state-columns {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        gap: 20px;
-      }
-      .state-card {
-        min-width: 0;
-        padding: 18px;
-        border: 1px solid var(--surface-border);
-        border-radius: 12px;
-        background: var(--surface);
-      }
-      .state-topic pre {
-        margin: 0;
-        overflow: hidden;
-      }
-      .state-topic pre code {
-        max-height: none;
-        border-radius: inherit;
-        font-size: 18px;
-        line-height: 23px;
-      }
-      .state-topic p code,
-      .state-topic li code,
-      .state-topic strong code {
-        font-size: inherit;
-      }
-      .state-topic .state-diagram {
-        display: block;
-        margin-top: 12px;
-        font-family: monospace;
-        font-size: 23px;
-        line-height: 1.6;
-        white-space: pre-wrap;
-      }
       @media (max-width: 900px) {
         .two-col {
           display: block;
@@ -225,7 +169,7 @@
                     line-height: 1.05;
                   "
                 >
-                  State, Events, Lists<br />and
+                  Lists, Conditional Rendering<br />and
                   <span style="color: var(--accent)">Effects</span>
                 </h1>
                 <p
@@ -340,7 +284,7 @@
                     font-weight: 600;
                   "
                 >
-                  Why Hooks & useState
+                  Why Hooks, useEffect & Cleanup
                 </p>
               </div>
               <div class="card" style="font-size: 0.78em; text-align: center">
@@ -352,66 +296,6 @@
                   "
                 >
                   05
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  Immutability, Shared & Derived State
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  06
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  Functional Updates & Batching
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  08
-                </div>
-                <p
-                  style="
-                    margin: 0 0 0.2rem;
-                    color: var(--accent);
-                    font-weight: 600;
-                  "
-                >
-                  useEffect & Cleanup
-                </p>
-              </div>
-              <div class="card" style="font-size: 0.78em; text-align: center">
-                <div
-                  style="
-                    font-size: 1.8em;
-                    margin-bottom: 0.3rem;
-                    color: var(--accent);
-                  "
-                >
-                  09
                 </div>
                 <p
                   style="
@@ -1721,6 +1605,8 @@ function UserProfile() {
               </ol>
             </aside>
           </section>
+
+
           <section>
             <h3>Why Hooks Exist ?</h3>
             <div style="text-align: left; font-size: 0.45em; margin-top: 2rem">
@@ -1760,238 +1646,8 @@ function UserProfile() {
                 </p>
               </div>
             </div>
-          </section>
-
-          <section id="managing-state" class="state-topic">
-            <div class="state-content">
-              <h3>Managing State Correctly</h3>
-              <p>Three questions about our online store:</p>
-              <div class="state-card">
-                <ul style="margin-top:0;">
-                  <li>How do we update objects and arrays safely?</li>
-                  <li>Where should state shared by two components live?</li>
-                  <li>Which values should we calculate instead of store?</li>
-                </ul>
-              </div>
-              <a href="/?target=day-2/demo/cart-state" target="_blank" rel="noopener noreferrer" class="highlight">Open Cart State Demo</a>
-              <p style="font-size:22px;"><code>demo/day-2/cart-state/Cart.tsx</code></p>
-              <p class="fragment">Predict first: what will the cart badge show after clicking Add to Cart?</p>
-            </div>
             <aside class="notes">
-              Instructor-led section, about 20-25 minutes; no student exercise. This named slide is also the optional entry point from Day 1. Begin with the wrong-first cart demo on the same course server. Show the source and ask for a prediction before clicking. The badge stays at zero even though cart.push modifies the array and the setter is called. Explain the cause on the next slide, then return to the demo and fix it live. If used during Day 1, return via the link on the batching recap instead of continuing into effects.
-            </aside>
-          </section>
-
-          <section class="state-topic">
-            <div class="state-content">
-              <h3>Why Didn't the Cart Update?</h3>
-              <div class="state-columns">
-                <div class="state-card">
-                  <strong>We called the setter...</strong>
-                  <pre style="margin-top:12px;"><code class="ts">cart.push(product);
-setCart(cart);</code></pre>
-                  <p style="margin-top:12px;">...but passed back the <strong class="highlight">same array</strong>.</p>
-                </div>
-                <div class="fragment state-card" data-fragment-index="0">
-                  <strong class="highlight">React compares with Object.is</strong>
-                  <p style="margin-top:12px;">The same array reference compares equal, so React can skip the update.</p>
-                  <p style="margin-top:12px;">Mutation also changes data that previous render snapshots may still reference.</p>
-                </div>
-              </div>
-              <div class="fragment" data-fragment-index="1">
-                <strong class="highlight">Create the next version instead:</strong>
-                <pre style="margin-top:12px;"><code class="ts">setCart(previousCart =&gt; [...previousCart, product]);</code></pre>
-              </div>
-              <p class="fragment" data-fragment-index="1">Treat existing state as read-only. Give React the updated copy.</p>
-            </div>
-            <aside class="notes">
-              Distinguish this from Day 1's local-variable counter: here we did call the setter, but supplied the same array reference after mutating it. React compares the next and previous state using Object.is, not a deep comparison of array contents. Do not claim React can never call the component again; unchanged state can cause it to skip committing an update. Mutation also corrupts data shared by old snapshots or other components.
-              Reveal the cause first, then the fix. Return to Cart.tsx and replace both handler statements with the single functional setter shown. Save, then reload to clear products already pushed into the old array; Fast Refresh can preserve mutated state. Click again to confirm that the badge increases. Do not introduce a force-render button. Repeated additions represent product units, so cart.length is the badge count.
-            </aside>
-          </section>
-
-          <section class="state-topic">
-            <div class="state-content">
-              <h3>Updating Objects Without Mutation</h3>
-              <pre><code class="ts">type Product = { id: number; name: string; price: number };
-const [product, setProduct] = useState&lt;Product&gt;({
-  id: 1, name: 'Coffee Mug', price: 12
-});</code></pre>
-              <div class="state-columns">
-                <div class="state-card">
-                  <strong style="color:#f87171;">❌ Changes the existing object</strong>
-                  <pre style="margin-top:12px;"><code class="ts">product.price = 15;
-setProduct(product);</code></pre>
-                </div>
-                <div class="fragment state-card">
-                  <strong style="color:#4ade80;">✅ Creates an updated copy</strong>
-                  <pre style="margin-top:12px;"><code class="ts">setProduct(previousProduct =&gt; ({
-  ...previousProduct,
-  price: 15
-}));</code></pre>
-                </div>
-              </div>
-              <p class="fragment">Copy the other properties, then override the changed property. Existing state stays unchanged.</p>
-              <p class="fragment" style="font-size:24px;"><strong class="highlight">Spread is shallow:</strong> nested objects are still shared. Copy each level you change.</p>
-            </div>
-            <aside class="notes">
-              The type declaration describes one product; the hook belongs inside its component. Spread copies the object's own enumerable properties into a new object. Putting price after the spread overrides that property while retaining id and name. React receives a different reference, and prior snapshots retain the old product. This is not deep cloning. For nested state, copy each object along the changed path. Mutating a freshly created, unshared object while constructing the next state is different from mutating existing state; the rule is to treat objects already in state as read-only.
-            </aside>
-          </section>
-
-          <section class="state-topic">
-            <div class="state-content">
-              <h3>Updating Arrays Without Mutation</h3>
-              <p>Our cart holds <code>Product[]</code>. Create a new array for each update.</p>
-              <pre><code class="ts">// Add a product
-setCart(previousCart =&gt; [...previousCart, product]);
-
-// Remove a product
-setCart(previousCart =&gt; previousCart.filter(
-  product =&gt; product.id !== productId
-));
-
-// Update matching products
-setCart(previousCart =&gt; previousCart.map(product =&gt;
-  product.id === productId
-    ? { ...product, price: 15 }
-    : product
-));</code></pre>
-              <p class="fragment" style="font-size:24px;"><strong class="highlight">A new array is not enough if you mutate an object inside it.</strong> Here, <code>map</code> creates a new array and spread copies each changed product.</p>
-              <p class="fragment" style="font-size:24px;">Avoid <code>push</code>, <code>splice</code>, <code>sort</code>, and <code>reverse</code> directly on state arrays.</p>
-            </div>
-            <aside class="notes">
-              Product has the id, name, and price fields from the previous slide. product is the product being added; productId identifies products to remove or update. These snippets are separate handler operations, not three calls to perform together. filter removes matching products; map retains unchanged product objects and creates new objects only for matches. Merely spreading an array then assigning nextCart[0].price would still mutate a shared product. Array-copying methods do not make every nested operation immutable automatically. Sorting a fresh copy is fine; sorting the original state array is not. There is no need to deep-clone every unchanged object.
-            </aside>
-          </section>
-
-          <section class="state-topic">
-            <div class="state-content">
-              <h3>Sharing State Between Siblings</h3>
-              <p>Adding a product should update a badge in another component.</p>
-              <div class="state-card">
-                <strong>Two local states are two separate carts:</strong>
-                <code class="state-diagram">Store
-  |-- ProductList owns cart A
-  `-- CartSummary owns cart B</code>
-              </div>
-              <div class="fragment state-card">
-                <p>Adding to cart A does not update cart B. Giving both variables the name <code>cart</code> does not connect them.</p>
-              </div>
-              <p class="fragment"><strong class="highlight">Lift state up:</strong> move the shared cart to the closest common parent, <code>Store</code>.</p>
-            </div>
-            <aside class="notes">
-              These are sibling components, unlike the earlier controlled-input example where one component owned the value and supplied it to an HTML input. Independent local state is useful when values should be independent; it is the wrong ownership for one shared cart. Do not synchronize two cart copies using effects. Choose one source of truth in the closest shared ancestor, not automatically the application root. This is a display-only teaching example, not another coding exercise.
-            </aside>
-          </section>
-
-          <section class="state-topic">
-            <div class="state-content">
-              <h3>One Owner, Values and Callbacks</h3>
-              <div class="state-columns" style="grid-template-columns:minmax(0, 1.3fr) minmax(0, 1fr);">
-                <pre><code class="tsx">function Store() {
-  const [cart, setCart] =
-    useState&lt;Product[]&gt;([]);
-
-  function addToCart(product: Product) {
-    setCart(previous =&gt;
-      [...previous, product]);
-  }
-
-  return (
-    &lt;&gt;
-      &lt;ProductList
-        onAddToCart={addToCart} /&gt;
-      &lt;CartSummary cart={cart} /&gt;
-    &lt;/&gt;
-  );
-}</code></pre>
-                <div class="state-card">
-                  <strong class="highlight">Store owns cart</strong>
-                  <code class="state-diagram">Store
-  |-- ProductList
-  `-- CartSummary</code>
-                  <p style="margin-top:12px;"><code>ProductList</code> receives a callback to request an addition.</p>
-                  <p style="margin-top:12px;"><code>CartSummary</code> receives the current cart to display.</p>
-                </div>
-              </div>
-              <p class="fragment">Values flow down through props. Children call supplied callbacks to request changes.</p>
-              <p class="fragment" style="font-size:24px;">No second cart state, no synchronization effect, no state library needed.</p>
-            </div>
-            <aside class="notes">
-              Product is the typed product from the preceding slides. ProductList's props type includes onAddToCart: (product: Product) => void. Its Add to Cart handler calls props.onAddToCart(product); it does not own another cart. CartSummary's props type includes cart: Product[], and it can display props.cart.length. The parent defines how the update happens. Passing a domain-specific callback instead of the setter keeps that responsibility clear. This is normal one-way data flow, not a child modifying its parent's variable directly. Keep unrelated state local to whichever component needs it.
-            </aside>
-          </section>
-
-          <section class="state-topic">
-            <div class="state-content">
-              <h3>Derived State: Don't Store It Twice</h3>
-              <p>We store both the cart and its count. What happens when a product is removed?</p>
-              <div class="state-columns" style="grid-template-columns:minmax(0, 1.35fr) minmax(0, 1fr);">
-                <pre><code class="ts">const [cart, setCart] =
-  useState&lt;Product[]&gt;([]);
-const [cartCount, setCartCount] =
-  useState&lt;number&gt;(0);
-
-function addToCart(product: Product) {
-  setCart(previous =&gt; [...previous, product]);
-  setCartCount(previous =&gt; previous + 1);
-}
-
-function removeFromCart(productId: number) {
-  setCart(previous =&gt; previous.filter(
-    product =&gt; product.id !== productId
-  ));
-}</code></pre>
-                <div class="state-card">
-                  <div class="fragment" data-fragment-index="0">
-                    <strong style="color:#f87171;">❌ The badge is out of sync</strong>
-                    <p style="margin-top:12px;">Removal updates the cart, but not the stored count.</p>
-                  </div>
-                  <div class="fragment" data-fragment-index="1" style="margin-top:20px;">
-                    <strong style="color:#4ade80;">✅ Calculate it during rendering</strong>
-                    <pre style="margin-top:12px;"><code class="ts">const cartCount = cart.length;</code></pre>
-                    <p style="margin-top:12px;">Keep only <code>cart</code> in state. The count always matches.</p>
-                  </div>
-                </div>
-              </div>
-              <p class="fragment" data-fragment-index="1" style="font-size:24px;">If current props or state can determine a value, calculate it instead. Examples: counts, totals, filtered lists, and form validity.</p>
-            </div>
-            <aside class="notes">
-              Ask students to predict before revealing the mismatch. After adding two products, removing one updates cart but leaves cartCount at two. Keeping both synchronized means every update path must remember both setters. On the second advance, remove the cartCount hook and every setCartCount call; derive cartCount from cart.length during each render. Do not introduce an effect to synchronize redundant state. Derived values are recalculated when their component renders, not independent state. For carts with per-line quantities, derive the unit count by summing quantities rather than using array length. There is no need for useMemo for this tiny calculation. Values such as an explicitly captured historical snapshot may legitimately be independent state; this example is the current cart count, not history.
-            </aside>
-          </section>
-
-          <section class="state-topic" id="state-batching-recap">
-            <div class="state-content">
-              <h3>Recap: Snapshots and Batching</h3>
-              <div class="state-columns">
-                <div class="state-card">
-                  <strong class="highlight">Snapshot: which value do we read?</strong>
-                  <p style="margin-top:12px;">The handler reads state from the render that created it. Calling a setter does not change that value.</p>
-                </div>
-                <div class="state-card">
-                  <strong class="highlight">Batching: when does the UI update?</strong>
-                  <p style="margin-top:12px;">React finishes the synchronous handler code, then processes its queued updates together.</p>
-                </div>
-              </div>
-              <div class="state-columns">
-                <div>
-                  <pre><code class="ts">// Starting at count = 0
-setCount(count + 1);
-setCount(count + 1);</code></pre>
-                  <p class="fragment" data-fragment-index="0" style="margin-top:12px;">Both request <code>1</code>. Final count: <code>1</code>.</p>
-                </div>
-                <div class="fragment" data-fragment-index="1">
-                  <pre><code class="ts">setCount(previous =&gt; previous + 1);
-setCount(previous =&gt; previous + 1);</code></pre>
-                  <p style="margin-top:12px;">Each uses the previous pending result. Final count: <code>2</code>.</p>
-                </div>
-              </div>
-              <p style="font-size:22px;"><a href="/presentation/Day%201/index.html#/state-extension" class="highlight">Visiting from Day 1? Return to Day 1</a></p>
-            </div>
-            <aside class="notes">
-              This is a quick recap if students have already seen Day 1's snapshot, batching, and functional-update sequence. Keep the ideas distinct: captured values explain why a handler still reads its original count; batching groups multiple updates rather than committing a half-updated UI. Ask for the left example's result before the first reveal, then show the functional solution on the next advance. Direct setters are not inherently wrong: one increment or setting a known replacement value is valid. Separate intentional clicks are handled separately. React does not wait for an async handler's Promise to resolve; an await is not a guarantee that the whole handler forms one batch. Functional updaters must be pure. If teaching this section as the optional Day 1 extension, return now instead of introducing useEffect. During Day 2, continue into effects.
+              Day 1 introduced useState as a built-in Hook and covered the Rules of Hooks. Keep the historical background and deeper discussion here in Day 2, as a bridge into useEffect. The state-update patterns remain in Day 1; this slide explains why Hooks exist more generally.
             </aside>
           </section>
 

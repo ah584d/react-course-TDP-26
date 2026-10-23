@@ -20,14 +20,14 @@ export default defineConfig([
     },
   },
   {
-    files: ['code/day_1/src/Counter.tsx'],
+    files: ['demo/day-1/changing-values/Counter.tsx'],
     rules: {
       // This live demo intentionally starts with a mutable local counter.
       'react-hooks/immutability': 'off',
     },
   },
   {
-    files: ['demo/day-2/cart-state/Cart.tsx'],
+    files: ['demo/day-1/cart-state/Cart.tsx'],
     rules: {
       // This instructor demo intentionally starts by mutating array state.
       'react-hooks/immutability': 'off',

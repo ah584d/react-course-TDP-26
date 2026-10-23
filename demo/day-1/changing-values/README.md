@@ -13,11 +13,11 @@ Use the URL printed by Vite if it selects a different port.
 The presentation links to this same target on the same server; no second
 server is needed.
 The counter starts intentionally broken.
-The read-only panel imports the actual [Counter.tsx](./src/Counter.tsx) source;
+The read-only panel imports the actual [Counter.tsx](./Counter.tsx) source;
 save that file in VS Code to update both the example and the panel.
-The [App.tsx](./src/App.tsx) shell is not displayed in the panel.
-The launcher registration lives in
-[entry.tsx](../../demo/day-1/changing-values/entry.tsx); it reuses this shell.
+The [ChangingValuesDemo.tsx](./ChangingValuesDemo.tsx) shell is not displayed
+in the panel. The course target registration lives alongside it in
+[entry.tsx](./entry.tsx). There is no separate standalone app or server.
 
 ## Live teaching flow
 
@@ -58,5 +58,5 @@ From the repository root:
 
 ```sh
 npm run build
-npm exec eslint -- code/day_1/src demo/day-1/changing-values
+npm exec eslint -- demo/day-1/changing-values
 ```
