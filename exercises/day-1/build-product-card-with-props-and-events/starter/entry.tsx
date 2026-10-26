@@ -4,7 +4,7 @@ import Preview from './Preview'
 
 export { meta }
 
-export default function BuildProductCardWithPropStarter() {
+export default function BuildProductCardWithPropsAndEventsStarter() {
   return (
     <div className="lesson-surface">
       <Preview />
