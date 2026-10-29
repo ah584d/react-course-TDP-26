@@ -155,8 +155,6 @@ function UseQueryDemo() {
           ? "Same queryKey in both components = one request. Go back to a character you already loaded: no new request at all."
           : "Each component runs its own useEffect + fetch = two requests per character, every time you switch."}
         {" "}Open the Network tab to see the same thing.
-        In dev, StrictMode may also show a cancelled duplicate in the Network
-        tab for classic fetch.
       </p>
     </div>
   );

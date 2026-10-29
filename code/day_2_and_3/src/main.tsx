@@ -1,8 +1,8 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App.tsx";
+import StrictLayout from "./StrictLayout.tsx";
 import KeysExample from "./pages/KeysExample.tsx";
 import ConditionalExample from "./pages/ConditionalExample.tsx";
 import UseEffectClock from "./pages/UseEffectClock.tsx";
@@ -15,10 +15,11 @@ import ReconciliationDemo from "./pages/ReconciliationDemo.tsx";
 import StarWarsCharacters from "./pages/StarWarsCharacters.tsx";
 import UseQueryDemo from "./pages/UseQueryDemo.tsx";
 
+// StrictMode stays on for every page except /usequery: see StrictLayout.tsx.
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Routes>
+  <BrowserRouter>
+    <Routes>
+      <Route element={<StrictLayout />}>
         <Route path="/" element={<App />} />
         <Route path="/keys" element={<KeysExample />} />
         <Route path="/conditional" element={<ConditionalExample />} />
@@ -30,8 +31,8 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/useref-counter" element={<UseRefCounter />} />
         <Route path="/reconciliation" element={<ReconciliationDemo />} />
         <Route path="/starwars" element={<StarWarsCharacters />} />
-        <Route path="/usequery" element={<UseQueryDemo />} />
-      </Routes>
-    </BrowserRouter>
-  </StrictMode>,
+      </Route>
+      <Route path="/usequery" element={<UseQueryDemo />} />
+    </Routes>
+  </BrowserRouter>,
 );

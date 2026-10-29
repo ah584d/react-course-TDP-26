@@ -25,8 +25,8 @@ function emit() {
 }
 
 // Every HTTP request goes through here, so the page can show exactly how many were sent.
-// A request is logged once its response arrives; aborted requests (e.g. the StrictMode
-// double effect in dev) are never logged.
+// A request is logged once its response arrives; aborted requests (e.g. the user switches
+// character before the response comes back) are never logged.
 export async function fetchPerson(
   personId: number,
   source: string,
