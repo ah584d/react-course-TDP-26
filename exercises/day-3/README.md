@@ -1,5 +1,17 @@
 # Day 3 Exercises
 
+## useRef
+
+### Clear Input
+
+**File to edit:** [use-ref-clear-input/starter/QuickNote.tsx](use-ref-clear-input/starter/QuickNote.tsx)
+
+**Tasks:**
+
+1. Create `inputRef` with `useRef<HTMLInputElement>(null)` and attach it to the input with `ref={inputRef}`.
+2. In `handleClear`, set `inputRef.current.value = ''` and call `inputRef.current.focus()`.
+3. Check that after clicking **Clear** you can keep typing without clicking the input.
+
 ## Morning: React Router Basics
 
 ### Podcast Navigator

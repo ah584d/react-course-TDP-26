@@ -921,6 +921,28 @@ function ClickCounter() {
         <!-- TanStack Query -->
         <!-- ============================================================ -->
 
+        <!-- Exercise: useRef -->
+        <section>
+          <h3>🧪 Exercise — useRef</h3>
+          <p class="small-text">→ live coding / hands-on</p>
+
+          <div class="card" style="margin-top: 1rem">
+            <p style="font-size: 0.7em">⏱️ Time: 10 minutes</p>
+            <p style="font-size: 0.7em">Make the Clear button empty the input and focus it again, using a ref to the DOM element.</p>
+          </div>
+          <p class="small-text" style="margin-top: 1rem">
+            <a href="http://localhost:5173/?target=day-3/exercises/use-ref-clear-input/starter" target="_blank" style="color:var(--accent)">Open Exercise</a>
+            &nbsp;|&nbsp;
+            <a href="http://localhost:5173/?target=day-3/exercises/use-ref-clear-input/solution" target="_blank" style="color:var(--accent)">Open Solution</a>
+          </p>
+          <aside class="notes">
+            Students edit QuickNote.tsx: create inputRef with useRef, attach it with ref={inputRef}, then in handleClear
+            set inputRef.current.value = "" and call inputRef.current.focus(). No useState needed.
+            Exercise: http://localhost:5173/?target=day-3/exercises/use-ref-clear-input/starter
+            Solution: http://localhost:5173/?target=day-3/exercises/use-ref-clear-input/solution
+          </aside>
+        </section>
+
         <section>
           <h2 class="slide-title">What Is a Cache?</h2>
           <div class="image-frame" style="padding: 0.55rem;">
@@ -1217,6 +1239,38 @@ const addProduct = useMutation({
             Contrast with useQuery: queries read and run automatically, mutations write and run on demand.
             The key pattern is invalidateQueries in onSuccess, which keeps the cached list in sync after a change.
             Mention optimistic updates as a next step but do not go deep.
+            Teacher demo (useMutation + invalidateQueries): code/day_2_and_3 at /usemutation.
+          </aside>
+        </section>
+
+        <section class="no-hscroll tanstack-code">
+          <h2 class="slide-title">useMutation: Live Example</h2>
+          <pre><code class="tsx">
+const client = useQueryClient();
+const todosQuery = useQuery({ queryKey: ["todos"], queryFn: fetchTodos });
+
+const add = useMutation({
+  mutationFn: addTodo,
+  onSuccess: () =&gt; {
+    client.invalidateQueries({ queryKey: ["todos"] });
+  },
+});
+
+&lt;button onClick={() =&gt; add.mutate(title)} disabled={add.isPending}&gt;
+  {add.isPending ? "Adding..." : "Add"}
+&lt;/button&gt;
+{add.isError &amp;&amp; &lt;p&gt;{add.error.message}&lt;/p&gt;}
+                    </code></pre>
+          <div class="small-text">
+            <ul>
+              <li><code>isPending</code>, <code>isError</code>, <code>error</code> track the write, like useQuery.</li>
+              <li>After success, the <code>todos</code> query refetches and the list updates.</li>
+            </ul>
+          </div>
+          <aside class="notes">
+            Live demo: code/day_2_and_3 at /usemutation. Add a todo and watch the button show Adding..., then the list
+            refresh. Type a title containing "fail" to show add.isError. Delete a todo to show a second mutation
+            invalidating the same query key.
           </aside>
         </section>
 

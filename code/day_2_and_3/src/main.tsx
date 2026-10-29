@@ -14,6 +14,7 @@ import UseRefCounter from "./pages/UseRefCounter.tsx";
 import ReconciliationDemo from "./pages/ReconciliationDemo.tsx";
 import StarWarsCharacters from "./pages/StarWarsCharacters.tsx";
 import UseQueryDemo from "./pages/UseQueryDemo.tsx";
+import UseMutationDemo from "./pages/UseMutationDemo.tsx";
 
 // StrictMode stays on for every page except /usequery: see StrictLayout.tsx.
 createRoot(document.getElementById("root")!).render(
@@ -31,6 +32,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/useref-counter" element={<UseRefCounter />} />
         <Route path="/reconciliation" element={<ReconciliationDemo />} />
         <Route path="/starwars" element={<StarWarsCharacters />} />
+        <Route path="/usemutation" element={<UseMutationDemo />} />
       </Route>
       <Route path="/usequery" element={<UseQueryDemo />} />
     </Routes>
