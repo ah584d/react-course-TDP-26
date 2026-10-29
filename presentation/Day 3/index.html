@@ -924,7 +924,7 @@ function ClickCounter() {
         <section>
           <h2 class="slide-title">What Is a Cache?</h2>
           <div class="image-frame" style="padding: 0.55rem;">
-            <svg class="diagram-svg" viewBox="0 0 760 250" role="img" aria-label="Fetching without a cache versus with a cache">
+            <svg class="diagram-svg" viewBox="0 0 760 280" role="img" aria-label="Fetching without a cache versus with a cache">
               <defs>
                 <marker id="arrowhead-cache" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
                   <polygon points="0 0, 10 3.5, 0 7" fill="#61dafb" />
@@ -934,26 +934,30 @@ function ClickCounter() {
                 </marker>
               </defs>
 
-              <rect x="10" y="10" width="360" height="230" rx="16" fill="#0f172a" stroke="#f87171" />
+              <rect x="10" y="10" width="360" height="260" rx="16" fill="#0f172a" stroke="#f87171" />
               <text x="190" y="38" fill="#fca5a5" text-anchor="middle" font-size="18">Without cache</text>
               <rect x="28" y="70" width="100" height="40" rx="10" fill="#1e293b" stroke="#8fb5d8" />
               <text x="78" y="95" fill="#dbeafe" text-anchor="middle" font-size="14">Header</text>
+              <text x="78" y="128" fill="#94a3b8" text-anchor="middle" font-size="11">shows user name</text>
               <rect x="28" y="150" width="100" height="40" rx="10" fill="#1e293b" stroke="#8fb5d8" />
               <text x="78" y="175" fill="#dbeafe" text-anchor="middle" font-size="14">Profile</text>
+              <text x="78" y="208" fill="#94a3b8" text-anchor="middle" font-size="11">shows full user profile</text>
               <rect x="268" y="85" width="86" height="90" rx="12" fill="#3f1d1d" stroke="#f87171" />
               <text x="311" y="135" fill="#fecaca" text-anchor="middle" font-size="16">Server</text>
               <path d="M130 90 L266 112" stroke="#f87171" stroke-width="3" marker-end="url(#arrowhead-cache-bad)" />
               <path d="M130 170 L266 148" stroke="#f87171" stroke-width="3" marker-end="url(#arrowhead-cache-bad)" />
               <text x="196" y="88" fill="#fca5a5" text-anchor="middle" font-size="12">GET /user</text>
               <text x="196" y="186" fill="#fca5a5" text-anchor="middle" font-size="12">GET /user</text>
-              <text x="190" y="224" fill="#fecaca" text-anchor="middle" font-size="14">2 components = 2 requests, 2 waits</text>
+              <text x="190" y="252" fill="#fecaca" text-anchor="middle" font-size="14">2 components = 2 requests, 2 waits</text>
 
-              <rect x="390" y="10" width="360" height="230" rx="16" fill="#0f172a" stroke="#4ade80" />
+              <rect x="390" y="10" width="360" height="260" rx="16" fill="#0f172a" stroke="#4ade80" />
               <text x="570" y="38" fill="#86efac" text-anchor="middle" font-size="18">With cache</text>
               <rect x="408" y="70" width="100" height="40" rx="10" fill="#1e293b" stroke="#8fb5d8" />
               <text x="458" y="95" fill="#dbeafe" text-anchor="middle" font-size="14">Header</text>
+              <text x="458" y="128" fill="#94a3b8" text-anchor="middle" font-size="11">shows user name</text>
               <rect x="408" y="150" width="100" height="40" rx="10" fill="#1e293b" stroke="#8fb5d8" />
               <text x="458" y="175" fill="#dbeafe" text-anchor="middle" font-size="14">Profile</text>
+              <text x="458" y="208" fill="#94a3b8" text-anchor="middle" font-size="11">shows full user profile</text>
               <rect x="560" y="85" width="80" height="90" rx="12" fill="#082f49" stroke="#61dafb" />
               <text x="600" y="125" fill="#d5f6ff" text-anchor="middle" font-size="16">Cache</text>
               <text x="600" y="147" fill="#7dd3fc" text-anchor="middle" font-size="12">user = {…}</text>
@@ -963,14 +967,16 @@ function ClickCounter() {
               <path d="M510 170 L558 148" stroke="#61dafb" stroke-width="3" marker-end="url(#arrowhead-cache)" />
               <path d="M642 130 L666 130" stroke="#61dafb" stroke-width="3" stroke-dasharray="5 3" marker-end="url(#arrowhead-cache)" />
               <text x="654" y="118" fill="#7dd3fc" text-anchor="middle" font-size="11">1×</text>
-              <text x="570" y="224" fill="#bbf7d0" text-anchor="middle" font-size="14">1 request, then instant reads ⚡</text>
+              <text x="570" y="252" fill="#bbf7d0" text-anchor="middle" font-size="14">1 request, then instant reads ⚡</text>
             </svg>
           </div>
           <div class="small-text">
             <p>A <strong>cache</strong> = a saved copy of data we already fetched, kept close to the UI.</p>
           </div>
           <aside class="notes">
-            Start with the picture before any words. Left side: two components both need the same user. Each one
+            Start with the picture before any words. Point at the small legends: Header only shows the user name,
+            Profile shows the full user profile - different UI, but both need the same user data.
+            Left side: two components both need the same user. Each one
             calls the server, so we pay for two network trips and the user waits twice.
             Right side: the first request fills the cache. Every other component that asks for the same data reads
             the saved copy instantly. The dashed arrow shows the server is only contacted once.
@@ -1162,6 +1168,23 @@ useQuery({
             By default data is stale immediately, so TanStack Query refetches on mount, window focus, and reconnect.
             staleTime controls how long data counts as fresh; gcTime controls how long unused data stays in memory.
             Demo idea: navigate away and back to show the cached data appearing instantly.
+          </aside>
+        </section>
+
+        <!-- Exercise: useQuery -->
+        <section>
+          <h3>🧪 Exercise — useQuery</h3>
+          <p class="small-text">→ live coding / hands-on</p>
+
+          <div class="card" style="margin-top: 1rem">
+            <p style="font-size: 0.7em">⏱️ Time: 15 minutes</p>
+          </div>
+          <aside class="notes">
+            Students write the usePerson hook with useQuery. PersonHeader (name) and PersonDetails (full profile)
+            both call it, and the "Network requests sent" counter must show 1 request, not 2.
+            Exercise: http://localhost:5173/?target=day-3/exercises/starwars-use-query/starter
+            Solution: http://localhost:5173/?target=day-3/exercises/starwars-use-query/solution
+            Teacher demo (useQuery vs classic fetch): code/day_2_and_3 at /usequery.
           </aside>
         </section>
 

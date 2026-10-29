@@ -13,6 +13,7 @@ import UseRefExample from "./pages/UseRefExample.tsx";
 import UseRefCounter from "./pages/UseRefCounter.tsx";
 import ReconciliationDemo from "./pages/ReconciliationDemo.tsx";
 import StarWarsCharacters from "./pages/StarWarsCharacters.tsx";
+import UseQueryDemo from "./pages/UseQueryDemo.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -29,6 +30,7 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/useref-counter" element={<UseRefCounter />} />
         <Route path="/reconciliation" element={<ReconciliationDemo />} />
         <Route path="/starwars" element={<StarWarsCharacters />} />
+        <Route path="/usequery" element={<UseQueryDemo />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
