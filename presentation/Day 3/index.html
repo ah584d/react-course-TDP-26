@@ -1098,6 +1098,9 @@ function Products() {
             <ul>
               <li>Same task: <strong>1 hook</strong> instead of 3 states and 1 effect.</li>
               <li>Cache, retries, refetching, and de-duplication come built in.</li>
+              <li><code>queryKey</code> uniquely identifies the data in the cache.</li>
+              <li><code>queryFn</code> returns a promise that resolves with the data.</li>
+              <li>The hook returns <code>data</code>, <code>isPending</code>, <code>isError</code>, and more.</li>
             </ul>
           </div>
           <aside class="notes">
@@ -1134,37 +1137,6 @@ function App() {
             Show the one-time setup: create a single QueryClient and wrap the app with QueryClientProvider.
             Stress that there should be one client for the whole app, created outside the component so it is not
             recreated on every render.
-          </aside>
-        </section>
-
-        <section class="no-hscroll tanstack-code">
-          <h2 class="slide-title">useQuery</h2>
-          <pre><code class="tsx">
-import { useQuery } from "@tanstack/react-query";
-
-function Products() {
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ["products"],
-    queryFn: () =&gt; fetch("/api/products").then((res) =&gt; res.json()),
-  });
-
-  if (isPending) return &lt;p&gt;Loading...&lt;/p&gt;;
-  if (isError) return &lt;p&gt;Error: {error.message}&lt;/p&gt;;
-
-  return &lt;ProductList products={data} /&gt;;
-}
-                    </code></pre>
-          <div class="small-text">
-            <ul>
-              <li><code>queryKey</code> uniquely identifies the data in the cache.</li>
-              <li><code>queryFn</code> returns a promise that resolves with the data.</li>
-              <li>The hook returns <code>data</code>, <code>isPending</code>, <code>isError</code>, and more.</li>
-            </ul>
-          </div>
-          <aside class="notes">
-            Compare with the useFetch hook: no useEffect, no manual loading flag, no manual error state.
-            Explain queryKey as the cache address and queryFn as how to get the data when it is not cached.
-            Mention that a key with variables, such as ["product", id], gives each product its own cache entry.
           </aside>
         </section>
 
