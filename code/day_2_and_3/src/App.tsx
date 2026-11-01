@@ -130,6 +130,8 @@ function App() {
           <Link to="/useref-counter">useRef - Constant Reference</Link>
           <Link to="/reconciliation">Reconciliation Demo</Link>
           <Link to="/starwars">⭐ Star Wars Characters (Exercise)</Link>
+          <Link to="/usequery">⚡ useQuery vs classic fetch (Day 3)</Link>
+          <Link to="/usemutation">✏️ useMutation (Day 3)</Link>
         </nav>
       </section>
     </>

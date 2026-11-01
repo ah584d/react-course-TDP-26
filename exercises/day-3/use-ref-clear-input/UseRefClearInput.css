@@ -1,0 +1,51 @@
+/* ── useRef: clear & focus input ── */
+
+.urf-app {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 480px;
+}
+
+.urf-row {
+  display: flex;
+  gap: 8px;
+}
+
+.urf-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(97, 218, 251, 0.4);
+  background: rgba(12, 22, 38, 0.88);
+  color: #f0f6ff;
+  font: inherit;
+  font-size: 16px;
+}
+
+.urf-input:focus {
+  outline: none;
+  border-color: #61dafb;
+  box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.25);
+}
+
+.urf-button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(248, 113, 113, 0.5);
+  background: rgba(248, 113, 113, 0.1);
+  color: #f0f6ff;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.urf-button:hover {
+  background: rgba(248, 113, 113, 0.2);
+}
+
+.urf-hint {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(180, 210, 245, 0.72);
+}
