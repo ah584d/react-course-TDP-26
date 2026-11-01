@@ -253,8 +253,19 @@
     }
 
     .reveal .query-update pre code {
-      font-size: 0.52em;
-      line-height: 1.15;
+      font-size: 0.42em;
+      line-height: 1.1;
+    }
+
+    .reveal .query-params-intro pre code {
+      font-size: 0.48em;
+      line-height: 1.1;
+    }
+
+    .reveal .query-params-intro > p,
+    .reveal .query-params-intro .small-text,
+    .reveal .query-update > p.small-text {
+      font-size: 0.62em;
     }
 
     .reveal .route-websites {
@@ -1813,15 +1824,19 @@ export default function SiteLayout() {
           <div class="two-col mini">
             <div class="card">
               <div class="label">Flat routes</div>
-              <pre><code class="tsx">&lt;Route path="/" element={&lt;Home /&gt;} /&gt;
-&lt;Route path="/about" element={&lt;About /&gt;} /&gt;</code></pre>
+              <pre><code class="tsx">&lt;Routes&gt;
+    &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+    &lt;Route path="/about" element={&lt;About /&gt;} /&gt;
+&lt;/Routes&gt;</code></pre>
               <p><code>/about</code> renders About alone.</p>
             </div>
             <div class="card">
               <div class="label">Nested routes</div>
-              <pre><code class="tsx">&lt;Route path="/" element={&lt;SiteLayout /&gt;}&gt;
-  &lt;Route path="about" element={&lt;About /&gt;} /&gt;
-&lt;/Route&gt;</code></pre>
+              <pre><code class="tsx">&lt;Routes&gt;
+    &lt;Route path="/" element={&lt;SiteLayout /&gt;}&gt;
+      &lt;Route path="about" element={&lt;About /&gt;} /&gt;
+    &lt;/Route&gt;
+&lt;/Routes&gt;</code></pre>
               <p><code>/about</code> renders SiteLayout with About in its Outlet.</p>
             </div>
           </div>
@@ -1952,8 +1967,48 @@ function ProductsPage() {
           </aside>
         </section>
 
+        <section class="query-params-intro">
+          <h2 class="slide-title">Updating Query Parameters</h2>
+          <p>React Router gives you a <code>URLSearchParams</code> object and a function to update the URL.</p>
+          <pre><code class="tsx">import { useSearchParams } from 'react-router-dom';
+
+function GenreFilter() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const genre = searchParams.get('genre') ?? '';
+
+  function chooseGenre(nextGenre) {
+    const next = new URLSearchParams(searchParams);
+    if (nextGenre) {
+      next.set('genre', nextGenre);
+    } else {
+      next.delete('genre');
+    }
+    setSearchParams(next);
+  }
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; chooseGenre('action')}&gt;Action&lt;/button&gt;
+      &lt;button onClick={() =&gt; chooseGenre('comedy')}&gt;Comedy&lt;/button&gt;
+      &lt;button onClick={() =&gt; chooseGenre('')}&gt;All genres&lt;/button&gt;
+      &lt;p&gt;Selected genre: {genre || 'All'}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          <div class="small-text">
+            <p><code>get(key)</code> reads a value; <code>set(key, value)</code> adds or replaces it.</p>
+            <p><code>delete(key)</code> removes a value; <code>has(key)</code> checks whether it exists.</p>
+            <p>Values are strings. Clone before changing params to preserve other filters, such as <code>?genre=comedy&amp;year=2026</code>.</p>
+          </div>
+          <aside class="notes">
+            Point out that useSearchParams returns a URLSearchParams instance, not a plain object. Query values are strings;
+            get returns null when a key is missing. A filter button calls chooseGenre with its value. The function copies
+            current params, changes or removes genre, then setSearchParams updates the URL.
+          </aside>
+        </section>
+
         <section class="query-update">
-          <h2 class="slide-title">Update one query parameter</h2>
+          <h2 class="slide-title">Example: Filter Movies by Genre</h2>
           <pre><code class="tsx">import { useSearchParams } from 'react-router-dom';
 const movies = [
   { title: 'Night Run', genre: 'action' },
@@ -1973,17 +2028,15 @@ export default function GenrePage() {
   }
   return (
     &lt;div&gt;
-      &lt;select value={genre} aria-label="Genre" onChange={event =&gt; changeGenre(event.target.value)}&gt;
-        &lt;option value=""&gt;All genres&lt;/option&gt;
-        &lt;option value="action"&gt;Action&lt;/option&gt;
-        &lt;option value="comedy"&gt;Comedy&lt;/option&gt;
-      &lt;/select&gt;
+      &lt;button type="button" onClick={() =&gt; changeGenre('')}&gt;All genres&lt;/button&gt;
+      &lt;button type="button" onClick={() =&gt; changeGenre('action')}&gt;Action&lt;/button&gt;
+      &lt;button type="button" onClick={() =&gt; changeGenre('comedy')}&gt;Comedy&lt;/button&gt;
       {shown.map(movie =&gt; &lt;p key={movie.title}&gt;{movie.title}&lt;/p&gt;)}
     &lt;/div&gt;
   );
 }</code></pre>
           <p class="small-text">The URL drives the selected filter. Copying the existing parameters preserves other options.</p>
-          <aside class="notes">Trace the select change to the URL update, then back through genre to the selected option and visible movies. A direct URL or refresh restores the same selection and results.</aside>
+          <aside class="notes">Click Action or Comedy and trace the button handler to changeGenre, then to the URL update and filtered list. All genres removes the genre key. A direct URL or refresh restores the same results.</aside>
         </section>
 
         <section>
