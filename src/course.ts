@@ -12,16 +12,19 @@ export interface CourseTargetMeta {
   kind: CourseTargetKind;
   variant: CourseTargetVariant;
   order: number;
+  routing?: "browser";
 }
 
 export interface CourseTargetModule {
   default: ComponentType;
   meta: CourseTargetMeta;
+  StandaloneApp?: ComponentType;
 }
 
 export interface CourseTarget {
   component: ComponentType;
   meta: CourseTargetMeta;
+  standaloneComponent?: ComponentType;
 }
 
 export interface CourseDay {
@@ -109,6 +112,7 @@ function normalizeTargets(
   return Object.values(modules).map((module) => ({
     component: module.default,
     meta: module.meta,
+    standaloneComponent: module.StandaloneApp,
   }));
 }
 
@@ -137,6 +141,16 @@ export const courseTargets = [
 });
 
 export function resolveRequestedTarget() {
+  if (isStandaloneMode()) return import.meta.env.VITE_COURSE_TARGET?.trim();
+
+  if (window.location.pathname.startsWith("/play/")) {
+    return courseTargets.find(({ meta }) =>
+      meta.routing === "browser" &&
+      (window.location.pathname === getTargetBasePath(meta) ||
+        window.location.pathname.startsWith(`${getTargetBasePath(meta)}/`))
+    )?.meta.id ?? window.location.pathname.slice("/play/".length);
+  }
+
   const params = new URLSearchParams(window.location.search);
 
   if (params.has("target")) {
@@ -144,8 +158,45 @@ export function resolveRequestedTarget() {
     return queryTarget && queryTarget !== "launcher" ? queryTarget : undefined;
   }
 
+  if (params.has("day")) return undefined;
+
   const envTarget = import.meta.env.VITE_COURSE_TARGET?.trim();
   return envTarget ? envTarget : undefined;
+}
+
+export function getTargetBasePath(meta: CourseTargetMeta) {
+  return `/play/${meta.id}`;
+}
+
+export function getTargetHref(meta: CourseTargetMeta) {
+  return meta.routing === "browser"
+    ? `${getTargetBasePath(meta)}/`
+    : `/?target=${encodeURIComponent(meta.id)}`;
+}
+
+export function prepareBrowserTargetLocation() {
+  if (isStandaloneMode()) return;
+
+  const requestedTarget = resolveRequestedTarget();
+  const target = courseTargets.find(({ meta }) => meta.id === requestedTarget);
+
+  if (!target || target.meta.routing !== "browser") return;
+  if (window.location.pathname.startsWith("/play/")) return;
+
+  const params = new URLSearchParams(window.location.search);
+  params.delete("target");
+  params.delete("day");
+  const query = params.toString();
+
+  window.history.replaceState(
+    null,
+    "",
+    `${getTargetHref(target.meta)}${query ? `?${query}` : ""}${window.location.hash}`,
+  );
+}
+
+export function isStandaloneMode() {
+  return import.meta.env.VITE_COURSE_STANDALONE === "true";
 }
 
 export function resolveRequestedDay() {

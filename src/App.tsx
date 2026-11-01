@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { BrowserRouter } from 'react-router-dom'
 import Sandbox from '../sandbox/Sandbox'
 import {
   courseDays,
@@ -6,7 +7,10 @@ import {
   getCourseDay,
   getDayHref,
   getDayTargets,
+  getTargetBasePath,
+  getTargetHref,
   getVariantLabel,
+  isStandaloneMode,
   resolveRequestedDay,
   resolveRequestedTarget,
 } from './course'
@@ -18,6 +22,7 @@ function App() {
     ? courseTargets.find((target) => target.meta.id === requestedTarget)
     : undefined
   const selectedDay = requestedDay ? getCourseDay(requestedDay) : undefined
+  const standalone = isStandaloneMode()
 
   useEffect(() => {
     if (requestedTarget === 'sandbox') {
@@ -26,7 +31,7 @@ function App() {
     }
 
     if (selectedTarget) {
-      document.title = `${selectedTarget.meta.title} | React Course Material`
+      document.title = `${selectedTarget.meta.title} | ${standalone ? 'Standalone app' : 'React Course Material'}`
       return
     }
 
@@ -36,7 +41,23 @@ function App() {
     }
 
     document.title = 'React Course Material | Presentations, Demos, and Exercises'
-  }, [requestedTarget, selectedDay, selectedTarget])
+  }, [requestedTarget, selectedDay, selectedTarget, standalone])
+
+  if (standalone) {
+    const StandaloneApp = selectedTarget?.standaloneComponent
+
+    if (!selectedTarget || !StandaloneApp || selectedTarget.meta.routing !== 'browser') {
+      throw new Error(`Target "${requestedTarget ?? '(missing)'}" does not export a browser-routed StandaloneApp. Restart the runner with a supported target.`)
+    }
+
+    return (
+      <div className="standalone-course-app">
+        <BrowserRouter useTransitions={false}>
+          <StandaloneApp />
+        </BrowserRouter>
+      </div>
+    )
+  }
 
   if (requestedTarget === 'sandbox') {
     return <Sandbox />
@@ -73,7 +94,13 @@ function App() {
           </header>
 
           <section className="viewer-stage">
-            <SelectedTarget />
+            {selectedTarget.meta.routing === 'browser' ? (
+              <BrowserRouter basename={getTargetBasePath(selectedTarget.meta)} useTransitions={false}>
+                <SelectedTarget />
+              </BrowserRouter>
+            ) : (
+              <SelectedTarget />
+            )}
           </section>
         </section>
       </main>
@@ -131,7 +158,7 @@ function App() {
 
     return (
       <main className="app-shell">
-        <a className="page-back-link" href="/">
+        <a className="page-back-link" href="/?target=launcher">
           <span aria-hidden="true">←</span>
           <span>Back to home</span>
         </a>
@@ -168,7 +195,7 @@ function App() {
               {demos.length > 0 ? (
                 <div className="target-list">
                   {demos.map((target) => (
-                    <a className="target-card target-card-demo" href={`/?target=${target.meta.id}`} key={target.meta.id}>
+                    <a className="target-card target-card-demo" href={getTargetHref(target.meta)} key={target.meta.id}>
                       <div className="target-card-top">
                         <span className="target-kind target-kind-demo">Demo</span>
                       </div>
@@ -201,12 +228,12 @@ function App() {
                       {exerciseGroup.description ? <p>{exerciseGroup.description}</p> : null}
                       <div className="exercise-links">
                         {exerciseGroup.starter ? (
-                          <a className="exercise-link exercise-link-starter" href={`/?target=${exerciseGroup.starter.meta.id}`}>
+                          <a className="exercise-link exercise-link-starter" href={getTargetHref(exerciseGroup.starter.meta)}>
                             Starter
                           </a>
                         ) : null}
                         {exerciseGroup.solution ? (
-                          <a className="exercise-link exercise-link-solution" href={`/?target=${exerciseGroup.solution.meta.id}`}>
+                          <a className="exercise-link exercise-link-solution" href={getTargetHref(exerciseGroup.solution.meta)}>
                             Solution
                           </a>
                         ) : null}

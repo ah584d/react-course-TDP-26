@@ -2,13 +2,13 @@ import type { CourseTargetMeta } from '../../../../src/course.ts'
 
 export const meta: CourseTargetMeta = {
   id: 'day-3/exercises/podcast-navigator/solution',
-  title: 'Podcast Navigator',
+  title: 'Optional: Podcast Navigator',
   description: 'Transform a static list into a multi-page app using React Router components and hooks.',
   dayOrder: 3,
   dayLabel: 'Day 3',
   kind: 'exercise',
   variant: 'solution',
-  order: 1,
+  order: 20,
 }
 
 export const solutionTasks = [
