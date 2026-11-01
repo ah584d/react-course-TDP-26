@@ -53,6 +53,39 @@ The presentation shell and scoped styles live in
 [sandbox/Sandbox.css](sandbox/Sandbox.css). No extra dependencies or standalone
 Vite setup are required.
 
+### Standalone exercise app (optional)
+
+Keep the launcher in one terminal and open a supported app without its course
+frame in a second terminal:
+
+```bash
+npm run course -- day-3/exercises/streambox-movie-details/starter --standalone --port 5174
+```
+
+Use the URL Vite prints; it may choose another port if one is occupied. Append
+`--strictPort` if you want Vite to fail rather than switch ports.
+Standalone mode is available for all five StreamBox starter/solution pairs and
+`day-3/demo/streambox`. It uses the same Vite project and dependencies.
+
+The selected target is fixed at startup, not encoded in the URL. Browse directly
+to `/movies`, `/account`, or `/movies/101` (once that route is implemented).
+Refresh and direct entry retain the selected checkpoint. Query parameters belong
+to the app; `?target=` and `?day=` do not switch targets in this mode.
+Stop the server and restart the command with another target to switch checkpoints.
+
+The normal exercise page still shows instructions and its embedded preview.
+Both views import the same `StandaloneApp.tsx`, so saved edits update both while
+both servers run. URL, history, and runtime state are independent between views.
+Editing a starter does not change its solution. Unsupported or unknown standalone
+targets fail explicitly; normal launcher and sandbox commands are unchanged.
+
+For contributors: an opt-in browser-routed entry can export a named
+`StandaloneApp` component from a neighboring `StandaloneApp.tsx`. The default
+entry remains the instructional preview and renders that same component.
+The runner supplies a root-level BrowserRouter for standalone mode, or the
+existing per-target basename for embedded mode. Do not add a nested router.
+Check runner argument regressions with `node --test scripts/course.test.mjs`.
+
 ## Folder convention
 
 Presentations stay under `presentation/`, but runnable targets now live in root-level `demo/` and `exercises/` folders:
@@ -186,10 +219,54 @@ as a Hook and covers its placement rules. Day 2 has no separate state-update
 instruction section.
 
 ### Day 3
+- `day-3/demo/state-navigation`
+- `day-3/demo/streambox`
+- `day-3/exercises/streambox-pages/starter`
+- `day-3/exercises/streambox-pages/solution`
+- `day-3/exercises/streambox-layout/starter`
+- `day-3/exercises/streambox-layout/solution`
+- `day-3/exercises/streambox-movie-details/starter`
+- `day-3/exercises/streambox-movie-details/solution`
+- `day-3/exercises/streambox-genre-filter/starter`
+- `day-3/exercises/streambox-genre-filter/solution`
+- `day-3/exercises/streambox-search-and-sort/starter`
+- `day-3/exercises/streambox-search-and-sort/solution`
 - `day-3/exercises/podcast-navigator/starter`
 - `day-3/exercises/podcast-navigator/solution`
 - `day-3-part-2/exercises/zustand-counter/starter`
 - `day-3-part-2/exercises/zustand-counter/solution`
+
+The [StreamBox exercises](exercises/day-3/README.md) progressively extend the same
+fictional app: pages/links, shared layout/index, movie details, genre filtering,
+then search/sort. Every starter supplies the completed prerequisite work.
+Podcast Navigator remains optional practice. Earlier Day 3 topics are unchanged.
+The routing lecture teaches React Router through general website, settings,
+people-directory, and product-filter examples; StreamBox is used for progressive
+practice and reviews rather than as the lecture's organizing theme.
+The [state-navigation demo](demo/day-3/state-navigation/StateNavigationDemo.tsx)
+illustrates the opening problem: local state can switch Home/About content
+without changing the browser URL, so refresh or sharing the address starts at Home.
+
+StreamBox Home is `/`; the catalogue is `/movies`. From Exercise 2 onward,
+StreamingLayout provides app-wide navigation and an Outlet. Its `movies` child
+uses MoviesLayout, with movie-section navigation and a second Outlet.
+The catalogue is the movies index; `:movieId` is added beside it in Exercise 3.
+Account and Help use only the app layout. Catalogue filters use URLs such as
+`/movies?genre=comedy`, not the Home URL.
+
+Targets that opt into `routing: 'browser'` in their metadata run under
+`/play/<target-id>/`. The runner supplies one `BrowserRouter` with that basename.
+This keeps exercise selection out of app query parameters, so refreshing
+`/play/day-3/exercises/streambox-movie-details/solution/movies/101` retains the
+correct target. Old `?target=` links and direct CLI selection still work; browser
+targets are converted to their canonical path before rendering.
+The supplied router uses `useTransitions={false}` so URL-controlled text inputs
+receive synchronous location updates and do not lose characters during fast typing.
+This applies only to targets opting into browser routing.
+Return through Back to Day 3 or use `/?target=launcher` to override a CLI default.
+
+Vite handles development SPA fallback. A production/static host must serve the
+root app HTML for `/play/*` requests while serving real assets normally.
 
 ### Day 4
 - `day-4/demo/react-memo`

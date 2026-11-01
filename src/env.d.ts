@@ -1,5 +1,6 @@
 interface ImportMetaEnv {
   readonly VITE_COURSE_TARGET?: string
+  readonly VITE_COURSE_STANDALONE?: string
 }
 
 interface ImportMeta {
