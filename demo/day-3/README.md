@@ -51,6 +51,13 @@ Open http://localhost:5174/. This separate [demo](navigation-links/StandaloneApp
 uses the same Home and About URLs but adds a shared Navbar with Links in both
 pages. Clicking Home or About changes the URL without reloading the document.
 
+## Updating Query Parameters
+
+Open `/play/day-3/demo/query-params` on the existing course server (normally
+`http://localhost:5173`). It has its own target title and shows
+`GenreFilterCatalog.tsx` beside the live filter. Selecting a genre updates the
+URL and results; refresh and Back/Forward restore the selected state.
+
 ## StreamBox: Finished App Tour
 
 ```sh

@@ -1,0 +1,48 @@
+.login-flow-demo .login-flow-page {
+  width: min(100%, 440px);
+  margin: 0 auto;
+}
+
+.login-flow-demo .login-flow-form {
+  display: grid;
+  gap: 10px;
+}
+
+.login-flow-demo .login-flow-form > input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  color: #e2e8f0;
+  background: #080e18;
+  font: inherit;
+}
+
+.login-flow-demo .login-flow-outcome {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin: 8px 0;
+  padding: 12px;
+  border: 1px solid #475569;
+  border-radius: 6px;
+}
+
+.login-flow-demo .login-flow-outcome legend {
+  padding: 0 6px;
+}
+
+.login-flow-demo .login-flow-outcome label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-flow-demo .login-flow-outcome input {
+  accent-color: #61dafb;
+}
+
+.login-flow-demo .login-flow-error {
+  margin: 0;
+  color: #fca5a5;
+}

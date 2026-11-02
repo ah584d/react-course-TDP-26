@@ -35,32 +35,47 @@ npm run course -- day-3/exercises/streambox-search-and-sort/solution
 ```
 
 Each preview lists its TODOs, editable files, and observable completion checks.
-Movie data and CSS are shared static resources under
-[streambox-shared](streambox-shared); the teaching components are local to each
-checkpoint. No starter imports an earlier solution. The app has no backend,
-authentication, payment integration, or playable video.
-
-### Standalone viewing for Practice 1
-
-```sh
-# Terminal 1: course instructions
-npm run course
-
-# Terminal 2: the Practice 1 app, on a separate port
-npm run course -- day-3/exercises/streambox-pages/starter --standalone --port 5174
 ```
 
-Practice 1's course pages show instructions only; open the app on port 5174 to
-see your changes. Standalone mode displays the app at `/`, with no course frame
-or `/play/...` prefix. Stop/restart the runner with the solution target to review
-it on the same port. Later checkpoints still include embedded previews and can
-also be run standalone. Their URL/history and runtime state are independent.
+For Practice 1, start its app in another terminal:
+
+```sh
+[streambox-shared](streambox-shared); the teaching components are local to each
+```
+
+For Practice 2, stop any previous server on port 5174, then run:
+
+```sh
+authentication, payment integration, or playable video.
+
+### Standalone viewing for Practices 1-5
+
+Run the course instructions in one terminal:
+
+```sh
+npm run course
+```
+
+In another terminal, stop any previous server on port 5174, then run the
+command for the practice you are working on:
+
+| Practice | Starter command |
+| --- | --- |
+| 1. Pages and Links | `npm run course -- day-3/exercises/streambox-pages/starter --standalone --port 5174` |
+| 2. Shared Layout and Index | `npm run course -- day-3/exercises/streambox-layout/starter --standalone --port 5174` |
+| 3. Movie Details and Cast | `npm run course -- day-3/exercises/streambox-movie-details/starter --standalone --port 5174` |
+| 4. Genre in the URL | `npm run course -- day-3/exercises/streambox-genre-filter/starter --standalone --port 5174` |
+| 5. Search and Sort Together | `npm run course -- day-3/exercises/streambox-search-and-sort/starter --standalone --port 5174` |
+
+Open [localhost:5174](http://localhost:5174/) to see your work. All five
+practice pages show instructions only; the standalone app displays at `/`, with
+no course frame or `/play/...` prefix. Stop/restart the runner with the desired
+starter or solution target to review it on the same port. The instructions and
+app have independent URL/history and runtime state.
 
 Each entry keeps its instructions and exports `StandaloneApp` for the runner.
-The early exercises' header/link TODOs live in `StandaloneApp.tsx` so a student's
-work is visible in standalone mode. The runner supplies BrowserRouter in either mode.
-No new installation or separate teaching project is needed. A second port is
-necessary only when both servers run together. Unsupported targets fail before
+The runner supplies BrowserRouter; do not add another one. No new installation
+or separate teaching project is needed. Unsupported targets fail before
 starting Vite.
 
 ### Pages and nested rendering

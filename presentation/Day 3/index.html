@@ -237,9 +237,16 @@
 
     .link-code-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
       gap: 12px;
       text-align: left;
+    }
+
+    .link-code-pages {
+      display: grid;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      min-width: 0;
     }
 
     .reveal .link-code-grid pre {
@@ -248,24 +255,54 @@
     }
 
     .reveal .link-code-grid pre code {
-      font-size: 0.46em;
+      font-size: 0.64em;
       line-height: 1.35;
     }
 
+    .link-code-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.35rem 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.5em;
+      line-height: 1.2;
+    }
+
+    .link-code-footer p {
+      margin: 0;
+    }
+
+    .link-code-footer .link-code-command {
+      flex: 1 1 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .link-code-footer .link-code-command code {
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
     .reveal .query-update pre code {
-      font-size: 0.42em;
-      line-height: 1.1;
+      font-size: 0.54em;
+      line-height: 1.2;
     }
 
     .reveal .query-params-intro pre code {
-      font-size: 0.48em;
-      line-height: 1.1;
+      font-size: 0.54em;
+      line-height: 1.2;
     }
 
     .reveal .query-params-intro > p,
     .reveal .query-params-intro .small-text,
     .reveal .query-update > p.small-text {
       font-size: 0.62em;
+    }
+
+    .reveal .practice-command code {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
     .reveal .route-websites {
@@ -424,6 +461,12 @@
       .two-col {
         grid-template-columns: 1fr;
         display: block;
+      }
+
+      .link-code-grid,
+      .link-code-pages {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
       }
 
       .split-code,
@@ -1706,39 +1749,27 @@ export default function Navbar() {
   )
 }</code></pre>
             </div>
-            <div>
-              <div class="label">HomePage.tsx</div>
-              <pre><code class="tsx">import Navbar from './Navbar'
-
+            <div class="link-code-pages">
+              <div>
+                <div class="label">HomePage.tsx</div>
+                <pre><code class="tsx">import Navbar from './Navbar'
 export default function HomePage() {
-  return (
-    &lt;div&gt;
-      &lt;Navbar /&gt;
-      &lt;h1&gt;Home&lt;/h1&gt;
-      &lt;p&gt;This is the Home page.&lt;/p&gt;
-    &lt;/div&gt;
-  )
+  return &lt;&gt;&lt;Navbar /&gt;&lt;h1&gt;Home&lt;/h1&gt;&lt;/&gt;
 }</code></pre>
-            </div>
-            <div>
-              <div class="label">AboutPage.tsx</div>
-              <pre><code class="tsx">import Navbar from './Navbar'
-
+              </div>
+              <div>
+                <div class="label">AboutPage.tsx</div>
+                <pre><code class="tsx">import Navbar from './Navbar'
 export default function AboutPage() {
-  return (
-    &lt;div&gt;
-      &lt;Navbar /&gt;
-      &lt;h1&gt;About&lt;/h1&gt;
-      &lt;p&gt;This is the About page.&lt;/p&gt;
-    &lt;/div&gt;
-  )
+  return &lt;&gt;&lt;Navbar /&gt;&lt;h1&gt;About&lt;/h1&gt;&lt;/&gt;
 }</code></pre>
+              </div>
             </div>
           </div>
-          <div class="small-text">
-            <p>Use Link instead of anchor tags to avoid full page reloads and preserve state.</p>
-            <p>Run <br><pre><code class="tsx">npm run course -- day-3/demo/navigation-links --standalone --port 5174</code></pre></p>
-            <p><a href="http://localhost:5174/" target="_blank" rel="noopener noreferrer">Open the Home and About navigation demo</a></p>
+          <div class="link-code-footer">
+            <p>Use <code>Link</code> to navigate without a full page reload.</p>
+            <p class="link-code-command">Run <pre class="tsx"><code>npm run course -- day-3/demo/navigation-links --standalone --port 5174</code></pre></p>
+            <p><a href="http://localhost:5174/" target="_blank" rel="noopener noreferrer">Open the Home and About demo</a></p>
           </div>
           <aside class="notes">
             Explain why normal anchor tags are a problem in client-side apps: they trigger a full page refresh.
@@ -1754,7 +1785,7 @@ export default function AboutPage() {
           <h2 class="slide-title">Practice 1: Pages and Links</h2>
           <p>Connect Streambox's Account and Help pages using routes and Links.</p>
           <p><a href="http://localhost:5173/play/day-3/exercises/streambox-pages/starter/" target="_blank" rel="noopener noreferrer">Open starter</a></p>
-          <p class="small-text">Stop the previous port-5174 demo, then run <br><pre class="tsx"><code>npm run course -- day-3/exercises/streambox-pages/starter --standalone --port 5174</code></pre></p>
+          <p class="small-text">Stop the previous port-5174 demo, then run <br><pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-pages/starter --standalone --port 5174</code></pre></p>
           <p class="small-text">Open <a href="http://localhost:5174/" target="_blank" rel="noopener noreferrer">the app on port 5174</a> to see your work.</p>
           <p class="fragment"><a href="http://localhost:5173/play/day-3/exercises/streambox-pages/solution/" target="_blank" rel="noopener noreferrer">Review solution</a></p>
           <aside class="notes">The course page shows instructions only. Check both direct URLs, refresh, and Back/Forward in the standalone app. The runner already supplies BrowserRouter. For the solution, stop the starter server and run npm run course -- day-3/exercises/streambox-pages/solution --standalone --port 5174.</aside>
@@ -1860,8 +1891,10 @@ export default function SiteLayout() {
           <h2 class="slide-title">Practice 2: Shared Layout and Index</h2>
           <p>Move Streambox's shared header into StreamingLayout and render Home as its index child.</p>
           <p><a href="http://localhost:5173/play/day-3/exercises/streambox-layout/starter/" target="_blank" rel="noopener noreferrer">Open starter</a></p>
+          <p class="small-text">Stop the previous port-5174 demo, then run <br><pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-layout/starter --standalone --port 5174</code></pre></p>
+          <p class="small-text">Open <a href="http://localhost:5174/" target="_blank" rel="noopener noreferrer">the app on port 5174</a> to see your work.</p>
           <p class="fragment"><a href="http://localhost:5173/play/day-3/exercises/streambox-layout/solution/" target="_blank" rel="noopener noreferrer">Review solution</a></p>
-          <aside class="notes">The movie-specific Details/Cast layout comes later, after path parameters.</aside>
+          <aside class="notes">The starter page contains the exercise instructions. Check your work in the standalone app on port 5174; the runner supplies BrowserRouter. The movie-specific Details/Cast layout comes later, after path parameters.</aside>
         </section>
 
         <section>
@@ -1910,8 +1943,10 @@ function ProductPage() {
           <h2 class="slide-title">Practice 3: Movie Details and Cast</h2>
           <p>Link each catalogue card to its movie. Make Details the index and Cast its sibling under the movie layout.</p>
           <p><a href="http://localhost:5173/play/day-3/exercises/streambox-movie-details/starter/" target="_blank" rel="noopener noreferrer">Open starter</a></p>
+          <p class="small-text">Stop the previous port-5174 demo, then run <br><pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-movie-details/starter --standalone --port 5174</code></pre></p>
+          <p class="small-text">Open <a href="http://localhost:5174/" target="_blank" rel="noopener noreferrer">the app on port 5174</a> to see your work.</p>
           <p class="fragment"><a href="http://localhost:5173/play/day-3/exercises/streambox-movie-details/solution/" target="_blank" rel="noopener noreferrer">Review solution</a></p>
-          <aside class="notes">Review /movies/101, /movies/101/cast, and /movies/999. The catalogue has no movie-specific header.</aside>
+          <aside class="notes">The starter page contains the exercise instructions. Check /movies/101, /movies/101/cast, /movies/999, and /unknown in the standalone app; refresh and use Back/Forward. The runner supplies BrowserRouter. For the solution, stop the starter server and run npm run course -- day-3/exercises/streambox-movie-details/solution --standalone --port 5174.</aside>
         </section>
 
         <section>
@@ -1969,82 +2004,50 @@ function ProductsPage() {
 
         <section class="query-params-intro">
           <h2 class="slide-title">Updating Query Parameters</h2>
-          <p>React Router gives you a <code>URLSearchParams</code> object and a function to update the URL.</p>
-          <pre><code class="tsx">import { useSearchParams } from 'react-router-dom';
+          <p>Query parameters keep view options, such as a selected genre, in the URL. <code>useSearchParams</code> reads and updates them without changing routes.</p>
+          <pre><code class="tsx">const [params, setParams] = useSearchParams();
+const genre = params.get('genre') ?? '';
 
-function GenreFilter() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const genre = searchParams.get('genre') ?? '';
-
-  function chooseGenre(nextGenre) {
-    const next = new URLSearchParams(searchParams);
-    if (nextGenre) {
-      next.set('genre', nextGenre);
+function updateGenre(value: string) {
+  setParams(previous =&gt; {
+    const next = new URLSearchParams(previous);
+    if (value) {
+      next.set('genre', value);
     } else {
       next.delete('genre');
     }
-    setSearchParams(next);
-  }
-
-  return (
-    &lt;div&gt;
-      &lt;button onClick={() =&gt; chooseGenre('action')}&gt;Action&lt;/button&gt;
-      &lt;button onClick={() =&gt; chooseGenre('comedy')}&gt;Comedy&lt;/button&gt;
-      &lt;button onClick={() =&gt; chooseGenre('')}&gt;All genres&lt;/button&gt;
-      &lt;p&gt;Selected genre: {genre || 'All'}&lt;/p&gt;
-    &lt;/div&gt;
-  );
+    return next;
+  });
 }</code></pre>
-          <div class="small-text">
-            <p><code>get(key)</code> reads a value; <code>set(key, value)</code> adds or replaces it.</p>
-            <p><code>delete(key)</code> removes a value; <code>has(key)</code> checks whether it exists.</p>
-            <p>Values are strings. Clone before changing params to preserve other filters, such as <code>?genre=comedy&amp;year=2026</code>.</p>
-          </div>
+          <p class="small-text">Clone existing params to preserve other options; remove the key to clear the filter.</p>
           <aside class="notes">
-            Point out that useSearchParams returns a URLSearchParams instance, not a plain object. Query values are strings;
-            get returns null when a key is missing. A filter button calls chooseGenre with its value. The function copies
-            current params, changes or removes genre, then setSearchParams updates the URL.
+            Query params describe options for the current page rather than identifying a different page. get returns null when a key is missing, so the example defaults to an empty genre. Clone the existing params before setting or deleting a key to preserve unrelated options.
           </aside>
         </section>
 
         <section class="query-update">
           <h2 class="slide-title">Example: Filter Movies by Genre</h2>
-          <pre><code class="tsx">import { useSearchParams } from 'react-router-dom';
-const movies = [
-  { title: 'Night Run', genre: 'action' },
-  { title: 'Weekend Mix-Up', genre: 'comedy' },
-];
-export default function GenrePage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const genre = searchParams.get('genre') ?? '';
-  const shown = movies.filter(movie =&gt; !genre || movie.genre === genre);
-  function changeGenre(nextGenre) {
-    setSearchParams(previous =&gt; {
-      const next = new URLSearchParams(previous);
-      if (nextGenre) next.set('genre', nextGenre);
-      else next.delete('genre');
-      return next;
-    });
-  }
-  return (
-    &lt;div&gt;
-      &lt;button type="button" onClick={() =&gt; changeGenre('')}&gt;All genres&lt;/button&gt;
-      &lt;button type="button" onClick={() =&gt; changeGenre('action')}&gt;Action&lt;/button&gt;
-      &lt;button type="button" onClick={() =&gt; changeGenre('comedy')}&gt;Comedy&lt;/button&gt;
-      {shown.map(movie =&gt; &lt;p key={movie.title}&gt;{movie.title}&lt;/p&gt;)}
-    &lt;/div&gt;
-  );
-}</code></pre>
-          <p class="small-text">The URL drives the selected filter. Copying the existing parameters preserves other options.</p>
-          <aside class="notes">Click Action or Comedy and trace the button handler to changeGenre, then to the URL update and filtered list. All genres removes the genre key. A direct URL or refresh restores the same results.</aside>
+          <p>Read the selected genre from the URL, then use it to filter the movie list.</p>
+          <pre><code class="tsx">const genre = params.get('genre') ?? '';
+const visibleMovies = movies.filter(
+  movie =&gt; !genre || movie.genre === genre
+);
+
+&lt;button onClick={() =&gt; updateGenre('comedy')}&gt;Comedy&lt;/button&gt;
+&lt;button onClick={() =&gt; updateGenre('')}&gt;All genres&lt;/button&gt;</code></pre>
+          <p><a href="http://localhost:5173/play/day-3/demo/query-params" target="_blank" rel="noopener noreferrer">Open the live genre filter demo</a></p>
+          <p class="small-text">Try Comedy, then All genres; refresh or use Back/Forward to restore a selection.</p>
+          <aside class="notes">Click Comedy and trace updateGenre to the query-string update and filtered list. All genres removes the genre key. A direct URL or refresh restores the same results. The live demo shows the complete component beside its running preview.</aside>
         </section>
 
         <section>
           <h2 class="slide-title">Practice 4: Genre in the URL</h2>
           <p>Connect Streambox's genre dropdown to <code>useSearchParams</code>.</p>
           <p><a href="http://localhost:5173/play/day-3/exercises/streambox-genre-filter/starter/" target="_blank" rel="noopener noreferrer">Open starter</a></p>
+          <p class="small-text">Stop the previous port-5174 demo, then run <br><pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-genre-filter/starter --standalone --port 5174</code></pre></p>
+          <p class="small-text">Open <a href="http://localhost:5174/" target="_blank" rel="noopener noreferrer">the app on port 5174</a> to see your work.</p>
           <p class="fragment"><a href="http://localhost:5173/play/day-3/exercises/streambox-genre-filter/solution/" target="_blank" rel="noopener noreferrer">Review solution</a></p>
-          <aside class="notes">Check /movies?genre=comedy, refresh, and Back/Forward. The starter's disabled control and TODO are intentional.</aside>
+          <aside class="notes">The starter page contains the exercise instructions. Check /movies?genre=comedy, /movies?genre=animation, refresh, and use Back/Forward in the standalone app. The runner supplies BrowserRouter. For the solution, stop the starter server and run npm run course -- day-3/exercises/streambox-genre-filter/solution --standalone --port 5174.</aside>
         </section>
 
         <section>
@@ -2053,6 +2056,34 @@ export default function GenrePage() {
           <p><a href="http://localhost:5173/play/day-3/demo/streambox/movies/years" target="_blank" rel="noopener noreferrer">Open working Streambox demo</a></p>
           <p class="small-text">Code: <a href="../../demo/day-3/streambox/YearFilterCatalog.tsx" target="_blank" rel="noopener noreferrer">YearFilterCatalog.tsx</a></p>
           <aside class="notes">Select two years, copy the URL into a new tab, and refresh. The checked boxes and results follow the URL. URLSearchParams may encode the comma as %2C in the address bar; get decodes it. This is a demo, not a student TODO.</aside>
+        </section>
+
+        <section>
+          <h2 class="slide-title">One key, multiple values</h2>
+          <div class="two-col mini">
+            <div class="card">
+              <div class="label">Comma-separated: one value</div>
+              <p><code>?years=2024,2023</code></p>
+              <p><code>get('years')</code> returns <code>'2024,2023'</code>; split it to read each year.</p>
+              <p class="small-text">Update as one joined value:</p>
+              <pre><code class="js">const value = selectedYears.join(',');
+if (value) params.set('years', value);
+else params.delete('years');</code></pre>
+            </div>
+            <div class="card">
+              <div class="label">Repeated key: multiple values</div>
+              <p><code>?years=2024&amp;years=2023</code></p>
+              <pre><code class="js">params.get('years');    // '2024'
+params.getAll('years'); // ['2024', '2023']</code></pre>
+              <p class="small-text">Clear the old list, then add each value:</p>
+              <pre><code class="js">params.delete('years');
+selectedYears.forEach((year) =&gt;
+  params.append('years', year)
+);</code></pre>
+            </div>
+          </div>
+          <p class="small-text">Choose one format and use it consistently when reading and writing the URL.</p>
+          <aside class="notes">URLSearchParams.get returns only the first value for a repeated key; getAll returns all values as an array. set replaces a key's values. For repeated keys, delete the existing values before appending the new selection so old values do not accumulate.</aside>
         </section>
 
         <section>
@@ -2082,6 +2113,8 @@ async function handleSave() {
   }
 }</code></pre>
           <p class="small-text">Show <code>saveError</code> next to Save with <code>role="alert"</code>. A failed save must not navigate.</p>
+          <p><a href="http://localhost:5173/play/day-3/demo/login-flow" target="_blank" rel="noopener noreferrer">Open the login flow demo</a></p>
+          <p class="small-text">Choose Succeed or Fail, then sign in to compare navigation with the error path.</p>
           <aside class="notes">This continues in the same component, with useState imported from React and navigate from the prior slide. A rejected save keeps the form visible and allows retry.</aside>
         </section>
 
@@ -2092,6 +2125,87 @@ async function handleSave() {
 navigate('/profile'); // /profile</code></pre>
           <p class="small-text">A leading slash starts at the app root. Without one, the destination is relative to the route.</p>
           <aside class="notes">The same distinction applies to Link's to prop. Keep route-relative .. and history replacement for later study.</aside>
+        </section>
+
+        <section>
+          <h2 class="slide-title">React Router Quiz 1: Which Element Renders?</h2>
+          <p>At <code>/about</code>, which element renders? What about <code>/contact</code>?</p>
+          <pre><code class="tsx">&lt;Routes&gt;
+  &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+  &lt;Route path="/about" element={&lt;About /&gt;} /&gt;
+  &lt;Route path="*" element={&lt;NotFound /&gt;} /&gt;
+&lt;/Routes&gt;</code></pre>
+          <p class="fragment"><strong class="highlight">/about renders About.</strong> It matches the explicit <code>/about</code> route.</p>
+          <p class="fragment"><strong class="highlight">/contact renders NotFound.</strong> It matches the wildcard fallback.</p>
+          <aside class="notes">Ask students to predict each URL before revealing the answers. Focus on the element supplied to each matching Route.</aside>
+        </section>
+
+        <section>
+          <h2 class="slide-title">React Router Quiz 2: What Is the ID?</h2>
+          <div class="two-col mini">
+            <div>
+              <pre><code class="tsx">&lt;Route
+  path="/products/:id"
+  element={&lt;ProductPage /&gt;}
+/&gt;
+
+const { id } = useParams();</code></pre>
+              <p>At <code>/products/42</code>, what renders, and what is <code>id</code>?</p>
+            </div>
+            <div>
+              <p class="fragment"><strong class="highlight">ProductPage</strong> renders.</p>
+              <p class="fragment"><code>id</code> is <code>'42'</code>, a string from the URL segment.</p>
+            </div>
+          </div>
+          <aside class="notes">Reveal the matched component first, then the parameter value. Route parameters are strings; convert them when numeric operations are needed.</aside>
+        </section>
+
+        <section>
+          <h2 class="slide-title">React Router Quiz 3: What Fills the Outlet?</h2>
+          <div class="two-col mini">
+            <div>
+              <pre><code class="tsx">&lt;Route path="/" element={&lt;SiteLayout /&gt;}&gt;
+  &lt;Route index element={&lt;Home /&gt;} /&gt;
+  &lt;Route path="about" element={&lt;About /&gt;} /&gt;
+&lt;/Route&gt;</code></pre>
+              <p>What does the layout's <code>Outlet</code> show at <code>/about</code> and <code>/</code>?</p>
+            </div>
+            <div>
+              <p class="fragment"><code>/about</code>: <strong class="highlight">About</strong> appears in the Outlet.</p>
+              <p class="fragment"><code>/</code>: the index route renders <strong class="highlight">Home</strong> in the Outlet.</p>
+              <p class="fragment"><code>SiteLayout</code> provides the shared parent UI for both.</p>
+            </div>
+          </div>
+          <aside class="notes">Reveal one answer at a time. The index child matches the parent URL without adding a path segment; the about child fills the same Outlet for /about.</aside>
+        </section>
+
+        <section>
+          <h2 class="slide-title">React Router Quiz 4: What Does the URL Return?</h2>
+          <p>Given <code>?years=2024&amp;years=2023</code>, what do these calls return?</p>
+          <pre><code class="tsx">const [params] = useSearchParams();
+params.get('years');
+params.getAll('years');</code></pre>
+          <p class="fragment"><code>get('years')</code> returns <code>'2024'</code>, the first value.</p>
+          <p class="fragment"><code>getAll('years')</code> returns <code>['2024', '2023']</code>.</p>
+          <aside class="notes">Ask for both values before advancing. get returns one value or null; getAll returns an array containing every value for that key.</aside>
+        </section>
+
+        <section>
+          <h2 class="slide-title">React Router Quiz 5: Navigate or Stay?</h2>
+          <pre><code class="tsx">async function handleLogin() {
+  try {
+    await login();
+    navigate('/profile');
+  } catch (error) {
+    console.error('Login failed:', error);
+    setError('Please try again.');
+  }
+}</code></pre>
+          <p>What happens after success? What happens after failure?</p>
+          <p class="fragment"><strong class="highlight">Success:</strong> navigate to <code>/profile</code> after login resolves.</p>
+          <p class="fragment"><strong class="highlight">Failure:</strong> log the error, show the message, and stay on the login page.</p>
+          <p class="fragment">Use <code>&lt;Link&gt;</code> for a normal destination; use <code>useNavigate()</code> when code chooses when to move.</p>
+          <aside class="notes">Ask students to trace both outcomes through the try/catch. The navigation is conditional on successful completion, so a rejected login remains on the current page. Contrast action-driven navigation with a normal Link.</aside>
         </section>
       </section>
     </div>

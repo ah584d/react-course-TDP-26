@@ -5,6 +5,8 @@ import './CartStateDemo.css'
 type CartDemoLayoutProps = {
   children: ReactNode
   className?: string
+  previewLabel?: string
+  sourceLabel?: string
   sources: { path: string; source: string; label?: string }[]
 }
 
@@ -41,10 +43,10 @@ export default function CartDemoLayout(props: CartDemoLayoutProps) {
 
   return (
     <div className={`cart-state-demo ${props.className ?? ''}`}>
-      <section className="cart-state-preview" aria-label="Store preview">
+      <section className="cart-state-preview" aria-label={props.previewLabel ?? 'Store preview'}>
         {props.children}
       </section>
-      <aside className="cart-state-source" aria-label="Cart code">
+      <aside className="cart-state-source" aria-label={props.sourceLabel ?? 'Cart code'}>
         <p>Edit in VS Code and save to update the preview and source together.</p>
         {hasTabs && (
           <div className="cart-state-tabs" role="tablist" aria-label="Source files">
