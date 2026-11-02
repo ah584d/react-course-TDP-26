@@ -48,13 +48,13 @@ npm run course
 In another terminal, stop any previous server on port 5174, then run the
 command for the practice you are working on:
 
-| Practice | Starter command |
-| --- | --- |
-| 1. Pages and Links | `npm run course -- day-3/exercises/streambox-pages/starter --standalone --port 5174` |
-| 2. Shared Layout and Index | `npm run course -- day-3/exercises/streambox-layout/starter --standalone --port 5174` |
-| 3. Movie Details and Cast | `npm run course -- day-3/exercises/streambox-movie-details/starter --standalone --port 5174` |
-| 4. Genre in the URL | `npm run course -- day-3/exercises/streambox-genre-filter/starter --standalone --port 5174` |
-| 5. Search and Sort Together | `npm run course -- day-3/exercises/streambox-search-and-sort/starter --standalone --port 5174` |
+| Practice | Starter command | Solution command |
+| --- | --- | --- |
+| 1. Pages and Links | `npm run course -- day-3/exercises/streambox-pages/starter --standalone --port 5174` | `npm run course -- day-3/exercises/streambox-pages/solution --standalone --port 5174` |
+| 2. Shared Layout and Index | `npm run course -- day-3/exercises/streambox-layout/starter --standalone --port 5174` | `npm run course -- day-3/exercises/streambox-layout/solution --standalone --port 5174` |
+| 3. Movie Details and Cast | `npm run course -- day-3/exercises/streambox-movie-details/starter --standalone --port 5174` | `npm run course -- day-3/exercises/streambox-movie-details/solution --standalone --port 5174` |
+| 4. Genre in the URL | `npm run course -- day-3/exercises/streambox-genre-filter/starter --standalone --port 5174` | `npm run course -- day-3/exercises/streambox-genre-filter/solution --standalone --port 5174` |
+| 5. Search and Sort Together | `npm run course -- day-3/exercises/streambox-search-and-sort/starter --standalone --port 5174` | `npm run course -- day-3/exercises/streambox-search-and-sort/solution --standalone --port 5174` |
 
 Open [localhost:5174](http://localhost:5174/) to see your work. All five
 practice pages show instructions only; the standalone app displays at `/`, with
@@ -85,11 +85,9 @@ as its index and Cast as a child. The title and movie navigation remain while
 the Outlet switches between Details and Cast. The catalogue has no movie-specific
 layout; Account, Help, and Home do not render it either.
 
-Starting in Exercise 4, supplied catalogue genre shortcuts link to fresh
-catalogue views such as `/movies?genre=comedy`. These simple links intentionally
-start a new view; the catalogue controls, by contrast, preserve other parameters
-when changing one filter. The shortcuts do not appear in earlier checkpoints,
-before query parameters are introduced.
+Exercise 4 introduces a genre dropdown backed by the `genre` query parameter,
+for example `/movies?genre=comedy`. Changing the genre preserves other query
+parameters, keeping the URL and controlled dropdown in sync.
 
 ### Embedded browser URLs
 

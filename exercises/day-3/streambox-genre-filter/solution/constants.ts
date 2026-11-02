@@ -22,5 +22,5 @@ export const checks = [
   "At /movies, select Comedy: the address contains ?genre=comedy and exactly two comedy movies appear.",
   "Open /movies?genre=animation: the dropdown shows Animation and exactly two cards appear.",
   "All genres removes genre. Browser Back/Forward and refresh restore both the selection and results.",
-  "Open /movies?genre=unknown for the recovery message. The supplied movie-section shortcuts start a new catalogue view with their genre."
+  "Open /movies?genre=unknown for the recovery message."
 ]

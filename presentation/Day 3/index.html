@@ -305,6 +305,35 @@
       overflow-wrap: anywhere;
     }
 
+    .reveal .practice-runners {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin: 0.45rem 0 0.6rem;
+      text-align: left;
+    }
+
+    .reveal .practice-runners > div {
+      min-width: 0;
+    }
+
+    .reveal .practice-runner-label {
+      margin: 0 0 0.25rem;
+      font-size: 0.62em;
+    }
+
+    .reveal .practice-runners pre {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0.25em 0.35em;
+    }
+
+    .reveal .practice-runners .practice-command code {
+      font-size: 0.46em;
+      line-height: 1.2;
+    }
+
     .reveal .route-websites {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1785,10 +1814,19 @@ export default function AboutPage() {
           <h2 class="slide-title">Practice 1: Pages and Links</h2>
           <p>Connect Streambox's Account and Help pages using routes and Links.</p>
           <p><a href="http://localhost:5173/play/day-3/exercises/streambox-pages/starter/" target="_blank" rel="noopener noreferrer">Open starter</a></p>
-          <p class="small-text">Stop the previous port-5174 demo, then run <br><pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-pages/starter --standalone --port 5174</code></pre></p>
+          <div class="practice-runners">
+            <div>
+              <p class="small-text practice-runner-label">Run the starter:</p>
+              <pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-pages/starter --standalone --port 5174</code></pre>
+            </div>
+            <div>
+              <p class="small-text practice-runner-label">Run the solution (stop server first):</p>
+              <pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-pages/solution --standalone --port 5174</code></pre>
+            </div>
+          </div>
           <p class="small-text">Open <a href="http://localhost:5174/" target="_blank" rel="noopener noreferrer">the app on port 5174</a> to see your work.</p>
           <p class="fragment"><a href="http://localhost:5173/play/day-3/exercises/streambox-pages/solution/" target="_blank" rel="noopener noreferrer">Review solution</a></p>
-          <aside class="notes">The course page shows instructions only. Check both direct URLs, refresh, and Back/Forward in the standalone app. The runner already supplies BrowserRouter. For the solution, stop the starter server and run npm run course -- day-3/exercises/streambox-pages/solution --standalone --port 5174.</aside>
+          <aside class="notes">The course page shows instructions only. Check both direct URLs, refresh, and Back/Forward in the standalone app. The runner already supplies BrowserRouter.</aside>
         </section>
 
         <section>
@@ -1891,7 +1929,16 @@ export default function SiteLayout() {
           <h2 class="slide-title">Practice 2: Shared Layout and Index</h2>
           <p>Move Streambox's shared header into StreamingLayout and render Home as its index child.</p>
           <p><a href="http://localhost:5173/play/day-3/exercises/streambox-layout/starter/" target="_blank" rel="noopener noreferrer">Open starter</a></p>
-          <p class="small-text">Stop the previous port-5174 demo, then run <br><pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-layout/starter --standalone --port 5174</code></pre></p>
+          <div class="practice-runners">
+            <div>
+              <p class="small-text practice-runner-label">Run the starter:</p>
+              <pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-layout/starter --standalone --port 5174</code></pre>
+            </div>
+            <div>
+              <p class="small-text practice-runner-label">Run the solution (stop server first):</p>
+              <pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-layout/solution --standalone --port 5174</code></pre>
+            </div>
+          </div>
           <p class="small-text">Open <a href="http://localhost:5174/" target="_blank" rel="noopener noreferrer">the app on port 5174</a> to see your work.</p>
           <p class="fragment"><a href="http://localhost:5173/play/day-3/exercises/streambox-layout/solution/" target="_blank" rel="noopener noreferrer">Review solution</a></p>
           <aside class="notes">The starter page contains the exercise instructions. Check your work in the standalone app on port 5174; the runner supplies BrowserRouter. The movie-specific Details/Cast layout comes later, after path parameters.</aside>
@@ -1943,10 +1990,19 @@ function ProductPage() {
           <h2 class="slide-title">Practice 3: Movie Details and Cast</h2>
           <p>Link each catalogue card to its movie. Make Details the index and Cast its sibling under the movie layout.</p>
           <p><a href="http://localhost:5173/play/day-3/exercises/streambox-movie-details/starter/" target="_blank" rel="noopener noreferrer">Open starter</a></p>
-          <p class="small-text">Stop the previous port-5174 demo, then run <br><pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-movie-details/starter --standalone --port 5174</code></pre></p>
+          <div class="practice-runners">
+            <div>
+              <p class="small-text practice-runner-label">Run the starter:</p>
+              <pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-movie-details/starter --standalone --port 5174</code></pre>
+            </div>
+            <div>
+              <p class="small-text practice-runner-label">Run the solution (stop server first):</p>
+              <pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-movie-details/solution --standalone --port 5174</code></pre>
+            </div>
+          </div>
           <p class="small-text">Open <a href="http://localhost:5174/" target="_blank" rel="noopener noreferrer">the app on port 5174</a> to see your work.</p>
           <p class="fragment"><a href="http://localhost:5173/play/day-3/exercises/streambox-movie-details/solution/" target="_blank" rel="noopener noreferrer">Review solution</a></p>
-          <aside class="notes">The starter page contains the exercise instructions. Check /movies/101, /movies/101/cast, /movies/999, and /unknown in the standalone app; refresh and use Back/Forward. The runner supplies BrowserRouter. For the solution, stop the starter server and run npm run course -- day-3/exercises/streambox-movie-details/solution --standalone --port 5174.</aside>
+          <aside class="notes">The starter page contains the exercise instructions. Check /movies/101, /movies/101/cast, /movies/999, and /unknown in the standalone app; refresh and use Back/Forward. The runner supplies BrowserRouter.</aside>
         </section>
 
         <section>
@@ -1958,7 +2014,7 @@ function ProductPage() {
               <li>Syntax: <code>/products<strong>?category=shoes&amp;sort=price</code></strong>.</li>
               <li>We access the query param values with React Router's <code>useSearchParams</code> hook.</li>
             </ul>
-            <p>Example: <a href="https://www.yad2.co.il/vehicles/cars" target="_blank" rel="noopener noreferrer">Filtering cars list</a></p>
+            <p>Example: <a href="https://store.steampowered.com/category/racing" target="_blank" rel="noopener noreferrer">Steam racing games</a></p>
           </div>
           <pre class="fragment"><code class="tsx">
 import { useSearchParams } from "react-router-dom";
@@ -2044,10 +2100,19 @@ const visibleMovies = movies.filter(
           <h2 class="slide-title">Practice 4: Genre in the URL</h2>
           <p>Connect Streambox's genre dropdown to <code>useSearchParams</code>.</p>
           <p><a href="http://localhost:5173/play/day-3/exercises/streambox-genre-filter/starter/" target="_blank" rel="noopener noreferrer">Open starter</a></p>
-          <p class="small-text">Stop the previous port-5174 demo, then run <br><pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-genre-filter/starter --standalone --port 5174</code></pre></p>
+          <div class="practice-runners">
+            <div>
+              <p class="small-text practice-runner-label">Run the starter:</p>
+              <pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-genre-filter/starter --standalone --port 5174</code></pre>
+            </div>
+            <div>
+              <p class="small-text practice-runner-label">Run the solution (stop server first):</p>
+              <pre class="tsx practice-command"><code>npm run course -- day-3/exercises/streambox-genre-filter/solution --standalone --port 5174</code></pre>
+            </div>
+          </div>
           <p class="small-text">Open <a href="http://localhost:5174/" target="_blank" rel="noopener noreferrer">the app on port 5174</a> to see your work.</p>
           <p class="fragment"><a href="http://localhost:5173/play/day-3/exercises/streambox-genre-filter/solution/" target="_blank" rel="noopener noreferrer">Review solution</a></p>
-          <aside class="notes">The starter page contains the exercise instructions. Check /movies?genre=comedy, /movies?genre=animation, refresh, and use Back/Forward in the standalone app. The runner supplies BrowserRouter. For the solution, stop the starter server and run npm run course -- day-3/exercises/streambox-genre-filter/solution --standalone --port 5174.</aside>
+          <aside class="notes">The starter page contains the exercise instructions. Check /movies?genre=comedy, /movies?genre=animation, refresh, and use Back/Forward in the standalone app. The runner supplies BrowserRouter.</aside>
         </section>
 
         <section>
@@ -2171,8 +2236,8 @@ const { id } = useParams();</code></pre>
               <p>What does the layout's <code>Outlet</code> show at <code>/about</code> and <code>/</code>?</p>
             </div>
             <div>
-              <p class="fragment"><code>/about</code>: <strong class="highlight">About</strong> appears in the Outlet.</p>
-              <p class="fragment"><code>/</code>: the index route renders <strong class="highlight">Home</strong> in the Outlet.</p>
+              <p class="fragment"><code>/about</code> - <strong class="highlight">About</strong> appears in the Outlet.</p>
+              <p class="fragment"><code>/</code> - the index route renders <strong class="highlight">Home</strong> in the Outlet.</p>
               <p class="fragment"><code>SiteLayout</code> provides the shared parent UI for both.</p>
             </div>
           </div>
