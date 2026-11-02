@@ -37,9 +37,6 @@ export default function MovieCatalogPage() {
     <section className="sb-page">
       <h2>Browse movies</h2>
       <p className="sb-muted">Fictional films. Real navigation. Find your next movie night.</p>
-      <nav aria-label="Genre shortcuts">
-        {GENRES.map((option) => <Link key={option.id} to={`/movies?genre=${option.id}`}>{option.label}</Link>)}
-      </nav>
       <div className="sb-filters">
         <label>
           Genre

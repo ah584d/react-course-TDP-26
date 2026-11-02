@@ -21,18 +21,19 @@ export default function MovieCatalogPage() {
     (genre === '' || movie.genre === genre)
   )
 
+  function changeGenre(nextGenre: string) {
+    // TODO: Update the URL's genre parameter while preserving other parameters.
+  }
+
   return (
     <section className="sb-page">
       <h2>Browse movies</h2>
       <p className="sb-muted">Fictional films. Real navigation. Find your next movie night.</p>
-      <nav aria-label="Genre shortcuts">
-        {GENRES.map((option) => <Link key={option.id} to={`/movies?genre=${option.id}`}>{option.label}</Link>)}
-      </nav>
-      <p className="sb-todo">TODO: Connect genre to the URL, then enable the dropdown.</p>
+      <p className="sb-todo">TODO: Connect the dropdown to the URL.</p>
       <div className="sb-filters">
         <label>
           Genre
-          <select aria-label="Genre" value={genre} disabled>
+          <select aria-label="Genre" value={genre} onChange={(event) => changeGenre(event.target.value)}>
             <option value="">All genres</option>
             {GENRES.map((option) => <option key={option.id} value={option.id}>{option.label}</option>)}
           </select>

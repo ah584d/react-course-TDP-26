@@ -18,9 +18,11 @@ export default function StreamboxMovieDetailsStarter() {
           <summary>Check your work</summary>
           <ul>{checks.map((check) => <li key={check}>{check}</li>)}</ul>
         </details>
-        <p>Start fresh here: prerequisite work is supplied. The runner supplies BrowserRouter. This embedded view uses a /play/... base prefix; keep it when typing URLs here. Optional --standalone mode uses clean paths at /. Your routes use / for Home, /movies for the catalogue, and /account and /help relative to that base.</p>
+        <p>Start fresh here: prerequisite work is supplied.</p>
+        <p>Run your app in another terminal. Stop any previous server on port 5174 first:</p>
+        <pre><code>npm run course -- day-3/exercises/streambox-movie-details/starter --standalone --port 5174</code></pre>
+        <p>Then open <a href="http://localhost:5174/" target="_blank" rel="noopener noreferrer">localhost:5174</a>. Test /movies/101, /movies/101/cast, /movies/999, and /unknown directly; refresh a detail URL and use Back/Forward. The runner supplies BrowserRouter; do not add another one.</p>
       </section>
-      <StandaloneApp />
     </div>
   )
 }

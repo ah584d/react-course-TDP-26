@@ -207,6 +207,64 @@
   padding: 0;
 }
 
+.streambox .streambox-query-demo .cart-state-preview {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.streambox .streambox-query-demo .sb-genre-demo {
+  padding: 16px;
+}
+
+.streambox .streambox-query-demo .sb-genre-buttons {
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+}
+
+.streambox .streambox-query-demo .sb-genre-buttons button {
+  min-height: 36px;
+  padding: 7px 10px;
+  font-size: 14px;
+}
+
+.streambox .streambox-query-demo .sb-genre-buttons button[aria-pressed="true"] {
+  border-color: #ff8ea1;
+  background: #593349;
+}
+
+.streambox .streambox-query-demo .sb-genre-results {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.streambox .streambox-query-demo .sb-genre-results li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #454052;
+}
+
+.streambox .streambox-query-demo .sb-genre-results li span:last-child {
+  color: #b6b5c8;
+}
+
+.streambox .streambox-query-demo .cart-state-source pre {
+  max-height: 68vh;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.streambox .streambox-query-demo .cart-state-source pre code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .streambox button {
   cursor: pointer;
   background: #593349;
