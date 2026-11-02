@@ -34,19 +34,8 @@ npm run course -- day-3/exercises/streambox-pages/starter
 npm run course -- day-3/exercises/streambox-search-and-sort/solution
 ```
 
-Each preview lists its TODOs, editable files, and observable completion checks.
-```
-
-For Practice 1, start its app in another terminal:
-
-```sh
-[streambox-shared](streambox-shared); the teaching components are local to each
-```
-
-For Practice 2, stop any previous server on port 5174, then run:
-
-```sh
-authentication, payment integration, or playable video.
+Each preview identifies its editable files and observable checks; remaining
+starter work is labelled where applicable.
 
 ### Standalone viewing for Practices 1-5
 
@@ -200,7 +189,7 @@ Transform a static podcast list into a multi-page app using React Router compone
 
 4. **`EpisodeDetails.tsx`** — Replace the plain `<a href="/">` anchor tags with `<Link to="/">` so navigation stays inside the router.
 
-> **Note:** This exercise uses `<MemoryRouter>` instead of `<BrowserRouter>` because the course runner already uses the real browser URL for navigation. In a real app you would use `<BrowserRouter>`.
+> **Note:** This exercise uses `<MemoryRouter>` so its internal navigation stays in memory and does not change the browser address. Use StreamBox to demonstrate real URL and browser-history behavior.
 
 It is preserved as additional practice. Its internal paths do not update the
 browser address bar, so use StreamBox to demonstrate real URL/history behavior.

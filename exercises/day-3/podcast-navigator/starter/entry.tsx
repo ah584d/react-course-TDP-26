@@ -2,10 +2,8 @@ import '../PodcastNavigator.css'
 import { meta } from './constants'
 import Preview from './Preview'
 import { MemoryRouter } from 'react-router-dom'
-// Note: We use MemoryRouter instead of BrowserRouter here because the course
-// runner already uses the real browser URL for navigation (?target=...).
-// MemoryRouter keeps routing state in memory, so it won't conflict with
-// the outer page. In a real app you would use BrowserRouter instead.
+// MemoryRouter keeps this optional exercise's route state in memory; its
+// internal navigation does not change the browser address bar.
 
 export { meta }
 

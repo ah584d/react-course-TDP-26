@@ -51,6 +51,18 @@ Open http://localhost:5174/. This separate [demo](navigation-links/StandaloneApp
 uses the same Home and About URLs but adds a shared Navbar with Links in both
 pages. Clicking Home or About changes the URL without reloading the document.
 
+## Login Navigation and Errors
+
+```sh
+npm run course -- day-3/demo/login-flow
+```
+
+Choose **Succeed** and submit to navigate from the app's `/` route to `/profile`.
+Choose **Fail** to stay on the sign-in page and display an error. The runner
+serves these routes under `/play/day-3/demo/login-flow` and provides
+`BrowserRouter`. This is a mocked outcome selector, not a credential form or
+authentication service.
+
 ## Updating Query Parameters
 
 Open `/play/day-3/demo/query-params` on the existing course server (normally
