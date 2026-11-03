@@ -300,6 +300,163 @@
             </table>
           </section>
 
+          <!-- Slide 2-pre: children schema -->
+          <section>
+            <h3>children = the "slot" 🎁</h3>
+            <p class="small-text">
+              The parent decides the content, the component decides the frame
+            </p>
+            <svg
+              class="diagram-svg"
+              viewBox="0 0 800 340"
+              style="margin-top: 0.5rem"
+            >
+              <defs>
+                <marker
+                  id="arrowhead-children"
+                  markerWidth="10"
+                  markerHeight="10"
+                  refX="8"
+                  refY="3"
+                  orient="auto"
+                >
+                  <polygon points="0 0, 10 3, 0 6" fill="#61dafb" />
+                </marker>
+              </defs>
+
+              <!-- Parent (left) -->
+              <rect x="30" y="30" width="300" height="270" rx="12" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.3)" stroke-width="2" />
+              <text x="180" y="60" text-anchor="middle" fill="#8fb5d8" font-size="16" font-weight="bold">👨 Parent writes</text>
+              <text x="60" y="105" fill="#fbbf24" font-size="16">&lt;Card&gt;</text>
+              <rect x="80" y="120" width="220" height="100" rx="8" fill="rgba(97,218,251,0.14)" stroke="#61dafb" stroke-width="2" />
+              <text x="100" y="155" fill="#c8d2de" font-size="15">&lt;h2&gt;Hello&lt;/h2&gt;</text>
+              <text x="100" y="185" fill="#c8d2de" font-size="15">&lt;p&gt;I am inside&lt;/p&gt;</text>
+              <text x="190" y="210" text-anchor="middle" fill="#61dafb" font-size="12">content</text>
+              <text x="60" y="255" fill="#fbbf24" font-size="16">&lt;/Card&gt;</text>
+
+              <!-- Arrow -->
+              <line x1="335" y1="170" x2="455" y2="170" stroke="#61dafb" stroke-width="3" marker-end="url(#arrowhead-children)" />
+              <text x="395" y="155" text-anchor="middle" fill="#61dafb" font-size="14" font-weight="bold">children</text>
+
+              <!-- Card component (right) -->
+              <rect x="470" y="30" width="300" height="270" rx="12" fill="rgba(251,191,36,0.1)" stroke="#fbbf24" stroke-width="2" />
+              <text x="620" y="60" text-anchor="middle" fill="#fbbf24" font-size="16" font-weight="bold">📦 Card component</text>
+              <text x="620" y="95" text-anchor="middle" fill="#c8d2de" font-size="13">&lt;div className="card"&gt;</text>
+              <rect x="500" y="115" width="240" height="100" rx="8" fill="none" stroke="#61dafb" stroke-width="2" stroke-dasharray="8 6" />
+              <text x="620" y="160" text-anchor="middle" fill="#61dafb" font-size="16" font-weight="bold">{props.children}</text>
+              <text x="620" y="190" text-anchor="middle" fill="#8fb5d8" font-size="12">← the empty slot</text>
+              <text x="620" y="250" text-anchor="middle" fill="#c8d2de" font-size="13">&lt;/div&gt;</text>
+            </svg>
+          </section>
+
+          <!-- Slide 2a: What is children? -->
+          <section>
+            <h3>What is <span class="highlight">children</span>? 👶</h3>
+            <p class="small-text">
+              Whatever you put <span class="highlight">between</span> the
+              opening and closing tags
+            </p>
+            <pre><code class="tsx" style="font-size: 0.6em;">import type { ReactNode } from "react";
+
+type CardProps = {
+  children: ReactNode; // text, elements, components...
+};
+
+function Card(props: CardProps) {
+  return &lt;div className="card"&gt;{props.children}&lt;/div&gt;;
+}
+
+// Usage - everything inside &lt;Card&gt; becomes props.children
+&lt;Card&gt;
+  &lt;h2&gt;Hello&lt;/h2&gt;
+  &lt;p&gt;I am inside the card&lt;/p&gt;
+&lt;/Card&gt;</code></pre>
+            <div class="card" style="margin-top: 1rem">
+              <p style="font-size: 0.75em">
+                💡 <span class="highlight">Think of it as a "slot":</span>
+                the component builds the box, the parent decides what goes
+                inside
+              </p>
+            </div>
+          </section>
+
+          <!-- Slide 2b: Why do we need children? -->
+          <section>
+            <h3>Why do we need children?</h3>
+            <div class="two-col" style="margin-top: 1.5rem">
+              <div>
+                <h4>❌ Without children</h4>
+                <pre><code class="tsx" style="font-size: 0.55em;">// One component per case,
+// or a prop for every detail
+&lt;Card
+  title="Hello"
+  text="I am inside"
+  showButton={true}
+  footer="..."
+/&gt;</code></pre>
+                <ul style="font-size: 0.7em; line-height: 1.7">
+                  <li>Too many props</li>
+                  <li>Rigid - hard to change content</li>
+                </ul>
+              </div>
+              <div>
+                <h4>✅ With children</h4>
+                <pre><code class="tsx" style="font-size: 0.55em;">// One wrapper, any content
+&lt;Card&gt;
+  &lt;h2&gt;Hello&lt;/h2&gt;
+  &lt;Avatar user={user} /&gt;
+  &lt;button&gt;Save&lt;/button&gt;
+&lt;/Card&gt;</code></pre>
+                <ul style="font-size: 0.7em; line-height: 1.7">
+                  <li>Reusable layout / behavior</li>
+                  <li>Flexible - any content fits</li>
+                </ul>
+              </div>
+            </div>
+            <div class="card" style="margin-top: 1rem">
+              <p style="font-size: 0.7em">
+                🎯 <span class="highlight">Bonus:</span> the parent creates
+                <code>&lt;Avatar user={user} /&gt;</code> itself, so
+                <code>user</code> doesn't pass through the wrapper - less
+                prop drilling!
+              </p>
+            </div>
+          </section>
+
+          <!-- Slide 2c: Real example of children -->
+          <section>
+            <h3>Real use: drill-down card</h3>
+            <p class="small-text">
+              The card owns the open/close logic, the parent owns the content
+            </p>
+            <pre><code class="tsx" style="font-size: 0.55em;">function DrillDownCard(props: { title: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; setOpen(!open)}&gt;{props.title}&lt;/button&gt;
+      {open &amp;&amp; &lt;div&gt;{props.children}&lt;/div&gt;}
+    &lt;/div&gt;
+  );
+}
+
+// Same card, any content
+&lt;DrillDownCard title="Details"&gt;
+  &lt;p&gt;Secret content 🎉&lt;/p&gt;
+&lt;/DrillDownCard&gt;
+
+&lt;DrillDownCard title="Nested"&gt;
+  &lt;DrillDownCard title="Go deeper"&gt;
+    &lt;p&gt;Cards inside cards&lt;/p&gt;
+  &lt;/DrillDownCard&gt;
+&lt;/DrillDownCard&gt;</code></pre>
+            <div class="roadmap" style="margin-top: 1rem">
+              <span>Wrapper</span>
+              <span>children</span>
+              <span>Reusable</span>
+            </div>
+          </section>
+
           <!-- Slide 3: Single Source of Truth - BAD Example -->
           <section>
             <h3>Problem: Multiple sources of truth</h3>
@@ -2152,7 +2309,24 @@ const useStore = create((set) => ({
 
             <div class="card" style="margin-top: 1rem">
               <p style="font-size: 0.7em">⏱️ Time: 15 minutes</p>
+              <ol style="font-size: 0.65em; line-height: 1.6">
+                <li>Add a <code>remove</code> action to the store (count - 1)</li>
+                <li>Make the grid 2×2: <code>gridTemplateRows: "1fr 1fr"</code></li>
+                <li>Add a second counter display (bottom-left)</li>
+                <li>Add a red <code>Remove</code> button (bottom-right, #f44336)</li>
+                <li>Both displays must show the same value from the store</li>
+              </ol>
             </div>
+            <p class="small-text" style="margin-top: 1rem">
+              <a href="http://localhost:5173/?target=day-3-part-2/exercises/zustand-counter/starter" target="_blank" style="color:var(--accent)">Open Exercise</a>
+              &nbsp;|&nbsp;
+              <a href="http://localhost:5173/?target=day-3-part-2/exercises/zustand-counter/solution" target="_blank" style="color:var(--accent)">Open Solution</a>
+            </p>
+            <aside class="notes">
+              Students edit useCounterStore.ts (add remove) and Counter.tsx (2x2 grid, second display, Remove button).
+              Exercise: http://localhost:5173/?target=day-3-part-2/exercises/zustand-counter/starter
+              Solution: http://localhost:5173/?target=day-3-part-2/exercises/zustand-counter/solution
+            </aside>
           </section>
 
           <!-- Slide 30: Key Takeaways -->
@@ -2230,6 +2404,289 @@ const useStore = create((set) => ({
                 <code style="color: var(--accent)">Zustand</code>
               </p>
             </div>
+          </section>
+
+          <!-- Error handling: intro -->
+          <section>
+            <h2>Error handling ⚠️</h2>
+            <p class="small-text">Things will fail. Plan for it.</p>
+            <div class="roadmap" style="margin-top: 1.5rem">
+              <span>try / catch</span>
+              <span>then / catch</span>
+              <span>Error Boundary</span>
+              <span>Suspense</span>
+            </div>
+          </section>
+
+          <!-- Error handling: try/catch -->
+          <section>
+            <h3>try / catch (async / await)</h3>
+            <p class="small-text">
+              Run risky code in <span class="highlight">try</span>, handle the
+              failure in <span class="highlight">catch</span>
+            </p>
+            <pre><code class="tsx" style="font-size: 0.6em;">async function loadUser(id: number) {
+  try {
+    const res = await fetch(`/api/users/${id}`);
+
+    // fetch does NOT throw on 404 / 500 - check it yourself
+    if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
+    return await res.json();
+  } catch (error) {
+    console.error("Failed to load user", error);
+    throw error; // or return a fallback value
+  } finally {
+    console.log("Always runs - good for cleanup");
+  }
+}</code></pre>
+          </section>
+
+          <!-- Error handling: then/catch -->
+          <section>
+            <h3>then / catch (Promises)</h3>
+            <p class="small-text">Same idea, different syntax</p>
+            <div class="two-col" style="margin-top: 1rem">
+              <div>
+                <h4>.then / .catch</h4>
+                <pre><code class="tsx" style="font-size: 0.5em;">fetch("/api/users/1")
+  .then((res) =&gt; {
+    if (!res.ok) throw new Error("Failed");
+    return res.json();
+  })
+  .then((user) =&gt; console.log(user))
+  .catch((error) =&gt; console.error(error))
+  .finally(() =&gt; console.log("done"));</code></pre>
+              </div>
+              <div>
+                <h4>async / await</h4>
+                <pre><code class="tsx" style="font-size: 0.5em;">try {
+  const res = await fetch("/api/users/1");
+  if (!res.ok) throw new Error("Failed");
+  const user = await res.json();
+  console.log(user);
+} catch (error) {
+  console.error(error);
+} finally {
+  console.log("done");
+}</code></pre>
+              </div>
+            </div>
+            <div class="card" style="margin-top: 1rem">
+              <p style="font-size: 0.7em">
+                💡 Prefer <span class="highlight">async / await</span> - it
+                reads top to bottom
+              </p>
+            </div>
+          </section>
+
+          <!-- Error handling: in React -->
+          <section>
+            <h3>Error handling in React</h3>
+            <p class="small-text">
+              Keep an <span class="highlight">error state</span> and show it
+            </p>
+            <pre><code class="tsx" style="font-size: 0.55em;">function UserCard(props: { id: number }) {
+  const [user, setUser] = useState&lt;User | null&gt;(null);
+  const [error, setError] = useState&lt;string | null&gt;(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() =&gt; {
+    async function load() {
+      try {
+        const res = await fetch(`/api/users/${props.id}`);
+        if (!res.ok) throw new Error("Could not load user");
+        setUser(await res.json());
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Unknown error");
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, [props.id]);
+
+  if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+  if (error) return &lt;p&gt;❌ {error}&lt;/p&gt;;
+  return &lt;p&gt;Hello {user?.name}&lt;/p&gt;;
+}</code></pre>
+          </section>
+
+          <!-- Error handling: why Error Boundary -->
+          <section>
+            <h3>What try / catch can't catch</h3>
+            <div class="two-col" style="margin-top: 1.5rem">
+              <div class="card">
+                <h4>✅ try / catch works for</h4>
+                <ul style="font-size: 0.7em; line-height: 1.7">
+                  <li>fetch / async code</li>
+                  <li>Event handlers</li>
+                  <li>Plain functions</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h4>❌ It can't catch</h4>
+                <ul style="font-size: 0.7em; line-height: 1.7">
+                  <li>Errors <b>while rendering</b></li>
+                  <li>Bug inside a child component</li>
+                </ul>
+              </div>
+            </div>
+            <div class="card" style="margin-top: 1rem">
+              <p style="font-size: 0.7em">
+                🔥 A render error with no protection = the
+                <span class="highlight">whole app goes white</span>
+              </p>
+            </div>
+          </section>
+
+          <!-- Error handling: Error Boundary diagram -->
+          <section>
+            <h3>Error Boundary 🛡️</h3>
+            <p class="small-text">
+              A component that catches render errors of its children and shows a
+              fallback
+            </p>
+            <svg
+              class="diagram-svg"
+              viewBox="0 0 800 300"
+              style="margin-top: 0.5rem"
+            >
+              <defs>
+                <marker
+                  id="arrowhead-boundary"
+                  markerWidth="10"
+                  markerHeight="10"
+                  refX="8"
+                  refY="3"
+                  orient="auto"
+                >
+                  <polygon points="0 0, 10 3, 0 6" fill="#ef4444" />
+                </marker>
+              </defs>
+
+              <rect x="30" y="20" width="740" height="260" rx="12" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.3)" stroke-width="2" />
+              <text x="50" y="50" fill="#8fb5d8" font-size="16" font-weight="bold">📱 App (keeps working)</text>
+
+              <rect x="60" y="70" width="680" height="190" rx="10" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="2" stroke-dasharray="8 6" />
+              <text x="80" y="98" fill="#22c55e" font-size="15" font-weight="bold">🛡️ ErrorBoundary</text>
+
+              <rect x="90" y="120" width="190" height="110" rx="8" fill="rgba(239,68,68,0.2)" stroke="#ef4444" stroke-width="2" />
+              <text x="185" y="160" text-anchor="middle" fill="#ef4444" font-size="15" font-weight="bold">💥 Child</text>
+              <text x="185" y="185" text-anchor="middle" fill="#c8d2de" font-size="13">throws while rendering</text>
+
+              <line x1="285" y1="175" x2="465" y2="175" stroke="#ef4444" stroke-width="3" marker-end="url(#arrowhead-boundary)" />
+              <text x="375" y="160" text-anchor="middle" fill="#ef4444" font-size="13">error</text>
+
+              <rect x="480" y="120" width="230" height="110" rx="8" fill="rgba(251,191,36,0.15)" stroke="#fbbf24" stroke-width="2" />
+              <text x="595" y="160" text-anchor="middle" fill="#fbbf24" font-size="15" font-weight="bold">Fallback UI</text>
+              <text x="595" y="185" text-anchor="middle" fill="#c8d2de" font-size="13">"Something went wrong"</text>
+            </svg>
+          </section>
+
+          <!-- Error handling: Error Boundary code -->
+          <section>
+            <h3>Error Boundary - the code</h3>
+            <pre><code class="tsx" style="font-size: 0.5em;">import { Component } from "react";
+import type { ReactNode } from "react";
+
+type Props = { fallback: ReactNode; children: ReactNode };
+type State = { hasError: boolean };
+
+class ErrorBoundary extends Component&lt;Props, State&gt; {
+  state: State = { hasError: false };
+
+  // React calls this when a child throws while rendering
+  static getDerivedStateFromError(): State {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    console.error("Caught by boundary:", error); // log to a service
+  }
+
+  render() {
+    return this.state.hasError ? this.props.fallback : this.props.children;
+  }
+}
+
+// Usage
+&lt;ErrorBoundary fallback={&lt;p&gt;Something went wrong 😢&lt;/p&gt;}&gt;
+  &lt;UserCard id={1} /&gt;
+&lt;/ErrorBoundary&gt;</code></pre>
+            <div class="card" style="margin-top: 0.8rem">
+              <p style="font-size: 0.65em">
+                💡 It's the one case that still needs a
+                <span class="highlight">class</span>. In practice, use the
+                <code>react-error-boundary</code> package
+              </p>
+            </div>
+          </section>
+
+          <!-- Error handling: Suspense -->
+          <section>
+            <h3>Suspense ⏳</h3>
+            <p class="small-text">
+              Show a <span class="highlight">fallback while waiting</span> for
+              something to be ready
+            </p>
+            <pre><code class="tsx" style="font-size: 0.6em;">import { lazy, Suspense } from "react";
+
+// Code is downloaded only when the component is first shown
+const Settings = lazy(() =&gt; import("./Settings"));
+
+function App() {
+  return (
+    &lt;Suspense fallback={&lt;p&gt;Loading...&lt;/p&gt;}&gt;
+      &lt;Settings /&gt;
+    &lt;/Suspense&gt;
+  );
+}</code></pre>
+            <div class="card" style="margin-top: 1rem">
+              <p style="font-size: 0.7em">
+                Suspense handles <span class="highlight">waiting</span>. It does
+                <b>not</b> handle failing - that is the Error Boundary's job
+              </p>
+            </div>
+          </section>
+
+          <!-- Error handling: together + summary -->
+          <section>
+            <h3>Put it together</h3>
+            <pre><code class="tsx" style="font-size: 0.6em;">&lt;ErrorBoundary fallback={&lt;p&gt;Something went wrong 😢&lt;/p&gt;}&gt;
+  &lt;Suspense fallback={&lt;p&gt;Loading...&lt;/p&gt;}&gt;
+    &lt;Settings /&gt;
+  &lt;/Suspense&gt;
+&lt;/ErrorBoundary&gt;</code></pre>
+            <table style="margin-top: 1rem; font-size: 0.7em">
+              <thead>
+                <tr>
+                  <th>Tool</th>
+                  <th>Handles</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>try / catch, .catch</td>
+                  <td>Async code &amp; event handlers</td>
+                </tr>
+                <tr>
+                  <td>Error state</td>
+                  <td>Show the error in the UI</td>
+                </tr>
+                <tr>
+                  <td>Error Boundary</td>
+                  <td>Errors while rendering</td>
+                </tr>
+                <tr>
+                  <td>Suspense</td>
+                  <td>Waiting / loading</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="small-text" style="margin-top: 1rem">
+              Live demo: <code style="color: var(--accent)">ErrorHandlingDemo</code>
+            </p>
           </section>
         </section>
       </div>

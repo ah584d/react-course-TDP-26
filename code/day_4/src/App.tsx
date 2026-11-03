@@ -121,6 +121,8 @@ function App() {
         <nav>
           <Link to="/prop-drilling">Prop Drilling - Theme Toggle (re-renders!)</Link>
           <Link to="/context">Context API - Theme Toggle</Link>
+          <Link to="/children">Children - Drill-down Card</Link>
+          <Link to="/error-handling">Error Handling - Boundary & Suspense</Link>
           <Link to="/zustand-todo">Zustand - Todo List</Link>
         </nav>
       </section>
