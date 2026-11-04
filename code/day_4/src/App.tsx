@@ -122,7 +122,7 @@ function App() {
           <Link to="/prop-drilling">Prop Drilling - Theme Toggle (re-renders!)</Link>
           <Link to="/context">Context API - Theme Toggle</Link>
           <Link to="/children">Children - Drill-down Card</Link>
-          <Link to="/error-handling">Error Handling - Boundary & Suspense</Link>
+          <Link to="/error-handling">Error Handling - try/catch & Error Boundary</Link>
           <Link to="/zustand-shop">Zustand - Mini Shop</Link>
         </nav>
       </section>

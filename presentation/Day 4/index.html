@@ -2479,7 +2479,6 @@ const useStore = create((set) => ({
               <span>try / catch</span>
               <span>then / catch</span>
               <span>Error Boundary</span>
-              <span>Suspense</span>
             </div>
           </section>
 
@@ -2688,40 +2687,13 @@ class ErrorBoundary extends Component&lt;Props, State&gt; {
             </div>
           </section>
 
-          <!-- Error handling: Suspense -->
-          <section>
-            <h3>Suspense ⏳</h3>
-            <p class="small-text">
-              Show a <span class="highlight">fallback while waiting</span> for
-              something to be ready
-            </p>
-            <pre><code class="tsx" style="font-size: 0.6em;">import { lazy, Suspense } from "react";
-
-// Code is downloaded only when the component is first shown
-const Settings = lazy(() =&gt; import("./Settings"));
-
-function App() {
-  return (
-    &lt;Suspense fallback={&lt;p&gt;Loading...&lt;/p&gt;}&gt;
-      &lt;Settings /&gt;
-    &lt;/Suspense&gt;
-  );
-}</code></pre>
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.7em">
-                Suspense handles <span class="highlight">waiting</span>. It does
-                <b>not</b> handle failing - that is the Error Boundary's job
-              </p>
-            </div>
-          </section>
-
           <!-- Error handling: together + summary -->
           <section>
             <h3>Put it together</h3>
-            <pre><code class="tsx" style="font-size: 0.6em;">&lt;ErrorBoundary fallback={&lt;p&gt;Something went wrong 😢&lt;/p&gt;}&gt;
-  &lt;Suspense fallback={&lt;p&gt;Loading...&lt;/p&gt;}&gt;
-    &lt;Settings /&gt;
-  &lt;/Suspense&gt;
+            <pre><code class="tsx" style="font-size: 0.6em;">// UserCard handles fetch errors with try / catch + error state
+// ErrorBoundary protects the app from errors while rendering
+&lt;ErrorBoundary fallback={&lt;p&gt;Something went wrong 😢&lt;/p&gt;}&gt;
+  &lt;UserCard id={1} /&gt;
 &lt;/ErrorBoundary&gt;</code></pre>
             <table style="margin-top: 1rem; font-size: 0.7em">
               <thead>
@@ -2742,10 +2714,6 @@ function App() {
                 <tr>
                   <td>Error Boundary</td>
                   <td>Errors while rendering</td>
-                </tr>
-                <tr>
-                  <td>Suspense</td>
-                  <td>Waiting / loading</td>
                 </tr>
               </tbody>
             </table>
