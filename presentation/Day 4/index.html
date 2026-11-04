@@ -466,7 +466,18 @@ function Card(props: CardProps) {
             <p class="small-text">
               The card owns the open/close logic, the parent owns the content
             </p>
-            <pre><code class="tsx" style="font-size: 0.55em;">function DrillDownCard(props: { title: string; children: ReactNode }) {
+            <pre><code class="tsx" style="font-size: 0.55em;">// Same card, any content
+&lt;DrillDownCard title="Details"&gt;
+  &lt;p&gt;Secret content 🎉&lt;/p&gt;
+&lt;/DrillDownCard&gt;
+
+&lt;DrillDownCard title="Nested"&gt;
+  &lt;DrillDownCard title="Go deeper"&gt;
+    &lt;p&gt;Cards inside cards&lt;/p&gt;
+  &lt;/DrillDownCard&gt;
+&lt;/DrillDownCard&gt;
+
+function DrillDownCard(props: { title: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -476,17 +487,7 @@ function Card(props: CardProps) {
     &lt;/div&gt;
   );
 }
-
-// Same card, any content
-&lt;DrillDownCard title="Details"&gt;
-  &lt;p&gt;Secret content 🎉&lt;/p&gt;
-&lt;/DrillDownCard&gt;
-
-&lt;DrillDownCard title="Nested"&gt;
-  &lt;DrillDownCard title="Go deeper"&gt;
-    &lt;p&gt;Cards inside cards&lt;/p&gt;
-  &lt;/DrillDownCard&gt;
-&lt;/DrillDownCard&gt;</code></pre>
+</code></pre>
             <div class="roadmap" style="margin-top: 1rem">
               <span>Wrapper</span>
               <span>children</span>
