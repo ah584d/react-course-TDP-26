@@ -1625,6 +1625,33 @@ const Button = () => {
             </div>
           </section>
 
+          <!-- Slide 18a: What causes a re-render? -->
+          <section>
+            <h3>What makes a component re-render? 🔄</h3>
+            <ol style="font-size: 0.8em; line-height: 1.9">
+              <li class="fragment">
+                Its <span class="highlight">own state</span> changes
+                <code>useState</code> / <code>useReducer</code>
+              </li>
+              <li class="fragment">
+                Its <span class="highlight">parent</span> re-renders
+                <span class="small-text">(even if its props are the same)</span>
+              </li>
+              <li class="fragment">
+                A <span class="highlight">context it consumes</span> changes
+                <code>useContext</code>
+              </li>
+            </ol>
+            <div class="card fragment" style="margin-top: 1rem">
+              <p style="font-size: 0.7em">
+                ⚠️ A context is compared as <span class="highlight">one
+                value</span>. If anything inside it changes, <b>every</b>
+                component that calls <code>useContext</code> re-renders - even
+                if it uses only one property
+              </p>
+            </div>
+          </section>
+
           <!-- Slide 18b: Context Performance Problem -->
           <section>
             <h3>Context downside: Performance issue ⚠️</h3>

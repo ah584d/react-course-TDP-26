@@ -123,7 +123,7 @@ function App() {
           <Link to="/context">Context API - Theme Toggle</Link>
           <Link to="/children">Children - Drill-down Card</Link>
           <Link to="/error-handling">Error Handling - Boundary & Suspense</Link>
-          <Link to="/zustand-todo">Zustand - Todo List</Link>
+          <Link to="/zustand-shop">Zustand - Mini Shop</Link>
         </nav>
       </section>
     </>
