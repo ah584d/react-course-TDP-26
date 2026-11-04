@@ -32,3 +32,35 @@
   background: rgba(251, 191, 36, 0.15);
   border: 1px solid #fbbf24;
 }
+
+.error-demo {
+  color-scheme: light;
+}
+
+.error-demo h1,
+.error-demo h2 {
+  color: #1a1a1a;
+}
+
+.error-demo .subtitle {
+  color: #444;
+}
+
+.error-demo .demo-section {
+  background: white;
+  border-color: #d0d0d8;
+}
+
+.error-demo button {
+  color: #1a1a1a;
+  background: #eef0ff;
+  border: 1px solid #d0d0d8;
+}
+
+.error-demo button:hover {
+  background: #dfe3ff;
+}
+
+.error-demo .demo-result {
+  color: #1a1a1a;
+}

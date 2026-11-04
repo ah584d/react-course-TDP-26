@@ -2635,6 +2635,33 @@ const useStore = create((set) => ({
             </div>
           </section>
 
+          <!-- Error handling: safety net video -->
+          <section>
+            <h3>The safety net 🪂</h3>
+            <iframe
+              data-src="https://www.youtube.com/embed/GaANi96Z-Wg"
+              width="800"
+              height="450"
+              style="margin-top: 0.5rem; border-radius: 14px; border: 0"
+              title="Luke Aikins no parachute jump"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+            <p class="small-text" style="margin-top: 0.5rem">
+              <a href="https://www.youtube.com/watch?v=GaANi96Z-Wg" target="_blank" style="color: var(--accent)">Open on YouTube</a>
+            </p>
+          </section>
+
+          <!-- Error handling: safety net image -->
+          <section>
+            <img
+              src="safety-net.jpg"
+              alt="Safety net"
+              style="max-height: 560px; max-width: 100%; border-radius: 14px"
+            />
+          </section>
+
           <!-- Error handling: Error Boundary diagram -->
           <section>
             <h3>Error Boundary 🛡️</h3>
@@ -2702,7 +2729,6 @@ function ErrorFallback(props: FallbackProps) {
 &lt;ErrorBoundary
   FallbackComponent={ErrorFallback}
   onError={(error) =&gt; console.error("Caught:", error)} // log to a service
-  onReset={() =&gt; refetchUser()} // runs when the user clicks "Try again"
 &gt;
   &lt;UserCard id={1} /&gt;
 &lt;/ErrorBoundary&gt;</code></pre>

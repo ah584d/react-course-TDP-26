@@ -32,7 +32,7 @@ function ErrorHandlingDemo() {
   const [boundaryKey, setBoundaryKey] = useState(0);
 
   return (
-    <div className="context-demo dark">
+    <div className="context-demo light error-demo">
       <div className="container">
         <section className="back-menu">
           <nav>
