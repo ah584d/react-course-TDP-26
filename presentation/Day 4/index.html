@@ -2776,6 +2776,52 @@ function ErrorFallback(props: FallbackProps) {
               Live demo: <code style="color: var(--accent)">ErrorHandlingDemo</code>
             </p>
           </section>
+
+          <!-- Exercise: Mini Shop checkout -->
+          <section>
+            <h3>🧪 Exercise — Mini Shop checkout</h3>
+            <p class="small-text">→ Zustand + useMutation + Error Boundary</p>
+            <div style="text-align: left; font-size: 0.45em; margin-top: 1.5rem">
+              <div class="card" style="padding: 1.5rem; background: var(--accent-soft)">
+                <p style="margin: 0 0 0.8rem; color: var(--accent); font-weight: bold; font-size: 1.6em">
+                  Starting point
+                </p>
+                <p style="margin: 0; font-size: 1.6em">
+                  <code>exercises/day-4/shop-checkout/starter/</code>
+                </p>
+              </div>
+              <ol style="margin-top: 1.5rem; font-size: 1.3em; line-height: 1.7">
+                <li>
+                  <b>Zustand:</b> write <code>addToCart</code>,
+                  <code>removeFromCart</code>, <code>clearCart</code> and read the
+                  cart in the header, product list and basket
+                </li>
+                <li>
+                  <b>useMutation:</b> pay with <code>submitOrder</code> - show
+                  "Paying...", clear the cart on success, show the error on failure
+                </li>
+                <li>
+                  <b>Error Boundary:</b> wrap <code>&lt;PromoBanner /&gt;</code> so
+                  a bad promo code doesn't crash the page
+                </li>
+                <li>
+                  BONUS: add a "Retry" button when the payment fails
+                </li>
+              </ol>
+            </div>
+            <p class="small-text" style="margin-top: 1rem">
+              <a href="http://localhost:5173/?target=day-4/exercises/shop-checkout/starter" target="_blank" style="color:var(--accent)">Open Exercise</a>
+              &nbsp;|&nbsp;
+              <a href="http://localhost:5173/?target=day-4/exercises/shop-checkout/solution" target="_blank" style="color:var(--accent)">Open Solution</a>
+            </p>
+            <aside class="notes">
+              Time: ~40 minutes. Phase 1 (Zustand) in useCartStore.ts, ShopHeader, ProductList, CartPanel.
+              Phase 2 (useMutation) in CheckoutButton.tsx - fails above $150 or with "Simulate server error".
+              Phase 3 (Error Boundary) in ShopCheckout.tsx - promo code HELLO crashes PromoBanner.
+              Exercise: http://localhost:5173/?target=day-4/exercises/shop-checkout/starter
+              Solution: http://localhost:5173/?target=day-4/exercises/shop-checkout/solution
+            </aside>
+          </section>
         </section>
       </div>
     </div>
