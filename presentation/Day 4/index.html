@@ -2604,6 +2604,37 @@ const useStore = create((set) => ({
             </div>
           </section>
 
+          <!-- Error handling: render errors code -->
+          <section>
+            <h3>try / catch can't catch these 💥</h3>
+            <div class="two-col" style="margin-top: 1rem">
+              <div>
+                <h4>1️⃣ Error while rendering</h4>
+                <pre><code class="tsx" style="font-size: 0.5em;">function Profile(props: { user: User }) {
+  // user is undefined -&gt; TypeError
+  return &lt;h1&gt;{props.user.name}&lt;/h1&gt;;
+}</code></pre>
+              </div>
+              <div>
+                <h4>2️⃣ Bug inside a child</h4>
+                <pre><code class="tsx" style="font-size: 0.5em;">function App() {
+  try {
+    return &lt;Profile /&gt;; // child crashes later
+  } catch (error) {
+    return &lt;p&gt;Oops&lt;/p&gt;; // ❌ never runs
+  }
+}</code></pre>
+              </div>
+            </div>
+            <div class="card" style="margin-top: 1rem">
+              <p style="font-size: 0.7em">
+                💡 <code>&lt;Profile /&gt;</code> is not executed inside the
+                <code>try</code>. React renders it <b>later</b>, so the error
+                escapes - result: <span class="highlight">white screen</span>
+              </p>
+            </div>
+          </section>
+
           <!-- Error handling: Error Boundary diagram -->
           <section>
             <h3>Error Boundary 🛡️</h3>
@@ -2650,39 +2681,37 @@ const useStore = create((set) => ({
 
           <!-- Error handling: Error Boundary code -->
           <section>
-            <h3>Error Boundary - the code</h3>
-            <pre><code class="tsx" style="font-size: 0.5em;">import { Component } from "react";
-import type { ReactNode } from "react";
+            <h3>Error Boundary - the modern way</h3>
+            <p class="small-text">
+              No class to write: use the
+              <span class="highlight">react-error-boundary</span> package
+            </p>
+            <pre><code class="tsx" style="font-size: 0.55em;">import { ErrorBoundary } from "react-error-boundary";
+import type { FallbackProps } from "react-error-boundary";
 
-type Props = { fallback: ReactNode; children: ReactNode };
-type State = { hasError: boolean };
-
-class ErrorBoundary extends Component&lt;Props, State&gt; {
-  state: State = { hasError: false };
-
-  // React calls this when a child throws while rendering
-  static getDerivedStateFromError(): State {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error: Error) {
-    console.error("Caught by boundary:", error); // log to a service
-  }
-
-  render() {
-    return this.state.hasError ? this.props.fallback : this.props.children;
-  }
+function ErrorFallback(props: FallbackProps) {
+  return (
+    &lt;div role="alert"&gt;
+      &lt;p&gt;Something went wrong 😢&lt;/p&gt;
+      &lt;pre&gt;{props.error.message}&lt;/pre&gt;
+      &lt;button onClick={props.resetErrorBoundary}&gt;Try again&lt;/button&gt;
+    &lt;/div&gt;
+  );
 }
 
-// Usage
-&lt;ErrorBoundary fallback={&lt;p&gt;Something went wrong 😢&lt;/p&gt;}&gt;
+&lt;ErrorBoundary
+  FallbackComponent={ErrorFallback}
+  onError={(error) =&gt; console.error("Caught:", error)} // log to a service
+  onReset={() =&gt; refetchUser()} // runs when the user clicks "Try again"
+&gt;
   &lt;UserCard id={1} /&gt;
 &lt;/ErrorBoundary&gt;</code></pre>
             <div class="card" style="margin-top: 0.8rem">
               <p style="font-size: 0.65em">
-                💡 It's the one case that still needs a
-                <span class="highlight">class</span>. In practice, use the
-                <code>react-error-boundary</code> package
+                💡 Under the hood it is still a class component - React has no
+                hook for this yet. The package hides it and adds
+                <span class="highlight">reset</span> and
+                <span class="highlight">logging</span> for free
               </p>
             </div>
           </section>
