@@ -300,6 +300,50 @@
             </table>
           </section>
 
+          <!-- Analogy 2: debris chute (agnostic pipe = children) -->
+          <section>
+            <img
+              src="debris_chute.jpeg"
+              alt="Construction debris chute"
+              style="max-height: 560px; max-width: 100%; border-radius: 14px"
+            />
+          </section>
+
+          <!-- Analogy 1: vending machine (fixed slots = many props) -->
+          <section>
+            <img
+              src="vending_machine.jpeg"
+              alt="Vending machine"
+              style="max-height: 560px; max-width: 100%; border-radius: 14px"
+            />
+          </section>
+
+          <!-- Slide 2-pre0: classic props vs children, side by side -->
+          <section>
+            <div class="two-col" style="margin-top: 1.5rem">
+              <div>
+                <h4 class="fragment" data-fragment-index="0">❌ Classic props</h4>
+                <pre><code class="tsx" style="font-size: 0.6em;">&lt;Card
+  title="Hello"
+  text="I am inside"
+  user={user}
+  buttonLabel="Save"
+  footer="Thanks!"
+/&gt;</code></pre>
+              </div>
+              <div>
+                <h4 class="fragment" data-fragment-index="0">✅ With children</h4>
+                <pre><code class="tsx" style="font-size: 0.6em;">&lt;Card&gt;
+  &lt;h2&gt;Hello&lt;/h2&gt;
+  &lt;p&gt;I am inside&lt;/p&gt;
+  &lt;Avatar user={user} /&gt;
+  &lt;button&gt;Save&lt;/button&gt;
+  &lt;footer&gt;Thanks!&lt;/footer&gt;
+&lt;/Card&gt;</code></pre>
+              </div>
+            </div>
+          </section>
+
           <!-- Slide 2-pre: children schema -->
           <section>
             <h3>children = the "slot" 🎁</h3>
@@ -357,8 +401,13 @@
               opening and closing tags
             </p>
             <pre><code class="tsx" style="font-size: 0.6em;">import type { ReactNode } from "react";
+// Usage - everything inside &lt;Card&gt; becomes props.children
+&lt;Card&gt;
+  &lt;h2&gt;Hello&lt;/h2&gt;
+  &lt;p&gt;I am inside the card&lt;/p&gt;
+&lt;/Card&gt;
 
-type CardProps = {
+interface CardProps {
   children: ReactNode; // text, elements, components...
 };
 
@@ -366,11 +415,7 @@ function Card(props: CardProps) {
   return &lt;div className="card"&gt;{props.children}&lt;/div&gt;;
 }
 
-// Usage - everything inside &lt;Card&gt; becomes props.children
-&lt;Card&gt;
-  &lt;h2&gt;Hello&lt;/h2&gt;
-  &lt;p&gt;I am inside the card&lt;/p&gt;
-&lt;/Card&gt;</code></pre>
+</code></pre>
             <div class="card" style="margin-top: 1rem">
               <p style="font-size: 0.75em">
                 💡 <span class="highlight">Think of it as a "slot":</span>
@@ -386,13 +431,12 @@ function Card(props: CardProps) {
             <div class="two-col" style="margin-top: 1.5rem">
               <div>
                 <h4>❌ Without children</h4>
-                <pre><code class="tsx" style="font-size: 0.55em;">// One component per case,
-// or a prop for every detail
-&lt;Card
+                <pre><code class="tsx" style="font-size: 0.55em;">&lt;Card
   title="Hello"
   text="I am inside"
-  showButton={true}
-  footer="..."
+  user={user}
+  buttonLabel="Save"
+  footer="Thanks!"
 /&gt;</code></pre>
                 <ul style="font-size: 0.7em; line-height: 1.7">
                   <li>Too many props</li>
@@ -401,25 +445,18 @@ function Card(props: CardProps) {
               </div>
               <div>
                 <h4>✅ With children</h4>
-                <pre><code class="tsx" style="font-size: 0.55em;">// One wrapper, any content
-&lt;Card&gt;
+                <pre><code class="tsx" style="font-size: 0.55em;">&lt;Card&gt;
   &lt;h2&gt;Hello&lt;/h2&gt;
+  &lt;p&gt;I am inside&lt;/p&gt;
   &lt;Avatar user={user} /&gt;
   &lt;button&gt;Save&lt;/button&gt;
+  &lt;footer&gt;Thanks!&lt;/footer&gt;
 &lt;/Card&gt;</code></pre>
                 <ul style="font-size: 0.7em; line-height: 1.7">
                   <li>Reusable layout / behavior</li>
                   <li>Flexible - any content fits</li>
                 </ul>
               </div>
-            </div>
-            <div class="card" style="margin-top: 1rem">
-              <p style="font-size: 0.7em">
-                🎯 <span class="highlight">Bonus:</span> the parent creates
-                <code>&lt;Avatar user={user} /&gt;</code> itself, so
-                <code>user</code> doesn't pass through the wrapper - less
-                prop drilling!
-              </p>
             </div>
           </section>
 

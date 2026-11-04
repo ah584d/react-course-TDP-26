@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import DrillDownCard from "../components/DrillDownCard.tsx";
 import "./ContextDemo.css";
+import "./ChildrenDemo.css";
 
 function ChildrenDemo() {
   return (
-    <div className="context-demo dark">
+    <div className="context-demo light children-demo">
       <div className="container">
         <section className="back-menu">
           <nav>
