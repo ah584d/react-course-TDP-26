@@ -5,7 +5,9 @@ import "./index.css";
 import App from "./App.tsx";
 import ContextDemo from "./pages/ContextDemo.tsx";
 import PropDrillingDemo from "./pages/PropDrillingDemo.tsx";
-import TodoList from "./pages/TodoList.tsx";
+import ErrorHandlingDemo from "./pages/ErrorHandlingDemo.tsx";
+import ChildrenDemo from "./pages/ChildrenDemo.tsx";
+import ShopDemo from "./pages/ShopDemo.tsx";
 import { ThemeProvider } from "./context/ThemeContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
@@ -16,7 +18,9 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/" element={<App />} />
           <Route path="/prop-drilling" element={<PropDrillingDemo />} />
           <Route path="/context" element={<ContextDemo />} />
-          <Route path="/zustand-todo" element={<TodoList />} />
+          <Route path="/children" element={<ChildrenDemo />} />
+          <Route path="/error-handling" element={<ErrorHandlingDemo />} />
+          <Route path="/zustand-shop" element={<ShopDemo />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

@@ -6,7 +6,7 @@ export const meta: CourseTargetMeta = {
   description:
     "Solution for creating a counter in a 2×2 grid layout with Zustand.",
   dayOrder: 4,
-  dayLabel: "Day 3 - part 2",
+  dayLabel: "Day 4",
   kind: "exercise",
   variant: "solution",
   order: 1,

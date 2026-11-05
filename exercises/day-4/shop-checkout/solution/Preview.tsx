@@ -1,0 +1,28 @@
+import { solutionPhases } from './constants'
+
+export default function Preview() {
+  return (
+    <section className="lesson-card exercise-header-card">
+      <div className="exercise-header-copy">
+        <p className="eyebrow">Solution</p>
+        <h2 className="exercise-title">Mini Shop Checkout</h2>
+        <code className="exercise-file-path">exercises/day-4/shop-checkout/solution/entry.tsx</code>
+      </div>
+
+      <div className="exercise-task-block exercise-task-block-inline">
+        <p className="eyebrow">Completed</p>
+        <strong>Zustand + useMutation + Error Boundary</strong>
+        {solutionPhases.map((phase) => (
+          <div key={phase.title}>
+            <p className="eyebrow">{phase.title}</p>
+            <div className="task-list">
+              {phase.tasks.map((task) => (
+                <p key={task}>{task}</p>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}

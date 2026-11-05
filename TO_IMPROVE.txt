@@ -1,3 +1,5 @@
+- day 3: add better example for useMutation, the point that useQuery is called immediately and that useMutation should be called explicitly.
+
 - in day 5 add an example where we have a server component with a hook and show that in produces an error
 - explain better un day 2 or 3 what is children and how to use it because in day 5, nextjs layout is based on children but it does not envelop the code with opening tag and closing component so it is not trivial to understand children in day 5
 - provide concrete example for SSG in day 5
