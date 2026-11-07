@@ -26,9 +26,16 @@
         .reveal ul { font-size: 0.86em; }
         .reveal code { font-size: 0.9em; }
         .reveal pre {
+            overflow: hidden;
             border-radius: 12px;
             border: 1px solid var(--surface-border);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+        }
+        .reveal pre code {
+            display: block;
+            max-width: 100%;
+            overflow-x: auto;
+            border-radius: inherit !important;
         }
         .reveal table {
             font-size: 0.75em;
@@ -45,6 +52,39 @@
         .highlight { color: var(--accent); }
         .two-col { display: flex; gap: 1.5rem; align-items: flex-start; }
         .two-col > div { flex: 1; }
+        .controlled-input-comparison {
+            display: grid;
+            grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+            gap: 1rem;
+            align-items: start;
+        }
+        .controlled-input-comparison pre {
+            padding: 0;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .controlled-input-comparison pre code {
+            max-width: 100%;
+            border-radius: inherit;
+            white-space: pre-wrap;
+        }
+        .different-controls pre {
+            box-sizing: border-box;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .different-controls pre code {
+            display: block;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 0.6em 0.75em;
+            border-radius: inherit;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
         .card {
             padding: 0.9rem 1rem;
             border: 1px solid var(--surface-border);
@@ -187,6 +227,9 @@
             .split-code,
             .adv-grid {
                 grid-template-columns: 1fr;
+            }
+            .controlled-input-comparison {
+                grid-template-columns: minmax(0, 1fr);
             }
             .hero-visual,
             .two-col > div + div {
@@ -1036,6 +1079,375 @@ export default {
                     <aside class="notes">
                         Render title, meta and link tags anywhere in your tree — React automatically moves them into the document head. No third-party libraries needed.
                     </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">What Is a Form?</h2>
+                    <p class="small-text">A form lets someone enter information and submit it to an app or service.</p>
+                    <h3 style="font-size:1.05em; margin-top:1rem;">Where we use forms</h3>
+                    <ul>
+                        <li>Signing up or signing in</li>
+                        <li>Searching or filtering content</li>
+                        <li>Checking out or placing an order</li>
+                        <li>Sending a contact or feedback message</li>
+                        <li>Setting preferences or answering a survey</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Today's Form Journey</h2>
+                    <ul>
+                        <li>Build a signup form from native inputs and React state</li>
+                        <li>Validate the values and show clear feedback</li>
+                        <li>Check username availability and submit to the prepared API</li>
+                        <li>Once the form works, connect success to site navigation</li>
+                    </ul>
+                    <p class="small-text">First make the form work. Then revisit Day 3 routing to connect the pages.</p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Start with Native HTML</h2>
+                    <p class="small-text">HTML already gives forms structure, labels, input types, and a submit action.</p>
+                    <pre><code class="html" style="font-size:0.72em; line-height:1.4;">&lt;form&gt;
+  &lt;label for="email"&gt;Email&lt;/label&gt;
+  &lt;input id="email" name="email" type="email" required /&gt;
+  &lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+                    <ul>
+                        <li>A label gives the field an accessible name and a larger click target.</li>
+                        <li>Input types provide useful browser behavior, such as email keyboards and basic format checks.</li>
+                        <li>Pressing Enter button inside a field can submit the form; keep the submit button inside the form.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Controlled Inputs: React Owns the Value</h2>
+                    <div class="controlled-input-comparison">
+                        <div>
+                            <p class="highlight">Uncontrolled</p>
+                                                        <pre><code class="tsx" style="font-size:0.62em; line-height:1.3;">function UncontrolledEmailInput() {
+    return (
+        &lt;input
+            type="email"
+        /&gt;;
+    )
+}</code></pre>
+                                                        <p class="small-text" style="font-size:0.50em">The browser owns the input value.</p>
+                        </div>
+                        <div>
+                            <p class="highlight">Controlled</p>
+                                                        <pre><code class="tsx" style="font-size:0.62em; line-height:1.3;">function ControlledEmailInput() {
+    const [email, setEmail] = useState('');
+
+    return (
+        &lt;input
+            type="email"
+            value={email}
+            onChange={event =&gt; setEmail(event.target.value)}
+        /&gt;;
+    )
+}</code></pre>
+                            <p class="small-text" style="font-size:0.50em">React supplies the value, and <code>onChange</code> updates the state that supplies it.</p>
+                        </div>
+                    </div>
+                    <p class="small-text">Choose controlled values when other UI or logic needs the current input. Use an uncontrolled input when React does not need to own its value.</p>
+                </section>
+
+                <section>
+                                        <h2 class="slide-title">Submit Buttons Trigger the Form's Submit Event</h2>
+                                        <pre><code class="tsx" style="font-size:0.68em; line-height:1.35;">import { type SubmitEvent } from 'react';
+
+function handleSubmit(event: SubmitEvent&lt;HTMLFormElement&gt;) {
+    event.preventDefault();
+}
+
+function SignupForm() {
+    return (
+        &lt;form onSubmit={handleSubmit}&gt;
+            &lt;input type="email" name="email" /&gt;
+            &lt;button type="submit"&gt;Submit&lt;/button&gt;
+        &lt;/form&gt;
+    );
+}</code></pre>
+                    <ul>
+                                                <li><code>type="submit"</code> triggers the form's <code>onSubmit</code> handler.</li>
+                                                <li>Pressing Enter in a form field also submits the form.</li>
+                                                <li><code>preventDefault()</code> stops the browser's default page reload so React can handle the submission.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Exercise 1: Control Name and Email</h2>
+                    <ul>
+                        <li>The starter has uncontrolled inputs</li>
+                        <li>We wish to control their values using React state</li>
+                    </ul>
+                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=1" target="_blank" rel="noopener">Open starter</a></p>
+                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/01-controlled-fields/solution" target="_blank" rel="noopener">Controlled fields</a></p>
+                </section>
+
+                                <section>
+                                        <h2 class="slide-title">Build Your Own Text Field</h2>
+                                        <p class="small-text">Both fields from Exercise 1 need the same label-and-input structure, but their labels, ids, values, and change handlers differ.</p>
+                                        <div class="two-col">
+                                                <div>
+                                                        <p class="highlight">Name</p>
+                                                        <pre><code class="tsx" style="font-size:0.72em; line-height:1.4;">&lt;SignupTextField
+    id="signup-name"
+    label="Name"
+    value={name}
+    onChange={setName}
+/&gt;</code></pre>
+                                                </div>
+                                                <div>
+                                                        <p class="highlight">Email</p>
+                                                        <pre><code class="tsx" style="font-size:0.72em; line-height:1.4;">&lt;SignupTextField
+    id="signup-email"
+    label="Email"
+    type="email"
+    value={email}
+    onChange={setEmail}
+/&gt;</code></pre>
+                                                </div>
+                                        </div>
+                                        <p class="small-text">The parent keeps the state. Which details should become props, and what label/input structure can the new component share?</p>
+                                </section>
+
+                                <section>
+                                    <h2 class="slide-title">Exercise 2: Build the Text Field</h2>
+                                    <ul>
+                                        <li>Build a small component around a native label and input.</li>
+                                        <li>Reusing this generic component will save us time and code when building our form.</li>
+                                    </ul>
+                                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=2" target="_blank" rel="noopener">Continue starter</a></p>
+                                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/02-reusable-field/solution" target="_blank" rel="noopener">Build a text field</a></p>
+                                </section>
+
+                                <section class="different-controls">
+                                    <h2 class="slide-title">Different Controls, Different Values</h2>
+                                    <div class="two-col">
+                                        <div>
+                                            <p class="highlight">Text-like input</p>
+                                            <pre><code class="tsx" style="font-size:0.62em; line-height:1.35;">&lt;input
+    value={username}
+    onChange={event =&gt; setUsername(event.target.value)}
+/&gt;</code></pre>
+                                            <p class="small-text">Input values are strings, including number inputs.</p>
+                                        </div>
+                                        <div>
+                                            <p class="highlight">Checkbox</p>
+                                            <pre><code class="tsx" style="font-size:0.62em; line-height:1.35;">&lt;input
+    type="checkbox"
+    checked={acceptedTerms}
+    onChange={event =&gt; {
+        setAcceptedTerms(event.target.checked)
+    }}
+/&gt;</code></pre>
+                                            <p class="small-text">Checkbox state is boolean and uses <code>checked</code>.</p>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section>
+                                    <h2 class="slide-title">Exercise 3: Add the Remaining Fields</h2>
+                                        <p class="highlight">How can the text fields and checkbox live together in one state object?</p>
+                                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=3" target="_blank" rel="noopener">Continue starter</a></p>
+                                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/03-all-fields/solution" target="_blank" rel="noopener">All fields</a></p>
+                                </section>
+
+                                <section>
+                                        <h2 class="slide-title">Exercise 3b: Refactor Text-Field Updates</h2>
+                                        <p style="font-size: 0.6em;">JavaScript lets us pass an object key's name as an argument and use bracket notation (for example, <code>object[key]</code>) to access that property.
+                                        This is called a property accessor.</p>
+                                        <pre><code class="js" style="font-size:0.68em; line-height:1.35;">const settings = { theme: 'light', density: 'comfortable' };
+const settingName = 'theme';
+
+settings[settingName]; // 'light'
+settings[settingName] = 'dark'; // updates the original object
+const updatedSettings = { ...settings, [settingName]: 'light' }; // updates a copy</code></pre>
+                                        <p class="highlight" style="font-size: 0.6em;">This example uses a variable to choose which object property changes. How could that idea help reduce repeated update logic?</p>
+                                        <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=3b" target="_blank" rel="noopener">Continue starter</a></p>
+                                        <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/03b-text-field-handler/solution" target="_blank" rel="noopener">Shared text-field handler</a></p>
+                                </section>
+
+                <section>
+                    <h2 class="slide-title">Choose One Validation Experience</h2>
+                    <table>
+                        <thead><tr><th>Browser-led</th><th>React-led</th></tr></thead>
+                        <tbody>
+                            <tr><td>Use constraints such as <code>required</code>, <code>type="email"</code>, and <code>minLength</code>.</td><td>Use <code>noValidate</code> and check every rule in React.</td></tr>
+                            <tr><td>The browser displays its own validation messages.</td><td>The app displays consistent inline messages beside fields.</td></tr>
+                            <tr><td>Add custom feedback for rules the browser cannot know.</td><td>Implement basic and cross-field rules yourself.</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="small-text">For this exercise, use React-led validation so required fields, password rules, and server feedback share one inline style.</p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Use the Provided Validator</h2>
+                    <pre><code class="tsx" style="font-size:0.7em; line-height:1.35;">import { validateSignup } from '../signupValidation';
+
+function handleSubmit(event: FormEvent&lt;HTMLFormElement&gt;) {
+  event.preventDefault();
+  const nextErrors = validateSignup(values);
+  setErrors(nextErrors);
+}</code></pre>
+                    <ul>
+                        <li>The helper checks every field and returns an object containing messages for invalid values.</li>
+                        <li>For example, <code>errors.email</code> is a message such as “Enter a valid email address.”</li>
+                        <li>Students focus on when to validate and how to show feedback, not rewriting the rules.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Put Errors Beside Their Fields</h2>
+                    <pre><code class="tsx" style="font-size:0.68em; line-height:1.35;">&lt;label htmlFor="email"&gt;Email&lt;/label&gt;
+&lt;input
+  id="email"
+  aria-invalid={Boolean(errors.email)}
+  aria-describedby={errors.email ? 'email-error' : undefined}
+/&gt;
+{errors.email &amp;&amp; (
+  &lt;span id="email-error"&gt;{errors.email}&lt;/span&gt;
+)}</code></pre>
+                    <ul>
+                        <li>Keep the visible label connected to the input.</li>
+                        <li>Use <code>aria-invalid</code> and <code>aria-describedby</code> to connect the invalid state and its message.</li>
+                        <li>Use a form-level <code>role="alert"</code> for a concise submit error summary, not as a substitute for field messages.</li>
+                    </ul>
+                </section>
+
+                                <section>
+                                        <h2 class="slide-title">Extend Your Field with an Error Message</h2>
+                                        <pre><code class="tsx" style="font-size:0.65em; line-height:1.35;">interface SignupTextFieldProps {
+    id: string;
+    errorMessage?: string;
+}
+
+function SignupTextField(props: SignupTextFieldProps) {
+    const errorId = `${props.id}-error`;
+    return (
+        &lt;&gt;
+            &lt;input
+                id={props.id}
+                aria-invalid={Boolean(props.errorMessage)}
+                aria-describedby={props.errorMessage ? errorId : undefined}
+            /&gt;
+            {props.errorMessage &amp;&amp; (
+                &lt;span id={errorId}&gt;{props.errorMessage}&lt;/span&gt;
+            )}
+        &lt;/&gt;
+    );
+}</code></pre>
+                                        <p class="small-text">Add this prop to your existing component. The matching error id connects the visible message to the native input for assistive technology.</p>
+                                </section>
+
+                                <section>
+                                    <h2 class="slide-title">Exercise 4: Add Validation Feedback</h2>
+                                    <ul>
+                                        <li>Import <code>validateSignup</code> from the provided helper file.</li>
+                                        <li>Extend your component with an optional <code>errorMessage</code> prop.</li>
+                                        <li>Show each field's message and keep Submit enabled so users can request validation.</li>
+                                    </ul>
+                                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=4" target="_blank" rel="noopener">Continue starter</a></p>
+                                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/04-validation/solution" target="_blank" rel="noopener">Validation</a></p>
+                                </section>
+
+                <section>
+                    <h2 class="slide-title">The Prepared API Checks Username Eligibility</h2>
+                    <div class="two-col">
+                        <div>
+                            <p class="highlight">Check while editing</p>
+                            <pre><code class="http" style="font-size:0.68em; line-height:1.4;">GET /api/usernames/check?username=alex</code></pre>
+                            <p class="small-text">The name must be in the allowed list and not already in use.</p>
+                        </div>
+                        <div>
+                            <p class="highlight">Submit signup</p>
+                            <pre><code class="http" style="font-size:0.68em; line-height:1.4;">POST /api/signup
+Content-Type: application/json
+
+{"username":"alex"}</code></pre>
+                            <p class="small-text">The API checks again and claims the username on success.</p>
+                        </div>
+                    </div>
+                    <p class="small-text">This classroom API only handles username eligibility. It does not store passwords or create an authenticated session.</p>
+                    <p class="small-text">Start it from the repository root in a second terminal: <code>npm run day5:api</code>.</p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Show the Async State in the Field</h2>
+                    <ol>
+                        <li><strong>Idle:</strong> no availability result yet.</li>
+                        <li><strong>Checking:</strong> show a spinner and “Checking availability…” beside the username field.</li>
+                        <li><strong>Available:</strong> show a clear success message.</li>
+                        <li><strong>Unavailable:</strong> explain whether the name is not allowed or already in use.</li>
+                        <li><strong>Request failed:</strong> show an error and let the user retry.</li>
+                    </ol>
+                    <p class="small-text">Start the check on blur. If the username changes while a request is pending, ignore that stale response.</p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Exercise 5: Check Username Availability</h2>
+                    <ul>
+                        <li>Call the GET endpoint when the username field loses focus.</li>
+                        <li>Show a spinner while checking, then show the result or a retryable request error.</li>
+                        <li>Clear stale feedback when the username changes.</li>
+                    </ul>
+                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=5" target="_blank" rel="noopener">Continue starter</a></p>
+                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/05-username-check/solution" target="_blank" rel="noopener">Username check</a></p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Submission Has Its Own States</h2>
+                    <div class="two-col">
+                        <div class="card">
+                            <p class="highlight">Before the request</p>
+                            <ul>
+                                <li>Prevent the browser reload.</li>
+                                <li>Run client validation.</li>
+                                <li>Require a current “available” username result.</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <p class="highlight">During and after</p>
+                            <ul>
+                                <li>Show “Submitting…” and prevent duplicate requests.</li>
+                                <li>On failure, stay on the form and show a retryable message.</li>
+                                <li>On success, show confirmation in place.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="small-text">Only send the username to this prepared API. The client’s earlier availability check is not the final authority.</p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Exercise 6: Submit Signup</h2>
+                    <ul>
+                        <li>Validate before sending the request.</li>
+                        <li>Show pending state; disable Submit only while pending.</li>
+                        <li>Stay on the form and show a useful message on failure.</li>
+                        <li>Show an in-place success confirmation.</li>
+                    </ul>
+                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=6" target="_blank" rel="noopener">Continue starter</a></p>
+                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/06-api-signup/solution" target="_blank" rel="noopener">API submission</a></p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Forms Checkpoint Complete</h2>
+                    <ul>
+                        <li>Native form semantics and controlled React values.</li>
+                        <li>Client validation with accessible field feedback.</li>
+                        <li>Async username availability and explicit submission states.</li>
+                        <li>The API rechecks eligibility; success is confirmed in place.</li>
+                    </ul>
+                    <p class="small-text">This prepared API does not store passwords or create a login session.</p>
+                    <p class="highlight" style="font-size:1.1em;">Next: revisit Day 3 routing and connect successful signup to a new page.</p>
                 </section>
 
                 <section>
