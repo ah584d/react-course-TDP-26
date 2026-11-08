@@ -52,6 +52,30 @@
         .highlight { color: var(--accent); }
         .two-col { display: flex; gap: 1.5rem; align-items: flex-start; }
         .two-col > div { flex: 1; }
+        .field-validator-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 0.75rem;
+            align-items: start;
+            text-align: left;
+        }
+        .field-validator-layout > div { min-width: 0; }
+        .field-validator-layout pre {
+            box-sizing: border-box;
+            width: 100%;
+            margin: 0.35rem 0;
+            padding: 0.35rem;
+            overflow: hidden;
+        }
+        .field-validator-layout pre code {
+            box-sizing: border-box;
+            max-width: 100%;
+            padding: 0.55em;
+            max-height: none !important;
+            white-space: pre-wrap !important;
+            overflow-wrap: anywhere;
+            overflow-y: visible;
+        }
         .controlled-input-comparison {
             display: grid;
             grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
@@ -224,6 +248,7 @@
                 grid-template-columns: 1fr;
                 display: block;
             }
+            .field-validator-layout { grid-template-columns: 1fr; }
             .split-code,
             .adv-grid {
                 grid-template-columns: 1fr;
@@ -1189,13 +1214,14 @@ function SignupForm() {
 
                                 <section>
                                         <h2 class="slide-title">Build Your Own Text Field</h2>
-                                        <p class="small-text">Both fields from Exercise 1 need the same label-and-input structure, but their labels, ids, values, and change handlers differ.</p>
+                                        <p class="small-text">Both fields from Exercise 1 need the same label-and-input structure, but their ids, labels, values, and change handlers differ.</p>
                                         <div class="two-col">
                                                 <div>
                                                         <p class="highlight">Name</p>
                                                         <pre><code class="tsx" style="font-size:0.72em; line-height:1.4;">&lt;SignupTextField
     id="signup-name"
     label="Name"
+    autoComplete="name"
     value={name}
     onChange={setName}
 /&gt;</code></pre>
@@ -1206,12 +1232,14 @@ function SignupForm() {
     id="signup-email"
     label="Email"
     type="email"
+    autoComplete="email"
     value={email}
     onChange={setEmail}
 /&gt;</code></pre>
                                                 </div>
                                         </div>
-                                        <p class="small-text">The parent keeps the state. Which details should become props, and what label/input structure can the new component share?</p>
+                                        <p class="small-text">The parent keeps the state and passes the relevant props to the component.</p>
+                                        <p class="small-text">The optional <code>autoComplete</code> prop tells the browser what kind of value to autofill, such as a name or email address.</p>
                                 </section>
 
                                 <section>
@@ -1276,29 +1304,44 @@ const updatedSettings = { ...settings, [settingName]: 'light' }; // updates a co
                 <section>
                     <h2 class="slide-title">Choose One Validation Experience</h2>
                     <table>
-                        <thead><tr><th>Browser-led</th><th>React-led</th></tr></thead>
-                        <tbody>
+                        <thead><tr><th style="width: 50%;">Browser-led</th><th>React-led</th></tr></thead>
+                        <tbody style="font-size: 0.85em;">
                             <tr><td>Use constraints such as <code>required</code>, <code>type="email"</code>, and <code>minLength</code>.</td><td>Use <code>noValidate</code> and check every rule in React.</td></tr>
                             <tr><td>The browser displays its own validation messages.</td><td>The app displays consistent inline messages beside fields.</td></tr>
-                            <tr><td>Add custom feedback for rules the browser cannot know.</td><td>Implement basic and cross-field rules yourself.</td></tr>
+                            <tr><td>Add custom functions and feedback for rules the browser cannot check with its built-in capabilities.</td><td>Implement basic and cross-field rules yourself.</td></tr>
                         </tbody>
                     </table>
                     <p class="small-text">For this exercise, use React-led validation so required fields, password rules, and server feedback share one inline style.</p>
                 </section>
 
                 <section>
-                    <h2 class="slide-title">Use the Provided Validator</h2>
-                    <pre><code class="tsx" style="font-size:0.7em; line-height:1.35;">import { validateSignup } from '../signupValidation';
+                                        <h2 class="slide-title">Whole-Form Validation</h2>
+                                                                                <div class="two-col">
+                                                                                        <div>
+                                                                                                <p class="highlight">Call it on submit</p>
+                                                                                                <pre><code class="tsx" style="font-size:0.56em; line-height:1.3; white-space:pre-wrap; overflow-wrap:anywhere;">import { validateSignup } from '../signupValidation';
 
-function handleSubmit(event: FormEvent&lt;HTMLFormElement&gt;) {
+function handleSubmit(event: SubmitEvent&lt;HTMLFormElement&gt;) {
   event.preventDefault();
   const nextErrors = validateSignup(values);
   setErrors(nextErrors);
 }</code></pre>
-                    <ul>
-                        <li>The helper checks every field and returns an object containing messages for invalid values.</li>
-                        <li>For example, <code>errors.email</code> is a message such as “Enter a valid email address.”</li>
-                        <li>Students focus on when to validate and how to show feedback, not rewriting the rules.</li>
+                                                                                        </div>
+                                                                                        <div>
+                                                                                                <p class="highlight">signupValidation.ts</p>
+                                                                                                <pre><code class="tsx" style="font-size:0.56em; line-height:1.3; white-space:pre-wrap; overflow-wrap:anywhere;">export function validateSignup(values: SignupValues): SignupErrors {
+    const errors: SignupErrors = {}
+    if (!values.name.trim()) errors.name = 'Enter your name.'
+    if (!values.username.trim()) errors.username = 'Choose a username.'
+    // more rules
+    return errors
+}</code></pre>
+                                                                                        </div>
+                                                                                </div>
+                    <ul style="font-size: 0.7em;">
+                                                <li>One validator receives the complete values object and checks every field.</li>
+                                                <li>It returns an errors object with a message for each invalid field, such as <code>errors.email</code>.</li>
+                                                <li>On submit, store that result; the following slides show how to present the messages accessibly.</li>
                     </ul>
                 </section>
 
@@ -1318,43 +1361,120 @@ function handleSubmit(event: FormEvent&lt;HTMLFormElement&gt;) {
                         <li>Use <code>aria-invalid</code> and <code>aria-describedby</code> to connect the invalid state and its message.</li>
                         <li>Use a form-level <code>role="alert"</code> for a concise submit error summary, not as a substitute for field messages.</li>
                     </ul>
+                    <p class="highlight">How can we apply this pattern to our reusable <code>SignupTextField</code>?</p>
                 </section>
 
                                 <section>
-                                        <h2 class="slide-title">Extend Your Field with an Error Message</h2>
-                                        <pre><code class="tsx" style="font-size:0.65em; line-height:1.35;">interface SignupTextFieldProps {
-    id: string;
-    errorMessage?: string;
-}
-
-function SignupTextField(props: SignupTextFieldProps) {
-    const errorId = `${props.id}-error`;
-    return (
-        &lt;&gt;
-            &lt;input
-                id={props.id}
-                aria-invalid={Boolean(props.errorMessage)}
-                aria-describedby={props.errorMessage ? errorId : undefined}
-            /&gt;
-            {props.errorMessage &amp;&amp; (
-                &lt;span id={errorId}&gt;{props.errorMessage}&lt;/span&gt;
-            )}
-        &lt;/&gt;
-    );
-}</code></pre>
-                                        <p class="small-text">Add this prop to your existing component. The matching error id connects the visible message to the native input for assistive technology.</p>
-                                </section>
-
-                                <section>
                                     <h2 class="slide-title">Exercise 4: Add Validation Feedback</h2>
-                                    <ul>
-                                        <li>Import <code>validateSignup</code> from the provided helper file.</li>
-                                        <li>Extend your component with an optional <code>errorMessage</code> prop.</li>
-                                        <li>Show each field's message and keep Submit enabled so users can request validation.</li>
-                                    </ul>
+                                    <p class="small-text">Open Exercise 4 in the starter and use its tab for the task checklist.</p>
                                     <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=4" target="_blank" rel="noopener">Continue starter</a></p>
                                     <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
                                     <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/04-validation/solution" target="_blank" rel="noopener">Validation</a></p>
+                                </section>
+
+                                                                <section>
+                                                                        <h2 class="slide-title" style="font-size: 1.5em;">Per-Field Validation Part 1:<br>Composing Field Validators</h2>
+                                                                        <div class="field-validator-layout">
+                                                                                <div>
+                                                                                        <p class="highlight">Generic Functions</p>
+                                                                                        <pre><code class="tsx" style="font-size:0.62em; line-height:1.2;">function validateNotBlank(value: string) {
+    return value.trim() ? undefined : 'Required field'
+}
+
+function validateLength(value: string, minimum: number) {
+    return value.length &gt;= minimum
+        ? undefined
+        : `Use at least ${minimum} characters.`
+}
+
+function validateMatch(value: string, expected: string, message: string) {
+    return value === expected ? undefined : message
+}</code></pre>
+                                                                                        <p class="small-text">These reusable helpers return a message or <code>undefined</code>.</p>
+                                                                                </div>
+                                                                                <div>
+                                                                                        <p class="highlight">Validators by Field</p>
+                                                                                        <pre><code class="tsx" style="font-size:0.56em; line-height:1.12;">type SignupValidator = (values: SignupValues) =&gt; string | undefined
+
+const validatorsByField: Record&lt;SignupTextFieldName, SignupValidator[]&gt; = {
+    name: [(values) =&gt; validateNotBlank(values.name)],
+    username: [(values) =&gt; validateNotBlank(values.username)],
+    password: [
+        (values) =&gt; validateNotBlank(values.password),
+        (values) =&gt; validateLength(values.password, 8),
+    ],
+    passwordConfirmation: [
+        (values) =&gt; validateNotBlank(values.passwordConfirmation),
+        (values) =&gt; validateMatch(values.passwordConfirmation, values.password, 'Passwords do not match.'),
+    ],
+}</code></pre>
+                                                                                        <p class="small-text">An object where each key is a field name, and each corresponding value is an ordered list of validators for that field.</p>
+                                                                                </div>
+                                                                        </div>
+                                                                </section>
+
+                                                                <section>
+                                                                        <h2 class="slide-title">Per-Field Validation Part 2:<br>How to Validate One Field</h2>
+                                                                        <pre><code class="tsx" style="font-size:0.65em; line-height:1.18;"> // Run each of the field's validators, stop at the first message received
+function validateField(fieldName, values) {
+    for (const validatorFunction of validatorsByField[fieldName]) {
+        const message = validatorFunction(values)
+        if (message !== undefined) {
+            return message
+        }
+    }
+    return undefined
+}
+
+// Get one field's error (note: we will use a different strategy going forward)
+const usernameError = validateField('username', values)
+</code></pre>
+                                                                </section>
+
+                                                                <section>
+                                                                        <h2 class="slide-title">Collect Errors Across the Form</h2>
+                                                                        <pre><code class="tsx" style="font-size:0.58em; line-height:1.25;">function validateForm(values: SignupValues): SignupErrors {
+    const errors: SignupErrors = {}
+    for (const fieldName of Object.keys(validatorsByField) as SignupTextFieldName[]) {
+        const message = validateField(fieldName, values)
+        if (message !== undefined) {
+            errors[fieldName] = message
+        }
+    }
+    if (!values.acceptedTerms) {
+        errors.acceptedTerms = 'Accept the terms.'
+    }
+    return errors
+}</code></pre>
+                                                                        <p class="small-text">Each field contributes at most one error; the outer loop continues after a field's chain stops. Submit can run every field's chain.</p>
+                                                                </section>
+
+                                                                <section>
+                                                                        <h2 class="slide-title">Show Errors After Submit</h2>
+                                                                        <pre><code class="tsx" style="font-size:0.58em; line-height:1.22;">const [isSubmitted, setIsSubmitted] = useState(false)
+const errors = validateForm(values)
+
+function handleSubmit(event) {
+    event.preventDefault()
+    setIsSubmitted(true)
+    if (Object.keys(errors).length &gt; 0) { // if true, there is at least 1 error
+        return
+    }
+    // If there are no errors, continue with logic using valid values
+}
+
+&lt;SignupTextField
+    value={values.username}
+    errorMessage={isSubmitted ? errors.username : undefined}
+    // ... rest of the props
+/&gt;</code></pre>
+                                                                        <p class="small-text">Errors are derived from current values, not stored separately. After the first submit attempt, they stay visible and update as values change.</p>
+                                                                </section>
+
+                                <section>
+                                    <h2 class="slide-title">When to Show Validation Feedback</h2>
+                                    <p class="small-text">Errors are derived from current values. Compare when they become visible: after submit, blur, or editing.</p>
+                                    <p><a class="demo-link" href="/?target=day-5/demo/validation-timing" target="_blank" rel="noopener">Open validation timing demo</a></p>
                                 </section>
 
                 <section>

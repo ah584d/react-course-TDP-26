@@ -73,6 +73,7 @@ const phases: SignupExercisePhase[] = [
     tasks: [
       'Import validateSignup from the provided helper and use it when the form is submitted.',
       'Extend SignupTextField with an optional errorMessage prop and show each field’s validation message.',
+      'Conditionally show each field’s error message.',
       'Keep Submit enabled so users can request validation feedback.',
     ],
   },
