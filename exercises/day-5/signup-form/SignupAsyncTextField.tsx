@@ -4,7 +4,7 @@ import type { UsernameCheckFeedback } from './signupApi'
 interface SignupAsyncTextFieldProps {
   id: string
   label: string
-  autoComplete: string
+  autoComplete?: string
   value: string
   errorMessage?: string
   pending: boolean
@@ -33,7 +33,6 @@ export default function SignupAsyncTextField(props: SignupAsyncTextFieldProps) {
         onBlur={props.onBlur}
         aria-invalid={Boolean(props.errorMessage)}
         aria-describedby={describedBy || undefined}
-        required
       />
       {props.errorMessage && <span className="signup-form__error" id={errorId}>{props.errorMessage}</span>}
       {props.pending && <span className="signup-form__hint signup-form__hint--pending" role="status">Loading...</span>}
