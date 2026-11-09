@@ -71,7 +71,10 @@ const phases: SignupExercisePhase[] = [
     title: 'Show validation feedback',
     tabLabel: '4',
     tasks: [
-      'Import validateSignup from the provided helper and use it when the form is submitted.',
+      'Import validateSignup and derive the current errors from form values; do not store the error map in state.',
+      'Track whether the form has been submitted to control when derived errors are shown.',
+      'Create updateValues(nextValues: SignupValues) to update values and clear the existing submit confirmation and submissionNotice. Change updateTextField and the terms checkbox handler to call updateValues with the new values instead of calling setValues directly.',
+      'Add submissionNotice state initialized to an empty string. In the submit handler, when validation errors exist, set it to "Please correct the highlighted fields." and return; otherwise clear it and keep the existing valid-submit confirmation. Render a non-empty notice below the fields with role="alert".',
       'Extend SignupTextField with an optional errorMessage prop and show each field’s validation message.',
       'Conditionally show each field’s error message.',
       'Keep Submit enabled so users can request validation feedback.',
@@ -81,19 +84,26 @@ const phases: SignupExercisePhase[] = [
     title: 'Check username availability',
     tabLabel: '5',
     tasks: [
-      'Call the prepared GET endpoint when the username field loses focus.',
-      'Show pending, available, unavailable, and retryable request-error feedback.',
-      'Clear stale feedback when the username changes.',
+      'Check out the server code at code/day_5/forms-api/server.mjs and add your name to the Set of allowed usernames.',
+      'Open a new terminal at the project root and run npm run day5:api',
+      'Create usernameCheck state with isPending and result. Start with isPending: false and result: null; result is either null or { status: "success" | "error", message: string }.',
+      'Write async validateUsername. First set { isPending: true, result: null }, then await checkUsername from signupApi.ts with the current username and store the returned result with isPending: false.',
+      'checkUsername handles the API response and request failures. It returns success when available, error with the API message when unavailable, or error with a retry message if the request fails; no try/catch is needed in validateUsername.',
+      'Create handleUsernameChange(username). In it, set usernameCheck to { isPending: false, result: null }, then call updateTextField("username", username).',
+      'Last, replace the username SignupTextField with the provided SignupAsyncTextField from ../SignupAsyncTextField. Pass id, label, autoComplete, value, errorMessage, pending, result, onChange={handleUsernameChange}, and onBlur={validateUsername}. The field disables itself while pending.',
+      'Each blur calls validateUsername and makes a fresh request. The component shows Loading... and the result message; do not render duplicate feedback beside it.',
     ],
   },
   {
     title: 'Submit the signup',
     tabLabel: '6',
     tasks: [
-      'Validate before sending the request and require a current available-username result.',
-      'Send only the username to the prepared signup API. Do not send or store the password.',
-      'Show a pending state and disable Submit only while a request is pending.',
-      'Stay on the form and show a retryable message on failure or an in-place confirmation on success.',
+      'Add submitSignup and type SignupSubmissionFeedback to the existing import from ../signupApi. Add isSubmitting state initialized to false and submissionResult state initialized to null with type SignupSubmissionFeedback | null. A result is { status: "success" | "error", message: string }.',
+      'Keep the local validation guard from Exercise 4. If hasErrors is true, set the existing submissionNotice to "Please correct the highlighted fields." and return.',
+      'After local validation passes, require usernameCheck.result?.status === "success". Otherwise set submissionNotice to "Check the username field and wait until it says your username is available before submitting." and return without sending a POST.',
+      'Set isSubmitting to true, then call const result = await submitSignup(normalizeUsername(values.username)) and pass result to setSubmissionResult(result). This stores the returned { status, message } object so the UI can display its message. Then set isSubmitting back to false.',
+      'Show a pending label and disable Submit and SignupAsyncTextField while isSubmitting is true.',
+      'Render submissionResult.message in place. Keep the entered values if the result is an error so the user can retry. Clear the values if it is a success so the user can do another call.',
     ],
   },
 ]
@@ -107,6 +117,7 @@ export default function SignupFormStarter() {
       phases={phases}
       exerciseTabs
       intro="Continue in this same starter file. Each exercise builds on your previous changes."
+      note="Start the prepared API with npm run day5:api. See code/day_5/forms-api/README.md for the request and response contract."
     >
       <SignupForm />
     </SignupExerciseShell>

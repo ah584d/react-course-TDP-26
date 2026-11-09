@@ -17,9 +17,12 @@ const phases: SignupExercisePhase[] = [
   {
     title: 'Checkpoint 4',
     tasks: [
-      'Import validateSignup and call it when the form is submitted.',
+      'Import validateSignup and derive the current errors from form values; do not store the error map in state.',
+      'Track whether the user has submitted to control when derived feedback becomes visible.',
+      'Use updateValues(nextValues) to update values and clear both the existing submit confirmation and submissionNotice. Route text-field and checkbox changes through this helper.',
+      'Store form-level feedback in submissionNotice, initialized to an empty string. Set it when validation fails and render it with role="alert".',
       'Add an optional errorMessage prop to SignupTextField and associate the message with its input.',
-      'Update field feedback after an invalid submit; keep Submit enabled.',
+      'Show current field feedback after an invalid submit; keep Submit enabled.',
     ],
   },
 ]

@@ -1,10 +1,8 @@
-import { useRef, useState, type SubmitEvent } from 'react'
+import { useState, type SubmitEvent } from 'react'
+import SignupAsyncTextField from '../../../SignupAsyncTextField'
 import SignupTextField from './SignupTextField'
-import { validateSignup, type SignupErrors, type SignupTextFieldName, type SignupValues } from '../../../signupValidation'
-type UsernameCheck =
-  | { kind: 'idle'; username: '' }
-  | { kind: 'checking'; username: string }
-  | { kind: 'available' | 'unavailable' | 'error'; username: string; message: string }
+import { validateSignup, type SignupTextFieldName, type SignupValues } from '../../../signupValidation'
+import { checkUsername as requestUsernameCheck, type UsernameCheckFeedback } from '../../../signupApi'
 
 const initialValues: SignupValues = {
   name: '',
@@ -21,14 +19,18 @@ function normalizeUsername(username: string) {
 
 export default function SignupForm() {
   const [values, setValues] = useState(initialValues)
-  const [errors, setErrors] = useState<SignupErrors>({})
-  const [usernameCheck, setUsernameCheck] = useState<UsernameCheck>({ kind: 'idle', username: '' })
-  const latestUsername = useRef('')
-  const checkSequence = useRef(0)
+  const [hasSubmitted, setHasSubmitted] = useState(false)
+  const [usernameCheck, setUsernameCheck] = useState<{ isPending: boolean; result: UsernameCheckFeedback | null }>({
+    isPending: false,
+    result: null,
+  })
+  const [submissionNotice, setSubmissionNotice] = useState('')
+  const errors = validateSignup(values)
+  const hasErrors = Object.keys(errors).length > 0
 
   function updateValues(nextValues: SignupValues) {
     setValues(nextValues)
-    if (Object.keys(errors).length > 0) setErrors(validateSignup(nextValues))
+    setSubmissionNotice('')
   }
 
   function updateTextField(fieldName: SignupTextFieldName, newValue: string) {
@@ -36,77 +38,55 @@ export default function SignupForm() {
   }
 
   function handleUsernameChange(username: string) {
-    latestUsername.current = normalizeUsername(username)
-    checkSequence.current += 1
-    setUsernameCheck({ kind: 'idle', username: '' })
+    setUsernameCheck({ isPending: false, result: null })
     updateTextField('username', username)
   }
 
-  async function checkUsername() {
+  async function validateUsername() {
     const username = normalizeUsername(values.username)
     if (!username) {
-      setUsernameCheck({ kind: 'idle', username: '' })
+      setUsernameCheck({ isPending: false, result: null })
       return
     }
 
-    const sequence = ++checkSequence.current
-    setUsernameCheck({ kind: 'checking', username })
-
-    try {
-      const response = await fetch(`/api/usernames/check?username=${encodeURIComponent(username)}`)
-      if (!response.ok) throw new Error('Could not check this username. Try again.')
-      const result = await response.json() as { valid: boolean; message: string }
-      if (sequence !== checkSequence.current || latestUsername.current !== username) return
-      setUsernameCheck({ kind: result.valid ? 'available' : 'unavailable', username, message: result.message })
-    } catch {
-      if (sequence === checkSequence.current && latestUsername.current === username) {
-        setUsernameCheck({ kind: 'error', username, message: 'Could not check this username. Try again.' })
-      }
-    }
+    setUsernameCheck({ isPending: true, result: null })
+    const result = await requestUsernameCheck(username)
+    setUsernameCheck({ isPending: false, result })
   }
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
-    setErrors(validateSignup(values))
+    setHasSubmitted(true)
+    setSubmissionNotice(hasErrors ? 'Please correct the highlighted fields.' : '')
   }
-
-  const normalizedUsername = normalizeUsername(values.username)
-  const usernameHint = usernameCheck.username === normalizedUsername
-    ? usernameCheck.kind === 'checking'
-      ? 'Checking availability…'
-      : usernameCheck.kind === 'available' || usernameCheck.kind === 'unavailable' || usernameCheck.kind === 'error'
-        ? usernameCheck.message
-        : undefined
-    : undefined
 
   return (
     <form className="signup-form" onSubmit={handleSubmit} noValidate>
       <div className="signup-form__fields">
-        <SignupTextField id="signup-name" label="Name" autoComplete="name" value={values.name} errorMessage={errors.name} onChange={(newValue) => updateTextField('name', newValue)} />
-        <SignupTextField id="signup-email" label="Email" type="email" autoComplete="email" value={values.email} errorMessage={errors.email} onChange={(newValue) => updateTextField('email', newValue)} />
-        <SignupTextField
+        <SignupTextField id="signup-name" label="Name" autoComplete="name" value={values.name} errorMessage={hasSubmitted ? errors.name : undefined} onChange={(newValue) => updateTextField('name', newValue)} />
+        <SignupTextField id="signup-email" label="Email" type="email" autoComplete="email" value={values.email} errorMessage={hasSubmitted ? errors.email : undefined} onChange={(newValue) => updateTextField('email', newValue)} />
+        <SignupAsyncTextField
           id="signup-username"
           label="Username"
           autoComplete="username"
           value={values.username}
-          errorMessage={errors.username}
-          hint={usernameHint}
-          pending={usernameCheck.kind === 'checking'}
-          hintTone={usernameCheck.kind === 'available' ? 'success' : usernameCheck.kind === 'unavailable' || usernameCheck.kind === 'error' ? 'error' : 'neutral'}
+          errorMessage={hasSubmitted ? errors.username : undefined}
+          pending={usernameCheck.isPending}
+          result={usernameCheck.result}
           onChange={handleUsernameChange}
-          onBlur={checkUsername}
+          onBlur={validateUsername}
         />
-        <SignupTextField id="signup-password" label="Password" type="password" autoComplete="new-password" value={values.password} errorMessage={errors.password} onChange={(newValue) => updateTextField('password', newValue)} />
-        <SignupTextField id="signup-password-confirmation" label="Confirm password" type="password" autoComplete="new-password" value={values.passwordConfirmation} errorMessage={errors.passwordConfirmation} onChange={(newValue) => updateTextField('passwordConfirmation', newValue)} />
+        <SignupTextField id="signup-password" label="Password" type="password" autoComplete="new-password" value={values.password} errorMessage={hasSubmitted ? errors.password : undefined} onChange={(newValue) => updateTextField('password', newValue)} />
+        <SignupTextField id="signup-password-confirmation" label="Confirm password" type="password" autoComplete="new-password" value={values.passwordConfirmation} errorMessage={hasSubmitted ? errors.passwordConfirmation : undefined} onChange={(newValue) => updateTextField('passwordConfirmation', newValue)} />
         <div className="signup-form__field signup-form__field--full">
           <label className="signup-form__checkbox-row" htmlFor="signup-terms">
-            <input className="signup-form__checkbox" id="signup-terms" type="checkbox" checked={values.acceptedTerms} onChange={(event) => updateValues({ ...values, acceptedTerms: event.target.checked })} aria-invalid={Boolean(errors.acceptedTerms)} aria-describedby={errors.acceptedTerms ? 'signup-terms-error' : undefined} />
+            <input className="signup-form__checkbox" id="signup-terms" type="checkbox" checked={values.acceptedTerms} onChange={(event) => updateValues({ ...values, acceptedTerms: event.target.checked })} aria-invalid={Boolean(hasSubmitted && errors.acceptedTerms)} aria-describedby={hasSubmitted && errors.acceptedTerms ? 'signup-terms-error' : undefined} />
             I agree to the terms
           </label>
-          {errors.acceptedTerms && <span className="signup-form__error" id="signup-terms-error">{errors.acceptedTerms}</span>}
+          {hasSubmitted && errors.acceptedTerms && <span className="signup-form__error" id="signup-terms-error">{errors.acceptedTerms}</span>}
         </div>
       </div>
-      {Object.keys(errors).length > 0 && <p className="signup-form__error" role="alert">Please correct the highlighted fields.</p>}
+      {submissionNotice && <p className="signup-form__error" role="alert">{submissionNotice}</p>}
       <button className="signup-form__button" type="submit">Submit</button>
     </form>
   )

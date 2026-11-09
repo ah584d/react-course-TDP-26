@@ -1477,45 +1477,65 @@ function handleSubmit(event) {
                                     <p><a class="demo-link" href="/?target=day-5/demo/validation-timing" target="_blank" rel="noopener">Open validation timing demo</a></p>
                                 </section>
 
+                                <section>
+                                    <h2 class="slide-title">When Should Submit Be Disabled?</h2>
+                                    <pre><code class="tsx" style="font-size:0.62em; line-height:1.25;">&lt;button
+    type="submit"
+    disabled={!isFormValid || isSubmitting}
+&gt;
+    {isSubmitting ? 'Submitting…' : 'Submit'}
+&lt;/button&gt;</code></pre>
+                                    <div class="two-col">
+                                        <div>
+                                            <p class="highlight">When the form is invalid</p>
+                                            <p class="small-text" style="font-size:0.6em;">Useful when errors are already visible and update as the user edits.</p>
+                                            <p class="small-text" style="font-size:0.6em;"><strong>Tradeoff:</strong> if errors appear only after submit, a disabled button blocks users from asking what needs fixing.</p>
+                                        </div>
+                                        <div>
+                                            <p class="highlight">While a request is pending</p>
+                                            <p class="small-text" style="font-size:0.6em;">Useful when repeating the action could create duplicate work; change the label to show progress.</p>
+                                            <p class="small-text" style="font-size:0.6em;"><strong>Tradeoff:</strong> users must wait for the request to finish. The server still needs to handle duplicates safely.</p>
+                                        </div>
+                                    </div>
+                                    <p class="small-text">If Submit is disabled, make the reason clear and the next step visible.</p>
+                                </section>
+
                 <section>
-                    <h2 class="slide-title">The Prepared API Checks Username Eligibility</h2>
+                    <h2 class="slide-title">When Validation Needs the Server</h2>
                     <div class="two-col">
                         <div>
-                            <p class="highlight">Check while editing</p>
-                            <pre><code class="http" style="font-size:0.68em; line-height:1.4;">GET /api/usernames/check?username=alex</code></pre>
-                            <p class="small-text">The name must be in the allowed list and not already in use.</p>
+                            <p class="highlight">The browser can check</p>
+                            <p class="small-text" style="font-size: 0.58em;">Rules based on the current form values, such as required fields or a valid email format, can be checked immediately.</p>
                         </div>
                         <div>
-                            <p class="highlight">Submit signup</p>
-                            <pre><code class="http" style="font-size:0.68em; line-height:1.4;">POST /api/signup
-Content-Type: application/json
-
-{"username":"alex"}</code></pre>
-                            <p class="small-text">The API checks again and claims the username on success.</p>
+                            <p class="highlight">The server must check</p>
+                            <p class="small-text" style="font-size: 0.58em;">Rules based on shared or changing information, such as whether a username is already in use, require a request to the server.</p>
                         </div>
                     </div>
-                    <p class="small-text">This classroom API only handles username eligibility. It does not store passwords or create an authenticated session.</p>
-                    <p class="small-text">Start it from the repository root in a second terminal: <code>npm run day5:api</code>.</p>
+                    <pre><code class="http" style="font-size:0.68em; line-height:1.4;">GET /availability?value=alex
+
+HTTP 200 OK
+{"valid":false,"message":"That value is already in use."}</code></pre>
+                    <p class="small-text" style="font-size: 0.6em;">A successful HTTP response can say a value is ineligible. A request failure is different: the client did not get an answer and cannot determine eligibility.</p>
+                    <p class="small-text" style="font-size: 0.6em;">An availability check does not reserve a value. The server must check again when the value is submitted.</p>
                 </section>
 
                 <section>
-                    <h2 class="slide-title">Show the Async State in the Field</h2>
+                    <h2 class="slide-title">Async Validation Has a Lifecycle</h2>
                     <ol>
-                        <li><strong>Idle:</strong> no availability result yet.</li>
-                        <li><strong>Checking:</strong> show a spinner and “Checking availability…” beside the username field.</li>
-                        <li><strong>Available:</strong> show a clear success message.</li>
-                        <li><strong>Unavailable:</strong> explain whether the name is not allowed or already in use.</li>
-                        <li><strong>Request failed:</strong> show an error and let the user retry.</li>
+                        <li><strong>Not checked:</strong> there is no server answer for the current value.</li>
+                        <li><strong>Checking:</strong> a request is in progress; the result is not known yet.</li>
+                        <li><strong>Valid or invalid:</strong> the server answered and the UI can show its decision.</li>
+                        <li><strong>Could not check:</strong> the request failed, so validity is unknown; allow a retry.</li>
                     </ol>
-                    <p class="small-text">Start the check on blur. If the username changes while a request is pending, ignore that stale response.</p>
+                    <p class="small-text">When the value changes, its previous answer no longer applies. A field can receive async request state as props to show loading feedback and, when appropriate, block edits while checking.</p>
                 </section>
 
                 <section>
                     <h2 class="slide-title">Exercise 5: Check Username Availability</h2>
                     <ul>
-                        <li>Call the GET endpoint when the username field loses focus.</li>
-                        <li>Show a spinner while checking, then show the result or a retryable request error.</li>
-                        <li>Clear stale feedback when the username changes.</li>
+                        <li>We will use an ayncronous API call to check if our username is valid.</li>
+                        <li>This is similar to many real-life applications that do not allow duplicate usernames.</li>
                     </ul>
                     <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=5" target="_blank" rel="noopener">Continue starter</a></p>
                     <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
@@ -1524,25 +1544,16 @@ Content-Type: application/json
 
                 <section>
                     <h2 class="slide-title">Submission Has Its Own States</h2>
-                    <div class="two-col">
-                        <div class="card">
-                            <p class="highlight">Before the request</p>
-                            <ul>
-                                <li>Prevent the browser reload.</li>
-                                <li>Run client validation.</li>
-                                <li>Require a current “available” username result.</li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <p class="highlight">During and after</p>
-                            <ul>
-                                <li>Show “Submitting…” and prevent duplicate requests.</li>
-                                <li>On failure, stay on the form and show a retryable message.</li>
-                                <li>On success, show confirmation in place.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <p class="small-text">Only send the username to this prepared API. The client’s earlier availability check is not the final authority.</p>
+                    <p>When the user clicks Submit:</p>
+                    <ol style="font-size: 0.7em;">
+                        <li><strong>Prevent browser reload.</strong></li>
+                        <li><strong>Check the current values' validity locally.</strong></li>
+                        <li><strong>If the values are invalid,</strong> show feedback and stop; no <code>POST</code> is sent.</li>
+                        <li><strong>If they are valid,</strong> send the data with <code>POST /{your_path}</code> and show a pending state.</li>
+                        <li><strong>While waiting,</strong> the outcome is unknown, so disable additional submits.</li>
+                        <li><strong>When the server responds:</strong> confirm success or continue the workflow; on failure, explain the problem, keep the entered values, and allow correction or retry.</li>
+                    </ol>
+                    <p class="small-text">The browser can check the values entered; the server confirms rules that depend on shared or changing data.</p>
                 </section>
 
                 <section>
@@ -1559,15 +1570,13 @@ Content-Type: application/json
                 </section>
 
                 <section>
-                    <h2 class="slide-title">Forms Checkpoint Complete</h2>
+                    <h2 class="slide-title">Forms Checkpoint Complete!</h2>
                     <ul>
                         <li>Native form semantics and controlled React values.</li>
                         <li>Client validation with accessible field feedback.</li>
                         <li>Async username availability and explicit submission states.</li>
                         <li>The API rechecks eligibility; success is confirmed in place.</li>
                     </ul>
-                    <p class="small-text">This prepared API does not store passwords or create a login session.</p>
-                    <p class="highlight" style="font-size:1.1em;">Next: revisit Day 3 routing and connect successful signup to a new page.</p>
                 </section>
 
                 <section>
@@ -1581,6 +1590,17 @@ Content-Type: application/json
                     <aside class="notes">
                         Recap the main takeaways: memoization is a powerful tool but not a default, the compiler is the future but requires clean React code, and React 19 has quality-of-life improvements. Measure first, optimize second.
                     </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Day 5 Summary</h2>
+                    <ul class="check-list">
+                        <li>Controlled form values keep the UI and React state in sync.</li>
+                        <li>Derive local validation errors from current values and show accessible feedback when needed.</li>
+                        <li>Async validation has pending, result, and request-failure states; a previous answer may no longer apply after a value changes.</li>
+                        <li>An availability check does not reserve shared data; the server must check again on submission.</li>
+                        <li>Submission has its own lifecycle: validate, wait for the server, then show success or retryable failure.</li>
+                    </ul>
                 </section>
 
                 <section>

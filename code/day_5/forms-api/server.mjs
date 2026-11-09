@@ -7,10 +7,7 @@ const allowedUsernames = new Set([
   'casey',
   'jamie',
   'jordan',
-  'morgan',
-  'riley',
   'sam',
-  'taylor',
 ])
 const inUseUsernames = new Set(['sam'])
 

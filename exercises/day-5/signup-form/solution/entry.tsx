@@ -17,9 +17,9 @@ const phases: SignupExercisePhase[] = [
   {
     title: 'Complete forms solution',
     tasks: [
-      'The form is controlled, validated, and provides accessible inline feedback.',
-      'Username availability and signup submission use the prepared API.',
-      'Submit is enabled unless a request is pending; routing is intentionally not included yet.',
+      'The form derives local validation errors from current values and uses submissionNotice for form-level feedback.',
+      'SignupAsyncTextField renders username availability feedback from its result prop; the field is disabled during checks and signup submission has separate pending state.',
+      'submitSignup returns SignupSubmissionFeedback for the form to display; routing is intentionally not included yet.',
     ],
   },
 ]

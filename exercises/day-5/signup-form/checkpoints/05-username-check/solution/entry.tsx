@@ -17,9 +17,11 @@ const phases: SignupExercisePhase[] = [
   {
     title: 'Checkpoint 5',
     tasks: [
-      'Username availability is checked on blur through GET /api/usernames/check.',
-      'The field displays checking, available, unavailable, or request-failure feedback.',
-      'Changing the username clears old feedback; stale responses are ignored.',
+      'Continue deriving local validation errors from the current form values and reuse submissionNotice for form-level feedback; keep username request state separate.',
+      'usernameCheck starts as { isPending: false, result: null }; result is null or { status: "success" | "error", message }.',
+      'validateUsername sets pending and clears the result, awaits checkUsername, then stores success/error feedback. Catch request failures and set pending false there too.',
+      'A username edit sets { isPending: false, result: null }. The async field disables itself while pending, preventing overlapping checks.',
+      'SignupAsyncTextField renders Loading... and the result message; pass the result object as a prop instead of rendering another message.',
     ],
   },
 ]
