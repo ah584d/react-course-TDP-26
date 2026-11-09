@@ -76,7 +76,7 @@ const phases: SignupExercisePhase[] = [
     tasks: [
       'Import validateSignup and derive the current errors from form values; do not store the error map in state.',
       'Track whether the form has been submitted to control when derived errors are shown.',
-      'Create updateValues(nextValues: SignupValues) to update values and clear the existing submit confirmation and submissionNotice. Change updateTextField and the terms checkbox handler to call updateValues with the new values instead of calling setValues directly.',
+      'Create updateValues(nextValues: SignupValues). Inside it, call setValues(nextValues), clear the existing submit confirmation, and call setSubmissionNotice("") to clear any notice about the previous values. Change updateTextField and the terms checkbox handler to call updateValues with the new values instead of calling setValues directly.',
       'Add submissionNotice state initialized to an empty string. In the submit handler, when validation errors exist, set it to "Please correct the highlighted fields." and return; otherwise clear it and keep the existing valid-submit confirmation. If the submissionNotice is non-empty, render below the fields with className="signup-form__error" and role="alert".',
       'Extend SignupTextField with an optional errorMessage prop and show each field’s validation message.',
       'Remove the "required" property inside the input in SignupTextField and the checkbox.',
@@ -104,6 +104,7 @@ const phases: SignupExercisePhase[] = [
     tabLabel: '6',
     tasks: [
       'Add submitSignup and type SignupSubmissionFeedback to the existing import from ../signupApi. Add isSubmitting state initialized to false and submissionResult state initialized to null with type SignupSubmissionFeedback | null. A result is { status: "success" | "error", message: string }.',
+      'Extend updateValues(nextValues) from Exercise 4 to call setSubmissionResult(null), alongside setSubmissionNotice(""), whenever form values change. This clears a result that belongs to the previous values.',
       'Keep the local validation guard from Exercise 4. If hasErrors is true, set the existing submissionNotice to "Please correct the highlighted fields." and return.',
       'After local validation passes, require usernameCheck.result?.status === "success". Otherwise set submissionNotice to "Check the username field and wait until it says your username is available before submitting." and return without sending a POST.',
       'Set isSubmitting to true, then call const result = await submitSignup(normalizeUsername(values.username)) and pass result to setSubmissionResult(result). This stores the returned { status, message } object so the UI can display its message. Then set isSubmitting back to false.',

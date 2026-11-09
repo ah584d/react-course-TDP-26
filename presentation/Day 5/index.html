@@ -504,6 +504,7 @@ function Parent() {
                         </div>
                     </div>
                     <p class="small-text">Arrays are compared by <strong>reference</strong>, not by content.<br>Every render creates a new reference → memo thinks props changed.</p>
+                    <p class="small-text">New reference can defeat memoization.</p>
                     <aside class="notes">
                         Side-by-side comparison. Left: inline array creates a new reference every render, defeating memo. Right: array defined outside the component keeps the same reference. This is the most common mistake with React.memo.
                     </aside>
@@ -703,40 +704,69 @@ const value = useMemo(() => compute(), [deps]);
                     </aside>
                 </section>
 
-                <section>
-                    <h2 class="slide-title">Problem: Expensive Calculation</h2>
-                    <pre><code class="tsx">
-function Stats({ n }: { n: number }) {
-  let total = 0;
-  for (let i = 0; i &lt; n; i++) total += i; // slow
+                                <section>
+                                        <h2 class="slide-title">Problem: Expensive Calculation</h2>
+                                        <pre><code class="tsx" style="font-size:0.65em; line-height:1.35;">
+type Product = { id: number; name: string };
+type Props = { products: Product[]; query: string; heading: string };
 
-  return &lt;p&gt;Sum: {total}&lt;/p&gt;;
+function ProductList({ products, query, heading }: Props) {
+    const visibleProducts = products
+        .filter((product) =&gt;
+            product.name.toLowerCase().includes(query.toLowerCase())
+        )
+        .sort((a, b) =&gt; a.name.localeCompare(b.name));
+
+    return (
+        &lt;&gt;
+            &lt;h2&gt;{heading}&lt;/h2&gt;
+            &lt;ul&gt;
+                {visibleProducts.map((product) =&gt; (
+                    &lt;li key={product.id}&gt;{product.name}&lt;/li&gt;
+                ))}
+            &lt;/ul&gt;
+        &lt;/&gt;
+    );
 }
-                    </code></pre>
-                    <p class="small-text">Recalculates on every render — even when <code>n</code> hasn't changed.</p>
-                    <aside class="notes">
-                        Without useMemo, the filter runs on every render even if products and query haven't changed. For large lists this is wasteful.
-                    </aside>
-                </section>
+                                        </code></pre>
+                                        <p class="small-text">Filtering and sorting run on every render, even if only <code>heading</code> changed.</p>
+                                        <aside class="notes">
+                                                Ask what happens when the parent changes only heading. ProductList renders because a prop changed, so the filter and sort run again even though products and query are unchanged. For a small list, this is fine; the example motivates memoizing a costly transformation.
+                                        </aside>
+                                </section>
 
-                <section>
-                    <h2 class="slide-title">Solution: With useMemo</h2>
-                    <pre><code class="tsx">
-function Stats({ n }: { n: number }) {
-  const total = useMemo(() => {
-    let sum = 0;
-    for (let i = 0; i &lt; n; i++) sum += i;
-    return sum;
-  }, [n]);
+                                <section>
+                                        <h2 class="slide-title">Solution: With useMemo</h2>
+                                        <pre><code class="tsx" style="font-size:0.65em; line-height:1.35;">
+type Product = { id: number; name: string };
+type Props = { products: Product[]; query: string; heading: string };
 
-  return &lt;p&gt;Sum: {total}&lt;/p&gt;;
+function ProductList({ products, query, heading }: Props) {
+    const visibleProducts = useMemo(() =&gt; {
+        return products
+            .filter((product) =&gt;
+                product.name.toLowerCase().includes(query.toLowerCase())
+            )
+            .sort((a, b) =&gt; a.name.localeCompare(b.name));
+    }, [products, query]);
+
+    return (
+        &lt;&gt;
+            &lt;h2&gt;{heading}&lt;/h2&gt;
+            &lt;ul&gt;
+                {visibleProducts.map((product) =&gt; (
+                    &lt;li key={product.id}&gt;{product.name}&lt;/li&gt;
+                ))}
+            &lt;/ul&gt;
+        &lt;/&gt;
+    );
 }
-                    </code></pre>
-                    <p class="small-text">Recalculates only when <code>n</code> changes.</p>
-                    <aside class="notes">
-                        Now the filter only runs when products or query actually change. If the parent re-renders for other reasons, this computation is skipped.
-                    </aside>
-                </section>
+                                        </code></pre>
+                                        <p class="small-text">The component still renders when <code>heading</code> changes, but the list recalculates only when <code>products</code> or <code>query</code> changes.</p>
+                                        <aside class="notes">
+                                                useMemo caches the filtered and sorted array. heading is used in the render but not in the calculation, so changing only heading causes a component render while reusing the cached array. The list could come from props populated by an API; filtering and sorting here are client-side derived data. Do not imply this is useful for every small list.
+                                        </aside>
+                                </section>
 
                 <section>
                     <h2 class="slide-title">What useMemo Actually Does</h2>
@@ -783,7 +813,6 @@ function Stats({ n }: { n: number }) {
                             <tr><td>useMemo(() =&gt; value)</td><td>useCallback(() =&gt; fn)</td></tr>
                         </tbody>
                     </table>
-                    <p class="small-text">useCallback(fn) is roughly useMemo(() =&gt; fn).</p>
                     <aside class="notes">
                         Key mental model: useMemo caches a value, useCallback caches a function. useCallback(fn, deps) is syntactic sugar for useMemo(() => fn, deps).
                     </aside>
