@@ -117,7 +117,6 @@ export default function SignupFormStarter() {
       phases={phases}
       exerciseTabs
       intro="Continue in this same starter file. Each exercise builds on your previous changes."
-      note="Start the prepared API with npm run day5:api. See code/day_5/forms-api/README.md for the request and response contract."
     >
       <SignupForm />
     </SignupExerciseShell>
