@@ -26,9 +26,16 @@
         .reveal ul { font-size: 0.86em; }
         .reveal code { font-size: 0.9em; }
         .reveal pre {
+            overflow: hidden;
             border-radius: 12px;
             border: 1px solid var(--surface-border);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+        }
+        .reveal pre code {
+            display: block;
+            max-width: 100%;
+            overflow-x: auto;
+            border-radius: inherit !important;
         }
         .reveal table {
             font-size: 0.75em;
@@ -45,6 +52,63 @@
         .highlight { color: var(--accent); }
         .two-col { display: flex; gap: 1.5rem; align-items: flex-start; }
         .two-col > div { flex: 1; }
+        .field-validator-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            gap: 0.75rem;
+            align-items: start;
+            text-align: left;
+        }
+        .field-validator-layout > div { min-width: 0; }
+        .field-validator-layout pre {
+            box-sizing: border-box;
+            width: 100%;
+            margin: 0.35rem 0;
+            padding: 0.35rem;
+            overflow: hidden;
+        }
+        .field-validator-layout pre code {
+            box-sizing: border-box;
+            max-width: 100%;
+            padding: 0.55em;
+            max-height: none !important;
+            white-space: pre-wrap !important;
+            overflow-wrap: anywhere;
+            overflow-y: visible;
+        }
+        .controlled-input-comparison {
+            display: grid;
+            grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+            gap: 1rem;
+            align-items: start;
+        }
+        .controlled-input-comparison pre {
+            padding: 0;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .controlled-input-comparison pre code {
+            max-width: 100%;
+            border-radius: inherit;
+            white-space: pre-wrap;
+        }
+        .different-controls pre {
+            box-sizing: border-box;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .different-controls pre code {
+            display: block;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 0.6em 0.75em;
+            border-radius: inherit;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
         .card {
             padding: 0.9rem 1rem;
             border: 1px solid var(--surface-border);
@@ -184,9 +248,13 @@
                 grid-template-columns: 1fr;
                 display: block;
             }
+            .field-validator-layout { grid-template-columns: 1fr; }
             .split-code,
             .adv-grid {
                 grid-template-columns: 1fr;
+            }
+            .controlled-input-comparison {
+                grid-template-columns: minmax(0, 1fr);
             }
             .hero-visual,
             .two-col > div + div {
@@ -436,6 +504,7 @@ function Parent() {
                         </div>
                     </div>
                     <p class="small-text">Arrays are compared by <strong>reference</strong>, not by content.<br>Every render creates a new reference → memo thinks props changed.</p>
+                    <p class="small-text">New reference can defeat memoization.</p>
                     <aside class="notes">
                         Side-by-side comparison. Left: inline array creates a new reference every render, defeating memo. Right: array defined outside the component keeps the same reference. This is the most common mistake with React.memo.
                     </aside>
@@ -451,18 +520,6 @@ function Parent() {
                     </ul>
                     <aside class="notes">
                         Don't wrap everything in memo. It has a cost (storing previous props, running comparison). Only use when the component is expensive or renders frequently with the same props.
-                    </aside>
-                </section>
-
-                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🛠️</span>
-                        <h2>Demo Time</h2>
-                        <p>React.memo in action</p>
-                        <a class="demo-link" href="/?target=day-4/demo/react-memo" target="_blank" rel="noopener">▶ Open demo</a>
-                    </div>
-                    <aside class="notes">
-                        Live demo: wrap a heavy component in React.memo, show the console.log only fires when props actually change.
                     </aside>
                 </section>
 
@@ -561,18 +618,6 @@ function Dashboard({ products }: { products: Product[] }) {
                     </aside>
                 </section>
 
-                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🛠️</span>
-                        <h2>Demo Time</h2>
-                        <p>React.memo + useCallback</p>
-                        <a class="demo-link" href="/?target=day-4/demo/use-callback" target="_blank" rel="noopener">▶ Open demo</a>
-                    </div>
-                    <aside class="notes">
-                        Live demo: Dashboard with search input + memoized ProductTable. Show that typing only re-renders Dashboard, not ProductTable. Remove useCallback and show memo breaks.
-                    </aside>
-                </section>
-
                 <!--
                 LIVE CODE — React.memo + useCallback Together
 
@@ -606,18 +651,6 @@ function Dashboard({ products }: { products: Product[] }) {
                 }
                 -->
 
-                <section data-background="linear-gradient(135deg, #10281a 0%, #0a3026 60%, #0d3320 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🧩</span>
-                        <h2>Exercise</h2>
-                        <p>Stable Product Rows — apply React.memo + useCallback</p>
-                        <a class="demo-link" href="/?target=day-4/exercises/stable-product-rows/starter" target="_blank" rel="noopener">▶ Open exercise</a>
-                    </div>
-                    <aside class="notes">
-                        Hands-on exercise: the product rows re-render on every tick. Students figure out how to stop the unnecessary re-renders using React.memo and useCallback before we move on to useMemo.
-                    </aside>
-                </section>
-
                 <section>
                     <h2 class="slide-title">What Is useMemo?</h2>
                     <ul>
@@ -635,40 +668,69 @@ const value = useMemo(() => compute(), [deps]);
                     </aside>
                 </section>
 
-                <section>
-                    <h2 class="slide-title">Problem: Expensive Calculation</h2>
-                    <pre><code class="tsx">
-function Stats({ n }: { n: number }) {
-  let total = 0;
-  for (let i = 0; i &lt; n; i++) total += i; // slow
+                                <section>
+                                        <h2 class="slide-title">Problem: Expensive Calculation</h2>
+                                        <pre><code class="tsx" style="font-size:0.65em; line-height:1.35;">
+type Product = { id: number; name: string };
+type Props = { products: Product[]; query: string; heading: string };
 
-  return &lt;p&gt;Sum: {total}&lt;/p&gt;;
+function ProductList({ products, query, heading }: Props) {
+    const visibleProducts = products
+        .filter((product) =&gt;
+            product.name.toLowerCase().includes(query.toLowerCase())
+        )
+        .sort((a, b) =&gt; a.name.localeCompare(b.name));
+
+    return (
+        &lt;&gt;
+            &lt;h2&gt;{heading}&lt;/h2&gt;
+            &lt;ul&gt;
+                {visibleProducts.map((product) =&gt; (
+                    &lt;li key={product.id}&gt;{product.name}&lt;/li&gt;
+                ))}
+            &lt;/ul&gt;
+        &lt;/&gt;
+    );
 }
-                    </code></pre>
-                    <p class="small-text">Recalculates on every render — even when <code>n</code> hasn't changed.</p>
-                    <aside class="notes">
-                        Without useMemo, the filter runs on every render even if products and query haven't changed. For large lists this is wasteful.
-                    </aside>
-                </section>
+                                        </code></pre>
+                                        <p class="small-text">Filtering and sorting run on every render, even if only <code>heading</code> changed.</p>
+                                        <aside class="notes">
+                                                Ask what happens when the parent changes only heading. ProductList renders because a prop changed, so the filter and sort run again even though products and query are unchanged. For a small list, this is fine; the example motivates memoizing a costly transformation.
+                                        </aside>
+                                </section>
 
-                <section>
-                    <h2 class="slide-title">Solution: With useMemo</h2>
-                    <pre><code class="tsx">
-function Stats({ n }: { n: number }) {
-  const total = useMemo(() => {
-    let sum = 0;
-    for (let i = 0; i &lt; n; i++) sum += i;
-    return sum;
-  }, [n]);
+                                <section>
+                                        <h2 class="slide-title">Solution: With useMemo</h2>
+                                        <pre><code class="tsx" style="font-size:0.65em; line-height:1.35;">
+type Product = { id: number; name: string };
+type Props = { products: Product[]; query: string; heading: string };
 
-  return &lt;p&gt;Sum: {total}&lt;/p&gt;;
+function ProductList({ products, query, heading }: Props) {
+    const visibleProducts = useMemo(() =&gt; {
+        return products
+            .filter((product) =&gt;
+                product.name.toLowerCase().includes(query.toLowerCase())
+            )
+            .sort((a, b) =&gt; a.name.localeCompare(b.name));
+    }, [products, query]);
+
+    return (
+        &lt;&gt;
+            &lt;h2&gt;{heading}&lt;/h2&gt;
+            &lt;ul&gt;
+                {visibleProducts.map((product) =&gt; (
+                    &lt;li key={product.id}&gt;{product.name}&lt;/li&gt;
+                ))}
+            &lt;/ul&gt;
+        &lt;/&gt;
+    );
 }
-                    </code></pre>
-                    <p class="small-text">Recalculates only when <code>n</code> changes.</p>
-                    <aside class="notes">
-                        Now the filter only runs when products or query actually change. If the parent re-renders for other reasons, this computation is skipped.
-                    </aside>
-                </section>
+                                        </code></pre>
+                                        <p class="small-text">The component still renders when <code>heading</code> changes, but the list recalculates only when <code>products</code> or <code>query</code> changes.</p>
+                                        <aside class="notes">
+                                                useMemo caches the filtered and sorted array. heading is used in the render but not in the calculation, so changing only heading causes a component render while reusing the cached array. The list could come from props populated by an API; filtering and sorting here are client-side derived data. Do not imply this is useful for every small list.
+                                        </aside>
+                                </section>
 
                 <section>
                     <h2 class="slide-title">What useMemo Actually Does</h2>
@@ -693,18 +755,6 @@ function Stats({ n }: { n: number }) {
                     </aside>
                 </section>
 
-                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🛠️</span>
-                        <h2>Demo Time</h2>
-                        <p>useMemo — caching expensive calculations</p>
-                        <a class="demo-link" href="/?target=day-4/demo/use-memo" target="_blank" rel="noopener">▶ Open demo</a>
-                    </div>
-                    <aside class="notes">
-                        Live demo: show useMemo with the filtered product list. Comment out useMemo, show the calculation running on every keystroke. Re-add it and show it only runs when deps change.
-                    </aside>
-                </section>
-
                 <section>
                     <h2 class="slide-title">useMemo vs useCallback</h2>
                     <table>
@@ -715,21 +765,8 @@ function Stats({ n }: { n: number }) {
                             <tr><td>useMemo(() =&gt; value)</td><td>useCallback(() =&gt; fn)</td></tr>
                         </tbody>
                     </table>
-                    <p class="small-text">useCallback(fn) is roughly useMemo(() =&gt; fn).</p>
                     <aside class="notes">
                         Key mental model: useMemo caches a value, useCallback caches a function. useCallback(fn, deps) is syntactic sugar for useMemo(() => fn, deps).
-                    </aside>
-                </section>
-
-                <section data-background="linear-gradient(135deg, #10281a 0%, #0a3026 60%, #0d3320 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🧩</span>
-                        <h2>Exercise</h2>
-                        <p>Filtered Analytics Summary — memoize the expensive computation</p>
-                        <a class="demo-link" href="/?target=day-4/exercises/filtered-analytics-summary/starter" target="_blank" rel="noopener">▶ Open exercise</a>
-                    </div>
-                    <aside class="notes">
-                        Hands-on exercise: the analytics summary recalculates on every tick. Students work out how to recompute it only when the filter changes, using useMemo.
                     </aside>
                 </section>
 
@@ -886,18 +923,6 @@ export default {
                                         </aside>
                                 </section>
 
-                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🛠️</span>
-                        <h2>Demo Time</h2>
-                        <p>React Compiler in action</p>
-                        <a class="demo-link" href="https://playground.react.dev/" target="_blank" rel="noopener">▶ Open React Playground</a>
-                    </div>
-                    <aside class="notes">
-                        Live demo: show a component without manual memoization, enable the compiler, and show that re-renders are automatically skipped.
-                    </aside>
-                </section>
-
                 <section>
                     <h2 class="slide-title">Why We Still Need the Hooks</h2>
                     <ul>
@@ -1039,6 +1064,478 @@ export default {
                 </section>
 
                 <section>
+                    <h2 class="slide-title">What Is a Form?</h2>
+                    <p class="small-text">A form lets someone enter information and submit it to an app or service.</p>
+                    <h3 style="font-size:1.05em; margin-top:1rem;">Where we use forms</h3>
+                    <ul>
+                        <li>Signing up or signing in</li>
+                        <li>Searching or filtering content</li>
+                        <li>Checking out or placing an order</li>
+                        <li>Sending a contact or feedback message</li>
+                        <li>Setting preferences or answering a survey</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Today's Form Journey</h2>
+                    <ul>
+                        <li>Build a signup form from native inputs and React state</li>
+                        <li>Validate the values and show clear feedback</li>
+                        <li>Check username availability and submit to the prepared API</li>
+                        <li>Once the form works, connect success to site navigation</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Start with Native HTML</h2>
+                    <p class="small-text">HTML already gives forms structure, labels, input types, and a submit action.</p>
+                    <pre><code class="html" style="font-size:0.72em; line-height:1.4;">&lt;form&gt;
+  &lt;label for="email"&gt;Email&lt;/label&gt;
+  &lt;input id="email" name="email" type="email" required /&gt;
+  &lt;button type="submit"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+                    <ul>
+                        <li>A label gives the field an accessible name and a larger click target.</li>
+                        <li>Input types provide useful browser behavior, such as email keyboards and basic format checks.</li>
+                        <li>Pressing Enter button inside a field can submit the form; keep the submit button inside the form.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Controlled Inputs: React Owns the Value</h2>
+                    <div class="controlled-input-comparison">
+                        <div>
+                            <p class="highlight">Uncontrolled</p>
+                                                        <pre><code class="tsx" style="font-size:0.62em; line-height:1.3;">function UncontrolledEmailInput() {
+    return (
+        &lt;input
+            type="email"
+        /&gt;;
+    )
+}</code></pre>
+                                                        <p class="small-text" style="font-size:0.50em">The browser owns the input value.</p>
+                        </div>
+                        <div>
+                            <p class="highlight">Controlled</p>
+                                                        <pre><code class="tsx" style="font-size:0.62em; line-height:1.3;">function ControlledEmailInput() {
+    const [email, setEmail] = useState('');
+
+    return (
+        &lt;input
+            type="email"
+            value={email}
+            onChange={event =&gt; setEmail(event.target.value)}
+        /&gt;;
+    )
+}</code></pre>
+                            <p class="small-text" style="font-size:0.50em">React supplies the value, and <code>onChange</code> updates the state that supplies it.</p>
+                        </div>
+                    </div>
+                    <p class="small-text">Choose controlled values when other UI or logic needs the current input. Use an uncontrolled input when React does not need to own its value.</p>
+                </section>
+
+                <section>
+                                        <h2 class="slide-title">Submit Buttons Trigger the Form's Submit Event</h2>
+                                        <pre><code class="tsx" style="font-size:0.68em; line-height:1.35;">import { type SubmitEvent } from 'react';
+
+function handleSubmit(event: SubmitEvent&lt;HTMLFormElement&gt;) {
+    event.preventDefault();
+}
+
+function SignupForm() {
+    return (
+        &lt;form onSubmit={handleSubmit}&gt;
+            &lt;input type="email" name="email" /&gt;
+            &lt;button type="submit"&gt;Submit&lt;/button&gt;
+        &lt;/form&gt;
+    );
+}</code></pre>
+                    <ul>
+                                                <li><code>type="submit"</code> triggers the form's <code>onSubmit</code> handler.</li>
+                                                <li>Pressing Enter in a form field also submits the form.</li>
+                                                <li><code>preventDefault()</code> stops the browser's default page reload so React can handle the submission.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Exercise 1: Control Name and Email</h2>
+                    <ul>
+                        <li>The starter has uncontrolled inputs</li>
+                        <li>We wish to control their values using React state</li>
+                    </ul>
+                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=1" target="_blank" rel="noopener">Open starter</a></p>
+                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/01-controlled-fields/solution" target="_blank" rel="noopener">Controlled fields</a></p>
+                </section>
+
+                                <section>
+                                        <h2 class="slide-title">Build Your Own Text Field</h2>
+                                        <p class="small-text">Both fields from Exercise 1 need the same label-and-input structure, but their ids, labels, values, and change handlers differ.</p>
+                                        <div class="two-col">
+                                                <div>
+                                                        <p class="highlight">Name</p>
+                                                        <pre><code class="tsx" style="font-size:0.72em; line-height:1.4;">&lt;SignupTextField
+    id="signup-name"
+    label="Name"
+    autoComplete="name"
+    value={name}
+    onChange={setName}
+/&gt;</code></pre>
+                                                </div>
+                                                <div>
+                                                        <p class="highlight">Email</p>
+                                                        <pre><code class="tsx" style="font-size:0.72em; line-height:1.4;">&lt;SignupTextField
+    id="signup-email"
+    label="Email"
+    type="email"
+    autoComplete="email"
+    value={email}
+    onChange={setEmail}
+/&gt;</code></pre>
+                                                </div>
+                                        </div>
+                                        <p class="small-text">The parent keeps the state and passes the relevant props to the component.</p>
+                                        <p class="small-text">The optional <code>autoComplete</code> prop tells the browser what kind of value to autofill, such as a name or email address.</p>
+                                </section>
+
+                                <section>
+                                    <h2 class="slide-title">Exercise 2: Build the Text Field</h2>
+                                    <ul>
+                                        <li>Build a small component around a native label and input.</li>
+                                        <li>Reusing this generic component will save us time and code when building our form.</li>
+                                    </ul>
+                                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=2" target="_blank" rel="noopener">Continue starter</a></p>
+                                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/02-reusable-field/solution" target="_blank" rel="noopener">Build a text field</a></p>
+                                </section>
+
+                                <section class="different-controls">
+                                    <h2 class="slide-title">Different Controls, Different Values</h2>
+                                    <div class="two-col">
+                                        <div>
+                                            <p class="highlight">Text-like input</p>
+                                            <pre><code class="tsx" style="font-size:0.62em; line-height:1.35;">&lt;input
+    value={username}
+    onChange={event =&gt; setUsername(event.target.value)}
+/&gt;</code></pre>
+                                            <p class="small-text">Input values are strings, including number inputs.</p>
+                                        </div>
+                                        <div>
+                                            <p class="highlight">Checkbox</p>
+                                            <pre><code class="tsx" style="font-size:0.62em; line-height:1.35;">&lt;input
+    type="checkbox"
+    checked={acceptedTerms}
+    onChange={event =&gt; {
+        setAcceptedTerms(event.target.checked)
+    }}
+/&gt;</code></pre>
+                                            <p class="small-text">Checkbox state is boolean and uses <code>checked</code>.</p>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section>
+                                    <h2 class="slide-title">Exercise 3: Add the Remaining Fields</h2>
+                                        <p class="highlight">How can the text fields and checkbox live together in one state object?</p>
+                                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=3" target="_blank" rel="noopener">Continue starter</a></p>
+                                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/03-all-fields/solution" target="_blank" rel="noopener">All fields</a></p>
+                                </section>
+
+                                <section>
+                                        <h2 class="slide-title">Exercise 3b: Refactor Text-Field Updates</h2>
+                                        <p style="font-size: 0.6em;">JavaScript lets us pass an object key's name as an argument and use bracket notation (for example, <code>object[key]</code>) to access that property.
+                                        This is called a property accessor.</p>
+                                        <pre><code class="js" style="font-size:0.68em; line-height:1.35;">const settings = { theme: 'light', density: 'comfortable' };
+const settingName = 'theme';
+
+settings[settingName]; // 'light'
+settings[settingName] = 'dark'; // updates the original object
+const updatedSettings = { ...settings, [settingName]: 'light' }; // updates a copy</code></pre>
+                                        <p class="highlight" style="font-size: 0.6em;">This example uses a variable to choose which object property changes. How could that idea help reduce repeated update logic?</p>
+                                        <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=3b" target="_blank" rel="noopener">Continue starter</a></p>
+                                        <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/03b-text-field-handler/solution" target="_blank" rel="noopener">Shared text-field handler</a></p>
+                                </section>
+
+                <section>
+                    <h2 class="slide-title">Choose One Validation Experience</h2>
+                    <table>
+                        <thead><tr><th style="width: 50%;">Browser-led</th><th>React-led</th></tr></thead>
+                        <tbody style="font-size: 0.85em;">
+                            <tr><td>Use constraints such as <code>required</code>, <code>type="email"</code>, and <code>minLength</code>.</td><td>Use <code>noValidate</code> and check every rule in React.</td></tr>
+                            <tr><td>The browser displays its own validation messages.</td><td>The app displays consistent inline messages beside fields.</td></tr>
+                            <tr><td>Add custom functions and feedback for rules the browser cannot check with its built-in capabilities.</td><td>Implement basic and cross-field rules yourself.</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="small-text">For this exercise, use React-led validation so required fields, password rules, and server feedback share one inline style.</p>
+                </section>
+
+                <section>
+                                        <h2 class="slide-title">Whole-Form Validation</h2>
+                                                                                <div class="two-col">
+                                                                                        <div>
+                                                                                                <p class="highlight">Call it on submit</p>
+                                                                                                <pre><code class="tsx" style="font-size:0.56em; line-height:1.3; white-space:pre-wrap; overflow-wrap:anywhere;">import { validateSignup } from '../signupValidation';
+
+function handleSubmit(event: SubmitEvent&lt;HTMLFormElement&gt;) {
+  event.preventDefault();
+  const nextErrors = validateSignup(values);
+  setErrors(nextErrors);
+}</code></pre>
+                                                                                        </div>
+                                                                                        <div>
+                                                                                                <p class="highlight">signupValidation.ts</p>
+                                                                                                <pre><code class="tsx" style="font-size:0.56em; line-height:1.3; white-space:pre-wrap; overflow-wrap:anywhere;">export function validateSignup(values: SignupValues): SignupErrors {
+    const errors: SignupErrors = {}
+    if (!values.name.trim()) errors.name = 'Enter your name.'
+    if (!values.username.trim()) errors.username = 'Choose a username.'
+    // more rules
+    return errors
+}</code></pre>
+                                                                                        </div>
+                                                                                </div>
+                    <ul style="font-size: 0.7em;">
+                                                <li>One validator receives the complete values object and checks every field.</li>
+                                                <li>It returns an errors object with a message for each invalid field, such as <code>errors.email</code>.</li>
+                                                <li>On submit, store that result; the following slides show how to present the messages accessibly.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Put Errors Beside Their Fields</h2>
+                    <pre><code class="tsx" style="font-size:0.68em; line-height:1.35;">&lt;label htmlFor="email"&gt;Email&lt;/label&gt;
+&lt;input
+  id="email"
+  aria-invalid={Boolean(errors.email)}
+  aria-describedby={errors.email ? 'email-error' : undefined}
+/&gt;
+{errors.email &amp;&amp; (
+  &lt;span id="email-error"&gt;{errors.email}&lt;/span&gt;
+)}</code></pre>
+                    <ul>
+                        <li>Keep the visible label connected to the input.</li>
+                        <li>Use <code>aria-invalid</code> and <code>aria-describedby</code> to connect the invalid state and its message.</li>
+                        <li>Use a form-level <code>role="alert"</code> for a concise submit error summary, not as a substitute for field messages.</li>
+                    </ul>
+                    <p class="highlight">How can we apply this pattern to our reusable <code>SignupTextField</code>?</p>
+                </section>
+
+                                <section>
+                                    <h2 class="slide-title">Exercise 4: Add Validation Feedback</h2>
+                                    <p class="small-text">Open Exercise 4 in the starter and use its tab for the task checklist.</p>
+                                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=4" target="_blank" rel="noopener">Continue starter</a></p>
+                                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/04-validation/solution" target="_blank" rel="noopener">Validation</a></p>
+                                </section>
+
+                                                                <section>
+                                                                        <h2 class="slide-title" style="font-size: 1.5em;">Per-Field Validation Part 1:<br>Composing Field Validators</h2>
+                                                                        <div class="field-validator-layout">
+                                                                                <div>
+                                                                                        <p class="highlight">Generic Functions</p>
+                                                                                        <pre><code class="tsx" style="font-size:0.62em; line-height:1.2;">function validateNotBlank(value: string) {
+    return value.trim() ? undefined : 'Required field'
+}
+
+function validateLength(value: string, minimum: number) {
+    return value.length &gt;= minimum
+        ? undefined
+        : `Use at least ${minimum} characters.`
+}
+
+function validateMatch(value: string, expected: string, message: string) {
+    return value === expected ? undefined : message
+}</code></pre>
+                                                                                        <p class="small-text">These reusable helpers return a message or <code>undefined</code>.</p>
+                                                                                </div>
+                                                                                <div>
+                                                                                        <p class="highlight">Validators by Field</p>
+                                                                                        <pre><code class="tsx" style="font-size:0.56em; line-height:1.12;">type SignupValidator = (values: SignupValues) =&gt; string | undefined
+
+const validatorsByField: Record&lt;SignupTextFieldName, SignupValidator[]&gt; = {
+    name: [(values) =&gt; validateNotBlank(values.name)],
+    username: [(values) =&gt; validateNotBlank(values.username)],
+    password: [
+        (values) =&gt; validateNotBlank(values.password),
+        (values) =&gt; validateLength(values.password, 8),
+    ],
+    passwordConfirmation: [
+        (values) =&gt; validateNotBlank(values.passwordConfirmation),
+        (values) =&gt; validateMatch(values.passwordConfirmation, values.password, 'Passwords do not match.'),
+    ],
+}</code></pre>
+                                                                                        <p class="small-text">An object where each key is a field name, and each corresponding value is an ordered list of validators for that field.</p>
+                                                                                </div>
+                                                                        </div>
+                                                                </section>
+
+                                                                <section>
+                                                                        <h2 class="slide-title">Per-Field Validation Part 2:<br>How to Validate One Field</h2>
+                                                                        <pre><code class="tsx" style="font-size:0.65em; line-height:1.18;"> // Run each of the field's validators, stop at the first message received
+function validateField(fieldName, values) {
+    for (const validatorFunction of validatorsByField[fieldName]) {
+        const message = validatorFunction(values)
+        if (message !== undefined) {
+            return message
+        }
+    }
+    return undefined
+}
+
+// Get one field's error (note: we will use a different strategy going forward)
+const usernameError = validateField('username', values)
+</code></pre>
+                                                                </section>
+
+                                                                <section>
+                                                                        <h2 class="slide-title">Collect Errors Across the Form</h2>
+                                                                        <pre><code class="tsx" style="font-size:0.58em; line-height:1.25;">function validateForm(values: SignupValues): SignupErrors {
+    const errors: SignupErrors = {}
+    for (const fieldName of Object.keys(validatorsByField) as SignupTextFieldName[]) {
+        const message = validateField(fieldName, values)
+        if (message !== undefined) {
+            errors[fieldName] = message
+        }
+    }
+    if (!values.acceptedTerms) {
+        errors.acceptedTerms = 'Accept the terms.'
+    }
+    return errors
+}</code></pre>
+                                                                        <p class="small-text">Each field contributes at most one error; the outer loop continues after a field's chain stops. Submit can run every field's chain.</p>
+                                                                </section>
+
+                                                                <section>
+                                                                        <h2 class="slide-title">Show Errors After Submit</h2>
+                                                                        <pre><code class="tsx" style="font-size:0.58em; line-height:1.22;">const [isSubmitted, setIsSubmitted] = useState(false)
+const errors = validateForm(values)
+
+function handleSubmit(event) {
+    event.preventDefault()
+    setIsSubmitted(true)
+    if (Object.keys(errors).length &gt; 0) { // if true, there is at least 1 error
+        return
+    }
+    // If there are no errors, continue with logic using valid values
+}
+
+&lt;SignupTextField
+    value={values.username}
+    errorMessage={isSubmitted ? errors.username : undefined}
+    // ... rest of the props
+/&gt;</code></pre>
+                                                                        <p class="small-text">Errors are derived from current values, not stored separately. After the first submit attempt, they stay visible and update as values change.</p>
+                                                                </section>
+
+                                <section>
+                                    <h2 class="slide-title">When to Show Validation Feedback</h2>
+                                    <p class="small-text">Errors are derived from current values. Compare when they become visible: after submit, blur, or editing.</p>
+                                    <p><a class="demo-link" href="/?target=day-5/demo/validation-timing" target="_blank" rel="noopener">Open validation timing demo</a></p>
+                                </section>
+
+                                <section>
+                                    <h2 class="slide-title">When Should Submit Be Disabled?</h2>
+                                    <pre><code class="tsx" style="font-size:0.62em; line-height:1.25;">&lt;button
+    type="submit"
+    disabled={!isFormValid || isSubmitting}
+&gt;
+    {isSubmitting ? 'Submitting…' : 'Submit'}
+&lt;/button&gt;</code></pre>
+                                    <div class="two-col">
+                                        <div>
+                                            <p class="highlight">When the form is invalid</p>
+                                            <p class="small-text" style="font-size:0.6em;">Useful when errors are already visible and update as the user edits.</p>
+                                            <p class="small-text" style="font-size:0.6em;"><strong>Tradeoff:</strong> if errors appear only after submit, a disabled button blocks users from asking what needs fixing.</p>
+                                        </div>
+                                        <div>
+                                            <p class="highlight">While a request is pending</p>
+                                            <p class="small-text" style="font-size:0.6em;">Useful when repeating the action could create duplicate work; change the label to show progress.</p>
+                                            <p class="small-text" style="font-size:0.6em;"><strong>Tradeoff:</strong> users must wait for the request to finish. The server still needs to handle duplicates safely.</p>
+                                        </div>
+                                    </div>
+                                    <p class="small-text">If Submit is disabled, make the reason clear and the next step visible.</p>
+                                </section>
+
+                <section>
+                    <h2 class="slide-title">When Validation Needs the Server</h2>
+                    <div class="two-col">
+                        <div>
+                            <p class="highlight">The browser can check</p>
+                            <p class="small-text" style="font-size: 0.58em;">Rules based on the current form values, such as required fields or a valid email format, can be checked immediately.</p>
+                        </div>
+                        <div>
+                            <p class="highlight">The server must check</p>
+                            <p class="small-text" style="font-size: 0.58em;">Rules based on shared or changing information, such as whether a username is already in use, require a request to the server.</p>
+                        </div>
+                    </div>
+                    <pre><code class="http" style="font-size:0.68em; line-height:1.4;">GET /availability?value=alex
+
+HTTP 200 OK
+{"valid":false,"message":"That value is already in use."}</code></pre>
+                    <p class="small-text" style="font-size: 0.6em;">A successful HTTP response can say a value is ineligible. A request failure is different: the client did not get an answer and cannot determine eligibility.</p>
+                    <p class="small-text" style="font-size: 0.6em;">An availability check does not reserve a value. The server must check again when the value is submitted.</p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Async Validation Has a Lifecycle</h2>
+                    <ol>
+                        <li><strong>Not checked:</strong> there is no server answer for the current value.</li>
+                        <li><strong>Checking:</strong> a request is in progress; the result is not known yet.</li>
+                        <li><strong>Valid or invalid:</strong> the server answered and the UI can show its decision.</li>
+                        <li><strong>Could not check:</strong> the request failed, so validity is unknown; allow a retry.</li>
+                    </ol>
+                    <p class="small-text">When the value changes, its previous answer no longer applies. A field can receive async request state as props to show loading feedback and, when appropriate, block edits while checking.</p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Exercise 5: Check Username Availability</h2>
+                    <ul>
+                        <li>We will use an ayncronous API call to check if our username is valid.</li>
+                        <li>This is similar to many real-life applications that do not allow duplicate usernames.</li>
+                    </ul>
+                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=5" target="_blank" rel="noopener">Continue starter</a></p>
+                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/05-username-check/solution" target="_blank" rel="noopener">Username check</a></p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Submission Has Its Own States</h2>
+                    <p>When the user clicks Submit:</p>
+                    <ol style="font-size: 0.7em;">
+                        <li><strong>Prevent browser reload.</strong></li>
+                        <li><strong>Check the current values' validity locally.</strong></li>
+                        <li><strong>If the values are invalid,</strong> show feedback and stop; no <code>POST</code> is sent.</li>
+                        <li><strong>If they are valid,</strong> send the data with <code>POST /{your_path}</code> and show a pending state.</li>
+                        <li><strong>While waiting,</strong> the outcome is unknown, so disable additional submits.</li>
+                        <li><strong>When the server responds:</strong> confirm success or continue the workflow; on failure, explain the problem, keep the entered values, and allow correction or retry.</li>
+                    </ol>
+                    <p class="small-text">The browser can check the values entered; the server confirms rules that depend on shared or changing data.</p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Exercise 6: Submit Signup</h2>
+                    <ul>
+                        <li>Validate before sending the request.</li>
+                        <li>Show pending state; disable Submit only while pending.</li>
+                        <li>Stay on the form and show a useful message on failure.</li>
+                        <li>Show an in-place success confirmation.</li>
+                    </ul>
+                    <p><a class="demo-link" href="/?target=day-5/exercises/signup-form/starter&amp;exercise=6" target="_blank" rel="noopener">Continue starter</a></p>
+                    <p class="small-text">When you have finished this exercise, do a <code>git commit</code></p>
+                    <p class="small-text">Checkpoint solution: <a href="/?target=day-5/exercises/signup-form/checkpoints/06-api-signup/solution" target="_blank" rel="noopener">API submission</a></p>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Forms Checkpoint Complete!</h2>
+                    <ul>
+                        <li>Native form semantics and controlled React values.</li>
+                        <li>Client validation with accessible field feedback.</li>
+                        <li>Async username availability and explicit submission states.</li>
+                        <li>The API rechecks eligibility; success is confirmed in place.</li>
+                    </ul>
+                </section>
+
+                <section>
                     <h2 class="slide-title">Day 5 Summary</h2>
                     <ul class="check-list">
                         <li>Memoization: cache values and functions to avoid unnecessary work</li>
@@ -1049,6 +1546,17 @@ export default {
                     <aside class="notes">
                         Recap the main takeaways: memoization is a powerful tool but not a default, the compiler is the future but requires clean React code, and React 19 has quality-of-life improvements. Measure first, optimize second.
                     </aside>
+                </section>
+
+                <section>
+                    <h2 class="slide-title">Day 5 Summary</h2>
+                    <ul class="check-list">
+                        <li>Controlled form values keep the UI and React state in sync.</li>
+                        <li>Derive local validation errors from current values and show accessible feedback when needed.</li>
+                        <li>Async validation has pending, result, and request-failure states; a previous answer may no longer apply after a value changes.</li>
+                        <li>An availability check does not reserve shared data; the server must check again on submission.</li>
+                        <li>Submission has its own lifecycle: validate, wait for the server, then show success or retryable failure.</li>
+                    </ul>
                 </section>
 
                 <section>

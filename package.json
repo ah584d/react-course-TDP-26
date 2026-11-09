@@ -6,6 +6,7 @@
   "scripts": {
     "course": "node scripts/course.mjs",
     "sandbox": "node scripts/course.mjs sandbox",
+    "day5:api": "node code/day_5/forms-api/server.mjs",
     "dev": "npm run course",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
