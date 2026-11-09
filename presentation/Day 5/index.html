@@ -523,18 +523,6 @@ function Parent() {
                     </aside>
                 </section>
 
-                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🛠️</span>
-                        <h2>Demo Time</h2>
-                        <p>React.memo in action</p>
-                        <a class="demo-link" href="/?target=day-4/demo/react-memo" target="_blank" rel="noopener">▶ Open demo</a>
-                    </div>
-                    <aside class="notes">
-                        Live demo: wrap a heavy component in React.memo, show the console.log only fires when props actually change.
-                    </aside>
-                </section>
-
                 <section>
                     <h2 class="slide-title">Why useCallback Exists</h2>
                     <div class="split-code" style="margin-left: -8%; margin-right: -8%; font-size: 0.78em;">
@@ -630,18 +618,6 @@ function Dashboard({ products }: { products: Product[] }) {
                     </aside>
                 </section>
 
-                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🛠️</span>
-                        <h2>Demo Time</h2>
-                        <p>React.memo + useCallback</p>
-                        <a class="demo-link" href="/?target=day-4/demo/use-callback" target="_blank" rel="noopener">▶ Open demo</a>
-                    </div>
-                    <aside class="notes">
-                        Live demo: Dashboard with search input + memoized ProductTable. Show that typing only re-renders Dashboard, not ProductTable. Remove useCallback and show memo breaks.
-                    </aside>
-                </section>
-
                 <!--
                 LIVE CODE — React.memo + useCallback Together
 
@@ -674,18 +650,6 @@ function Dashboard({ products }: { products: Product[] }) {
                   );
                 }
                 -->
-
-                <section data-background="linear-gradient(135deg, #10281a 0%, #0a3026 60%, #0d3320 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🧩</span>
-                        <h2>Exercise</h2>
-                        <p>Stable Product Rows — apply React.memo + useCallback</p>
-                        <a class="demo-link" href="/?target=day-4/exercises/stable-product-rows/starter" target="_blank" rel="noopener">▶ Open exercise</a>
-                    </div>
-                    <aside class="notes">
-                        Hands-on exercise: the product rows re-render on every tick. Students figure out how to stop the unnecessary re-renders using React.memo and useCallback before we move on to useMemo.
-                    </aside>
-                </section>
 
                 <section>
                     <h2 class="slide-title">What Is useMemo?</h2>
@@ -791,18 +755,6 @@ function ProductList({ products, query, heading }: Props) {
                     </aside>
                 </section>
 
-                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🛠️</span>
-                        <h2>Demo Time</h2>
-                        <p>useMemo — caching expensive calculations</p>
-                        <a class="demo-link" href="/?target=day-4/demo/use-memo" target="_blank" rel="noopener">▶ Open demo</a>
-                    </div>
-                    <aside class="notes">
-                        Live demo: show useMemo with the filtered product list. Comment out useMemo, show the calculation running on every keystroke. Re-add it and show it only runs when deps change.
-                    </aside>
-                </section>
-
                 <section>
                     <h2 class="slide-title">useMemo vs useCallback</h2>
                     <table>
@@ -815,18 +767,6 @@ function ProductList({ products, query, heading }: Props) {
                     </table>
                     <aside class="notes">
                         Key mental model: useMemo caches a value, useCallback caches a function. useCallback(fn, deps) is syntactic sugar for useMemo(() => fn, deps).
-                    </aside>
-                </section>
-
-                <section data-background="linear-gradient(135deg, #10281a 0%, #0a3026 60%, #0d3320 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🧩</span>
-                        <h2>Exercise</h2>
-                        <p>Filtered Analytics Summary — memoize the expensive computation</p>
-                        <a class="demo-link" href="/?target=day-4/exercises/filtered-analytics-summary/starter" target="_blank" rel="noopener">▶ Open exercise</a>
-                    </div>
-                    <aside class="notes">
-                        Hands-on exercise: the analytics summary recalculates on every tick. Students work out how to recompute it only when the filter changes, using useMemo.
                     </aside>
                 </section>
 
@@ -982,18 +922,6 @@ export default {
                                                 Two steps: upgrade React and install the babel plugin. Add it to your Vite config and you're done. The compiler handles the rest behind the scenes.
                                         </aside>
                                 </section>
-
-                <section data-background="linear-gradient(135deg, #0d2137 0%, #0a3040 60%, #0d1f33 100%)">
-                    <div class="demo-slide">
-                        <span class="demo-icon">🛠️</span>
-                        <h2>Demo Time</h2>
-                        <p>React Compiler in action</p>
-                        <a class="demo-link" href="https://playground.react.dev/" target="_blank" rel="noopener">▶ Open React Playground</a>
-                    </div>
-                    <aside class="notes">
-                        Live demo: show a component without manual memoization, enable the compiler, and show that re-renders are automatically skipped.
-                    </aside>
-                </section>
 
                 <section>
                     <h2 class="slide-title">Why We Still Need the Hooks</h2>
@@ -1156,7 +1084,6 @@ export default {
                         <li>Check username availability and submit to the prepared API</li>
                         <li>Once the form works, connect success to site navigation</li>
                     </ul>
-                    <p class="small-text">First make the form work. Then revisit Day 3 routing to connect the pages.</p>
                 </section>
 
                 <section>
