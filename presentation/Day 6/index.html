@@ -656,7 +656,7 @@
                   style="height: 100%; background: var(--accent-soft)"
                 >
                   <h4 style="font-size: 0.9em; margin-bottom: 1rem">
-                    Old Directory Structure
+                    New Directory Structure
                   </h4>
                   <pre><code class="plaintext" style="font-size: 0.6em;">my-app/
 ├── app/
@@ -681,7 +681,7 @@
                   style="height: 100%; background: var(--accent-soft)"
                 >
                   <h4 style="font-size: 0.9em; margin-bottom: 1rem">
-                    New Directory Structure
+                    Old Directory Structure
                   </h4>
                   <pre><code class="plaintext" style="font-size: 0.6em;">my-app/
 ├── pages/
@@ -1239,139 +1239,7 @@ export default function Navigation() {
             </div>
           </section>
 
-          <!-- Slide: Root Layout -->
-          <section>
-            <h3>Root Layout</h3>
-            <p class="small-text">
-              The top-level layout that wraps your entire app
-            </p>
-
-            <div
-              class="card"
-              style="
-                margin-top: 1.5rem;
-                text-align: left;
-                background: var(--accent-soft);
-              "
-            >
-              <h4
-                style="
-                  font-size: 0.85em;
-                  margin-bottom: 0.8rem;
-                  color: var(--accent);
-                "
-              >
-                📁 app/layout.tsx
-              </h4>
-              <p
-                style="
-                  font-size: 0.75em;
-                  line-height: 1.7;
-                  margin-bottom: 0.8rem;
-                "
-              >
-                The Root Layout is <strong>required</strong> in every Next.js
-                app. It defines the outermost HTML structure that wraps all
-                pages.
-              </p>
-              <ul style="font-size: 0.75em; line-height: 1.7">
-                <li>
-                  Must return <code>&lt;html&gt;</code> and
-                  <code>&lt;body&gt;</code> tags
-                </li>
-                <li>
-                  Receives a <code>children</code> prop — this is where your
-                  page content renders
-                </li>
-                <li>
-                  Applied to <strong>every page</strong> in your application
-                </li>
-                <li>
-                  Perfect place for global navigation, footer, fonts, and
-                  analytics
-                </li>
-                <li>
-                  Does <strong>not re-render</strong> when users navigate
-                  between pages
-                </li>
-              </ul>
-            </div>
-          </section>
-
-          <!-- Slide: Layout Benefits -->
-          <section>
-            <h3 style="font-size: 1.6em">Layout Benefits</h3>
-            <p class="small-text" style="font-size: 0.6em">
-              Why layouts are powerful in Next.js
-            </p>
-
-            <div class="two-col" style="margin-top: 1.5rem; gap: 0.8rem">
-              <div class="card" style="background: rgba(34, 197, 94, 0.1)">
-                <h4 style="font-size: 0.7em; margin-bottom: 0.4rem">
-                  💡 Common Use Cases
-                </h4>
-                <ul style="font-size: 0.65em; line-height: 1.6">
-                  <li>Global navigation bar</li>
-                  <li>Footer</li>
-                  <li>Analytics scripts</li>
-                  <li>Global styles/fonts</li>
-                  <li>Theme providers</li>
-                  <li>Authentication wrappers</li>
-                </ul>
-              </div>
-
-              <div class="card" style="background: rgba(251, 191, 36, 0.1)">
-                <h4 style="font-size: 0.7em; margin-bottom: 0.4rem">
-                  ⚡ Performance Note
-                </h4>
-                <p
-                  style="
-                    font-size: 0.65em;
-                    line-height: 1.6;
-                    margin: 0 0 0.8rem;
-                  "
-                >
-                  Because layouts don't re-render on navigation, your
-                  header/footer stay mounted, making page transitions instant
-                  and smooth.
-                </p>
-                <p
-                  style="
-                    font-size: 0.6em;
-                    line-height: 1.5;
-                    margin: 0;
-                    color: var(--accent);
-                  "
-                >
-                  💡 This means no "flash" when navigating between pages — the
-                  layout stays constant while only the page content changes.
-                </p>
-              </div>
-            </div>
-
-            <div
-              class="card"
-              style="
-                margin-top: 1rem;
-                background: rgba(97, 218, 251, 0.15);
-                border: 2px solid var(--accent);
-              "
-            >
-              <p
-                style="
-                  font-size: 0.6em;
-                  margin: 0;
-                  text-align: center;
-                  color: var(--accent);
-                "
-              >
-                📝 <strong>Note to self:</strong> Show code example from
-                <code>code/day_5/app/layout.tsx</code>
-              </p>
-            </div>
-          </section>
-
-          <!-- Slide 13.5: What is a Layout? -->
+          <!-- Slide: What is a Layout? -->
           <section>
             <h3>What is a Layout?</h3>
             <p class="small-text">
@@ -1557,6 +1425,138 @@ export default function Navigation() {
                   >Page Content</span
                 >
                 mounts/unmounts.
+              </p>
+            </div>
+          </section>
+
+          <!-- Slide: Root Layout -->
+          <section>
+            <h3>Root Layout</h3>
+            <p class="small-text">
+              The top-level layout that wraps your entire app
+            </p>
+
+            <div
+              class="card"
+              style="
+                margin-top: 1.5rem;
+                text-align: left;
+                background: var(--accent-soft);
+              "
+            >
+              <h4
+                style="
+                  font-size: 0.85em;
+                  margin-bottom: 0.8rem;
+                  color: var(--accent);
+                "
+              >
+                📁 app/layout.tsx
+              </h4>
+              <p
+                style="
+                  font-size: 0.75em;
+                  line-height: 1.7;
+                  margin-bottom: 0.8rem;
+                "
+              >
+                The Root Layout is <strong>required</strong> in every Next.js
+                app. It defines the outermost HTML structure that wraps all
+                pages.
+              </p>
+              <ul style="font-size: 0.75em; line-height: 1.7">
+                <li>
+                  Must return <code>&lt;html&gt;</code> and
+                  <code>&lt;body&gt;</code> tags
+                </li>
+                <li>
+                  Receives a <code>children</code> prop — this is where your
+                  page content renders
+                </li>
+                <li>
+                  Applied to <strong>every page</strong> in your application
+                </li>
+                <li>
+                  Perfect place for global navigation, footer, fonts, and
+                  analytics
+                </li>
+                <li>
+                  Does <strong>not re-render</strong> when users navigate
+                  between pages
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Slide: Layout Benefits -->
+          <section>
+            <h3 style="font-size: 1.6em">Layout Benefits</h3>
+            <p class="small-text" style="font-size: 0.6em">
+              Why layouts are powerful in Next.js
+            </p>
+
+            <div class="two-col" style="margin-top: 1.5rem; gap: 0.8rem">
+              <div class="card" style="background: rgba(34, 197, 94, 0.1)">
+                <h4 style="font-size: 0.7em; margin-bottom: 0.4rem">
+                  💡 Common Use Cases
+                </h4>
+                <ul style="font-size: 0.65em; line-height: 1.6">
+                  <li>Global navigation bar</li>
+                  <li>Footer</li>
+                  <li>Analytics scripts</li>
+                  <li>Global styles/fonts</li>
+                  <li>Theme providers</li>
+                  <li>Authentication wrappers</li>
+                </ul>
+              </div>
+
+              <div class="card" style="background: rgba(251, 191, 36, 0.1)">
+                <h4 style="font-size: 0.7em; margin-bottom: 0.4rem">
+                  ⚡ Performance Note
+                </h4>
+                <p
+                  style="
+                    font-size: 0.65em;
+                    line-height: 1.6;
+                    margin: 0 0 0.8rem;
+                  "
+                >
+                  Because layouts don't re-render on navigation, your
+                  header/footer stay mounted, making page transitions instant
+                  and smooth.
+                </p>
+                <p
+                  style="
+                    font-size: 0.6em;
+                    line-height: 1.5;
+                    margin: 0;
+                    color: var(--accent);
+                  "
+                >
+                  💡 This means no "flash" when navigating between pages — the
+                  layout stays constant while only the page content changes.
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="card"
+              style="
+                margin-top: 1rem;
+                background: rgba(97, 218, 251, 0.15);
+                border: 2px solid var(--accent);
+              "
+            >
+              <p
+                style="
+                  font-size: 0.6em;
+                  margin: 0;
+                  text-align: center;
+                  color: var(--accent);
+                "
+              >
+                📝 <strong>Note to self:</strong> Show code example from
+                <code>code/day_5/app/layout.tsx</code>
               </p>
             </div>
           </section>
@@ -2357,9 +2357,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <th>
                     <strong style="color: #22c55e">CSR</strong> (Vite/React)
                   </th>
-                  <th>
-                    <strong style="color: #fbbf24">SSR</strong> (Next.js)
-                  </th>
+                  <th><strong style="color: #fbbf24">SSR</strong> (Next.js)</th>
                 </tr>
               </thead>
               <tbody>
@@ -2402,7 +2400,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </section>
 
-  <section>
+          <section>
             <h3>Demo 🛠️: SSR vs CSR</h3>
             <div
               class="card"
@@ -2434,10 +2432,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 Page:
                 <code style="color: var(--accent)">/ssr-vs-csr</code>
               </p>
-              <p
-                class="small-text"
-                style="margin: 1rem 0 0; line-height: 1.5"
-              >
+              <p class="small-text" style="margin: 1rem 0 0; line-height: 1.5">
                 Compare the server-rendered time with the live client clock,
                 then click the counter to see client-side interactivity.
               </p>
@@ -2688,7 +2683,13 @@ export async function PostFeed() {
             </p>
 
             <div class="card" style="margin-top: 1rem; text-align: left">
-              <h4 style="font-size: 0.8em; color: var(--accent); margin: 0 0 0.5rem">
+              <h4
+                style="
+                  font-size: 0.8em;
+                  color: var(--accent);
+                  margin: 0 0 0.5rem;
+                "
+              >
                 The idea
               </h4>
               <p
@@ -2703,7 +2704,13 @@ export async function PostFeed() {
                 call directly. Next.js sends the input to the server and runs
                 the function there.
               </p>
-              <h4 style="font-size: 0.8em; color: var(--accent); margin: 0 0 0.5rem">
+              <h4
+                style="
+                  font-size: 0.8em;
+                  color: var(--accent);
+                  margin: 0 0 0.5rem;
+                "
+              >
                 Why use it instead of REST?
               </h4>
               <ul
@@ -2794,10 +2801,7 @@ export async function PostFeed() {
                 Page:
                 <code style="color: var(--accent)">/server-action-demo</code>
               </p>
-              <p
-                class="small-text"
-                style="margin: 1rem 0 0; line-height: 1.5"
-              >
+              <p class="small-text" style="margin: 1rem 0 0; line-height: 1.5">
                 Submit a shoutout and see it saved by a server function without
                 a separate API route.
               </p>
@@ -2959,16 +2963,12 @@ export default function Error({
                 Page:
                 <code style="color: var(--accent)">/loading-example</code>
               </p>
-              <p
-                class="small-text"
-                style="margin: 1rem 0 0; line-height: 1.5"
-              >
+              <p class="small-text" style="margin: 1rem 0 0; line-height: 1.5">
                 Navigate to the page and watch the loading UI appear while the
                 data is being fetched.
               </p>
             </div>
           </section>
-
 
           <!-- Slide 22: Best Practices -->
           <section>
@@ -3364,7 +3364,6 @@ export default function RealTimeChart() {
               "
             />
           </section>
-
         </section>
       </div>
     </div>
